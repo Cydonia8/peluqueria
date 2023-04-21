@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 21-04-2023 a las 12:01:24
+-- Tiempo de generación: 21-04-2023 a las 12:20:27
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 8.1.6
 
@@ -33,6 +33,19 @@ CREATE TABLE `citas` (
   `fecha` date NOT NULL,
   `hora` time NOT NULL,
   `servicio` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `horario`
+--
+
+CREATE TABLE `horario` (
+  `m_apertura` time NOT NULL,
+  `m_cierre` time NOT NULL,
+  `t_apertura` time NOT NULL,
+  `t_cierre` time NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -91,7 +104,8 @@ INSERT INTO `tipos` (`id`, `nombre`) VALUES
 --
 ALTER TABLE `citas`
   ADD PRIMARY KEY (`cliente`,`trabajador`,`fecha`,`hora`),
-  ADD KEY `fk_cit_trabajador` (`trabajador`);
+  ADD KEY `fk_cit_trabajador` (`trabajador`),
+  ADD KEY `fk_cit_servicio` (`servicio`);
 
 --
 -- Indices de la tabla `personas`
