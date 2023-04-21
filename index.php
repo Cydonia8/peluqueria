@@ -14,8 +14,6 @@
     <section class="formularios hidden">
         <button id="atras">Atrás</button>
         <form data-form="login" action="#" method="post">
-<<<<<<< HEAD
-=======
             <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Correo</label>
                 <input type="email" class="form-control" name="correo" aria-describedby="emailHelp">
@@ -48,7 +46,6 @@
         </form>
         <!-- <form data-form="login" action="#" method="post">
             <input type="password" name="pass" required>
->>>>>>> bd4c6c480ada52a00bf1661231f924efb6b46137
             <input type="email" name="correo" placeholder="Correo">
             <input type="password" name="pass" required>
             <input type="submit" value="Iniciar sesión">

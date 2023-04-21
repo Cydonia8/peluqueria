@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="estilos.css">
-    <script src="scripts/index.js" defer></script>
+    <script src="../scripts/horario.js" defer></script>
     <title>Bienvenido</title>
 </head>
 <body>
@@ -38,13 +38,25 @@
                             <input type='time' name='t_apertura' disabled value='$lista[2]'>
                             <input type='time' name='t_cierre' disabled value='$lista[3]'>
                         ";
+                        $consulta->close();
                     ?>
                 </div>
             </div>
             <div class='w-100'>
-                <input class="w-25 mx-auto d-block mt-3" name="enviar" type="submit" value="Modificar">
+                <button type="button" class="d-block btn btn-primary mx-auto mt-3">Modificar</button>
+                <input type="submit" class="btn btn-primary mx-auto mt-3 d-none" name="enviar" value="Enviar">
             </div>
         </form>
+        <?php
+            if(isset($_POST['enviar'])){
+                $preparada=$conexion->prepare("update horario set m_apertura=?,m_cierre=?,t_apertura=?,t_cierre=?");
+                $preparada->bind_param("ssss",$_POST['m_apertura'],$_POST['m_cierre'],$_POST['t_apertura'],$_POST['t_cierre']);
+                $preparada->execute();
+                $preparada->close();
+                $conexion->close();
+                header("Refresh:0");
+            }
+        ?>
     </section>
 </body>
 </html>
