@@ -17,14 +17,15 @@
                 <h3>Mañana</h3>
                 <div>
                     <?php
-
+                        require_once("functions.php");
+                        $conexion=createConnection();
 
                         $consulta=$conexion->query("select * from horario");
                         $lista=$consulta->fetch_array(MYSQLI_NUM);
 
                         echo"
-                        <input type='time' name='m_apertura' value='$lista[0]'>
-                        <input type='time' name='m_cierre' value='$lista[1]'>
+                            <input type='time' name='m_apertura' disabled value='$lista[0]'>
+                            <input type='time' name='m_cierre' disabled value='$lista[1]'>
                         ";
                     ?>
                 </div>
@@ -34,11 +35,14 @@
                 <div>
                     <?php
                         echo"
-                        <input type='time' name='m_apertura' value='$lista[2]'>
-                        <input type='time' name='m_cierre' value='$lista[3]'>
+                            <input type='time' name='t_apertura' disabled value='$lista[2]'>
+                            <input type='time' name='t_cierre' disabled value='$lista[3]'>
                         ";
                     ?>
                 </div>
+            </div>
+            <div class='w-100'>
+                <input class="w-25 mx-auto d-block mt-3" name="enviar" type="submit" value="Modificar">
             </div>
         </form>
     </section>
