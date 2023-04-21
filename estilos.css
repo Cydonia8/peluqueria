@@ -39,3 +39,15 @@ form{
 form.active{
     display: flex;
 }
+.color-principal{
+    color: ;
+}
+.color-secundario{
+    color: ;
+}
+.bg-principal{
+    background-color: ;
+}
+.bg-secundario{
+    background-color: ;
+}
