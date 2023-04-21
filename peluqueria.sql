@@ -58,6 +58,7 @@ CREATE TABLE `personas` (
   `id` bigint(1) NOT NULL,
   `nombre` varchar(75) NOT NULL,
   `correo` varchar(75) NOT NULL,
+  `pass` varchar(20) NOT NULL,
   `telefono` char(9) NOT NULL,
   `tipo` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
