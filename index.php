@@ -12,7 +12,7 @@
 </head>
 <body>
     <section class="formularios hidden">
-        <button id="atras">Atrás</button>
+        <button class="rounded-pill p-2" id="atras">Atrás</button>
         <form data-form="login" action="#" method="post">
             <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Correo</label>
