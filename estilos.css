@@ -3,6 +3,9 @@
 }
 body{
     margin: 0;
+    background: rgb(27,160,195);
+background: linear-gradient(180deg, rgba(27,160,195,1) 50%, rgba(8,6,6,0.9500175070028011) 100%);
+height: 100vh;
 }
 .buttons{
     height: 100vh;
@@ -15,7 +18,8 @@ body{
     gap: 4rem;
     top: 0;
     z-index: 10000;
-    background-color: rgb(80, 195, 230);
+    /* background: rgb(255,255,255);
+background: linear-gradient(180deg, rgba(255,255,255,0.8995973389355743) 26%, rgba(7,77,119,1) 83%); */
 }
 .buttons.hidden{
     display: none;
@@ -33,7 +37,8 @@ body{
     position: fixed;
     gap: 4rem;
     top: 0;
-    background-color: rgb(80, 195, 230);
+    /* background: rgb(255,255,255);
+background: linear-gradient(180deg, rgba(255,255,255,0.8995973389355743) 26%, rgba(7,77,119,1) 83%); */
 }
 .login-register-buttons{
     padding: 0.5rem;

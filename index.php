@@ -11,7 +11,7 @@
     <title>Bienvenido</title>
 </head>
 <body>
-    <section class="formularios">
+    <section class="formularios hidden">
         <button id="atras">Atrás</button>
         <form data-form="login" action="#" method="post">
             <div class="mb-3">
