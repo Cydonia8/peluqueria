@@ -13,10 +13,15 @@
 <body>
     <section class="formularios">
         <form data-form="login" action="#" method="post">
-            
+            <input type="password" name="pass" required>
+            <input type="email" name="correo" placeholder="Correo">
             <input type="submit" value="Iniciar sesión">
         </form>
         <form data-form="register" action="#" method="post">
+            <input type="text" name="nombre" placeholder="Nombre" required>
+            <input type="email" name="correo" placeholder="Correo" required>
+            <input type="password" name="pass" required>
+            <input type="tel" name="telefono" pattern="[6-7]{1}[0-9]{8}" required>
             <input type="submit" value="Registrarme">
         </form>
     </section>

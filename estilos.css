@@ -38,6 +38,7 @@ form{
 }
 form.active{
     display: flex;
+    flex-direction: column;
 }
 .color-principal{
     color: ;
