@@ -14,8 +14,6 @@
     <section class="formularios hidden">
         <button class="rounded-pill p-2" id="atras">Atrás</button>
         <form data-form="login" action="#" method="post">
-<<<<<<< HEAD
-=======
             <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Correo</label>
                 <input type="email" class="form-control" name="correo" aria-describedby="emailHelp">
@@ -46,20 +44,6 @@
             </div>
             <button type="submit" class="btn btn-primary">Registrarme</button>
         </form>
-        <!-- <form data-form="login" action="#" method="post">
-            <input type="password" name="pass" required>
->>>>>>> bd4c6c480ada52a00bf1661231f924efb6b46137
-            <input type="email" name="correo" placeholder="Correo">
-            <input type="password" name="pass" required>
-            <input type="submit" value="Iniciar sesión">
-        </form>
-        <form data-form="register" action="#" method="post">
-            <input type="text" name="nombre" placeholder="Nombre" required>
-            <input type="email" name="correo" placeholder="Correo" required>
-            <input type="password" name="pass" required>
-            <input type="tel" name="telefono" pattern="[6-7]{1}[0-9]{8}" required>
-            <input type="submit" value="Registrarme">
-        </form> -->
     </section>
     <section class="buttons">
         <button class="login-register-buttons" data-button="login">Iniciar sesión</button>
