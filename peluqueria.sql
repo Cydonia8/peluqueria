@@ -31,7 +31,8 @@ CREATE TABLE `citas` (
   `cliente` bigint(20) NOT NULL,
   `trabajador` bigint(20) NOT NULL,
   `fecha` date NOT NULL,
-  `hora` time NOT NULL
+  `hora` time NOT NULL,
+  `servicio` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -142,6 +143,7 @@ ALTER TABLE `tipos`
 --
 ALTER TABLE `citas`
   ADD CONSTRAINT `fk_cit_cliente` FOREIGN KEY (`cliente`) REFERENCES `personas` (`id`),
+  ADD CONSTRAINT `fk_cit_servicio` FOREIGN KEY (`servicio`) REFERENCES `servicios` (`id`),
   ADD CONSTRAINT `fk_cit_trabajador` FOREIGN KEY (`trabajador`) REFERENCES `personas` (`id`);
 
 --
