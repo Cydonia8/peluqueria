@@ -37,8 +37,7 @@ form{
     display: none;
 }
 form.active{
-    display: flex;
-    flex-direction: column;
+    display: block;
 }
 .color-principal{
     color: ;
