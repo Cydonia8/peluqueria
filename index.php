@@ -12,6 +12,7 @@
 </head>
 <body>
     <section class="formularios">
+        <button id="atras">Atrás</button>
         <form data-form="login" action="#" method="post">
             <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Correo</label>
@@ -20,7 +21,7 @@
             </div>
             <div class="mb-3">
                 <label for="exampleInputPassword1" class="form-label">Contraseña</label>
-                <input type="password" name="pass" class="form-control" id="exampleInputPassword1">
+                <input type="password" name="pass" class="form-control">
             </div>
             <button type="submit" class="btn btn-primary">Iniciar sesión</button>
         </form>
@@ -31,15 +32,15 @@
             </div>
             <div class="mb-3">
                 <label for="exampleInputPassword1" class="form-label">Correo</label>
-                <input type="email" name="correo" class="form-control" id="exampleInputPassword1">
+                <input type="email" name="correo" class="form-control">
             </div>
             <div class="mb-3">
                 <label for="exampleInputPassword1" class="form-label">Contraseña</label>
-                <input type="password" name="pass" class="form-control" id="exampleInputPassword1">
+                <input type="password" name="pass" class="form-control">
             </div>
             <div class="mb-3">
                 <label for="exampleInputPassword1" class="form-label">Teléfono</label>
-                <input type="tel" pattern="[6-7]{1}[0-9]{8}" name="telefono" class="form-control" id="exampleInputPassword1">
+                <input type="tel" pattern="[6-7]{1}[0-9]{8}" name="telefono" class="form-control">
             </div>
             <button type="submit" class="btn btn-primary">Registrarme</button>
         </form>

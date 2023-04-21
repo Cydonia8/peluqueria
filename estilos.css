@@ -17,6 +17,12 @@ body{
     z-index: 10000;
     background-color: rgb(80, 195, 230);
 }
+.buttons.hidden{
+    display: none;
+}
+.formularios.hidden{
+    display: none;
+}
 .formularios{
     height: 100vh;
     width: 100vw;
