@@ -13,8 +13,8 @@
 <body>
     <section class="formularios">
         <form data-form="login" action="#" method="post">
-            <input type="password" name="pass" required>
             <input type="email" name="correo" placeholder="Correo">
+            <input type="password" name="pass" required>
             <input type="submit" value="Iniciar sesión">
         </form>
         <form data-form="register" action="#" method="post">
