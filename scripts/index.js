@@ -27,3 +27,9 @@ atras.addEventListener("click",()=>{
     container_botones.classList.remove("hidden")
     forms.forEach(form=>{form.classList.remove("active")})
 })
+
+setTimeout(()=> {
+    $(".alert").fadeTo(500, 0).slideUp(500, ()=>{
+        $(this).remove(); 
+    });
+}, 3000);

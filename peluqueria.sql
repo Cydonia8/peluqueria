@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 21-04-2023 a las 12:20:27
--- Versión del servidor: 10.4.24-MariaDB
--- Versión de PHP: 8.1.6
+-- Tiempo de generación: 21-04-2023 a las 13:50:05
+-- Versión del servidor: 10.4.27-MariaDB
+-- Versión de PHP: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -33,7 +33,7 @@ CREATE TABLE `citas` (
   `fecha` date NOT NULL,
   `hora` time NOT NULL,
   `servicio` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -46,7 +46,7 @@ CREATE TABLE `horario` (
   `m_cierre` time NOT NULL,
   `t_apertura` time NOT NULL,
   `t_cierre` time NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -61,7 +61,14 @@ CREATE TABLE `personas` (
   `pass` varchar(20) NOT NULL,
   `telefono` char(9) NOT NULL,
   `tipo` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `personas`
+--
+
+INSERT INTO `personas` (`id`, `nombre`, `correo`, `pass`, `telefono`, `tipo`) VALUES
+(1, 'Alvaro', 'alv@gmail.com', 'alv', '633522998', 1);
 
 -- --------------------------------------------------------
 
@@ -74,7 +81,7 @@ CREATE TABLE `servicios` (
   `nombre` varchar(50) NOT NULL,
   `duracion` time NOT NULL,
   `precio` float(5,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -85,7 +92,7 @@ CREATE TABLE `servicios` (
 CREATE TABLE `tipos` (
   `id` bigint(20) NOT NULL,
   `nombre` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `tipos`
@@ -113,6 +120,7 @@ ALTER TABLE `citas`
 --
 ALTER TABLE `personas`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `correo` (`correo`),
   ADD KEY `fk_per_tipo` (`tipo`);
 
 --
@@ -135,7 +143,7 @@ ALTER TABLE `tipos`
 -- AUTO_INCREMENT de la tabla `personas`
 --
 ALTER TABLE `personas`
-  MODIFY `id` bigint(1) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(1) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `servicios`
