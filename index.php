@@ -32,7 +32,7 @@
     <script src="scripts/jquery-3.2.1.min.js" defer></script>
     <title>Bienvenido</title>
 </head>
-<body>
+<body id = "index">
     <section class="formularios hidden">
         <button class="rounded-pill p-2" id="atras">Atrás</button>
         <form data-form="login" action="#" method="post">
