@@ -6,6 +6,68 @@ function createConnection(){
     return $con;
 }
 
+function closeSession(){
+    if(isset($_POST["cerrar-sesion"])){
+        if(isset($_COOKIE['sesion'])){
+            unset($_SESSION['user']);
+            setcookie("sesion","", time()-3600, '/');              
+            echo "<meta http-equiv='refresh' content='0;url=../index.php'>";
+        }else{
+            unset($_SESSION['user']);
+            header("location:../index.php");
+        }
+    }
+}
+
+function printMenu(){
+    if(isset($_SESSION["user"])){
+        if($_SESSION["user"] == "admin@admin.com"){
+            echo "<nav class=\"ps-2 navbar navbar-expand-lg navbar-light bg-light\">
+                        <a class=\"navbar-brand\" href=\"#\">Peluquería</a>
+                        <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarNav\" aria-controls=\"navbarNav\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">
+                            <span class=\"navbar-toggler-icon\"></span>
+                        </button>
+                        <div class=\"collapse navbar-collapse\" id=\"navbarNav\">
+                            <ul class=\"navbar-nav\">
+                            <li class=\"nav-item active\">
+                                <a class=\"nav-link\" href=\"calendario.php\">Calendario</span></a>
+                            </li>
+                            <li class=\"nav-item\">
+                                <a class=\"nav-link\" href=\"empleados.php\">Empleados</a>
+                            </li>
+                            <li class=\"nav-item\">
+                                <a class=\"nav-link\" href=\"servicios.php\">Servicios</a>
+                            </li>
+                            <li class=\"nav-item\">
+                                <a class=\"nav-link\" href=\"horario.php\">Horarios</a>
+                            </li>
+                            <li lass=\"nav-item\">
+                                <form action=\"#\" method=\"post\"><input class=\"nav-link\" type=\"submit\" name=\"cerrar-sesion\" value=\"Cerrar sesión\"></form>
+                            </li>
+                            </ul>
+                        </div>
+                </nav>";
+        }else{
+            echo "<nav class=\"ps-2 navbar navbar-expand-lg navbar-light bg-light\">
+                    <a class=\"navbar-brand\" href=\"#\">Peluquería</a>
+                    <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarNav\" aria-controls=\"navbarNav\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">
+                        <span class=\"navbar-toggler-icon\"></span>
+                    </button>
+                    <div class=\"collapse navbar-collapse\" id=\"navbarNav\">
+                        <ul class=\"navbar-nav\">
+                        <li class=\"nav-item active\">
+                            <form action=\"#\" method=\"post\"><input type=\"submit\" name=\"cerrar-sesion\" value=\"Cerrar sesión\"></form>
+                        </li>
+                        </ul>
+                    </div>
+                </nav>";
+        }
+    }else{
+
+    }
+    
+}
+
 function registerUser($nombre, $correo, $pass, $tlf, $tipo){
     $con = createConnection();
     $insercion = $con->prepare("INSERT INTO personas (nombre, correo, pass, telefono, tipo) values (?, ?, ?, ?, ?)");

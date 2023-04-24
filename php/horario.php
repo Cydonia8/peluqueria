@@ -1,3 +1,8 @@
+<?php
+    session_start();
+    require_once("functions.php");
+    closeSession();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,13 +16,16 @@
     <title>Bienvenido</title>
 </head>
 <body>
+    <?php
+        printMenu();
+    ?>
     <section class="container-fluid px-sm-3 px-0 mt-4 row">
         <form action="" method="post" class="col-6 mx-auto row">
             <div class="col d-flex flex-column align-items-center">
                 <h3>Mañana</h3>
                 <div>
                     <?php
-                        require_once("functions.php");
+                        
                         $conexion=createConnection();
 
                         $consulta=$conexion->query("select * from horario");

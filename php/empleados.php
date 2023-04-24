@@ -1,6 +1,7 @@
 <?php
     session_start();
     require_once "functions.php";
+    closeSession();
     if(isset($_POST["insertar"])){
         $nombre = $_POST["nombre"];
         $pass = $_POST["pass"];
@@ -34,30 +35,13 @@
     <title>Document</title>
 </head>
 <body id="empleados">
-    <section class="insertar-empleado">
-        <ion-icon id="close-form-empleado" name="close-outline"></ion-icon>
-        <form action="#" method="post">
-            <div class="form-group">
-                <label for="nombre">Nombre del empleado</label>
-                <input name="nombre" required type="text" class="form-control" aria-describedby="emailHelp" placeholder="Nombre">
-            </div>
-            <div class="mb-3">
-                <label for="telefono" class="form-label">Teléfono</label>
-                <input required type="tel" pattern="[6-7]{1}[0-9]{8}" name="telefono" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="correo">Correo electrónico</label>
-                <input name="correo" required type="email" class="form-control" placeholder="Correo">
-            </div>
-            <div class="form-group">
-                <label for="pass">Contraseña</label>
-                <input name="pass" required type="password" class="form-control" aria-describedby="emailHelp" placeholder="Contraseña">
-            </div>
-            <input type="submit" class="mt-3 btn btn-primary" value="Crear empleado" name="insertar">
-        </form>
-    </section>
-    <button id="button-insertar-empleado">Insertar empleado</button>
-    <section class="tabla-empleados">
+    <?php
+        printMenu();
+    ?>
+    <section class="tabla-empleados container-fluid px-sm-3 px-0 mt-4 row">
+        <div>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="Añadir nuevo">Añadir nuevo</button>
+        </div>
         <table>
             <thead>
                 <th>Nombre</th>
@@ -72,6 +56,40 @@
             </tbody>
         </table>
     </section>
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel"></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="#" method="post">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="nombre">Nombre del empleado</label>
+                            <input name="nombre" required type="text" class="form-control" aria-describedby="emailHelp" placeholder="Nombre">
+                        </div>
+                        <div class="mb-3">
+                            <label for="telefono" class="form-label">Teléfono</label>
+                            <input required type="tel" pattern="[6-7]{1}[0-9]{8}" name="telefono" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="correo">Correo electrónico</label>
+                            <input name="correo" required type="email" class="form-control" placeholder="Correo">
+                        </div>
+                        <div class="form-group">
+                            <label for="pass">Contraseña</label>
+                            <input name="pass" required type="password" class="form-control" aria-describedby="emailHelp" placeholder="Contraseña">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <input type="submit" class="btn btn-primary" value="Crear empleado" name="insertar">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <?php
             if(isset($unico)){
                 if(!$unico){
@@ -79,5 +97,6 @@
                 }
             }
         ?>
+    
 </body>
 </html>

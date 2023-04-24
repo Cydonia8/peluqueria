@@ -7,7 +7,9 @@
         $accede = checkLogin($mail,$pass);
 
         if($accede){
-            echo "<meta http-equiv='refresh' content='0;url=php/calendario.php'>";
+            $_SESSION["user"] = $mail;
+            header("location:php/calendario.php");
+            // echo "<meta http-equiv='refresh' content='0;url=php/calendario.php'>";
         }
     }elseif(isset($_POST["register"])){
         $nombre = $_POST["nombre"];
@@ -17,7 +19,6 @@
         $id = getClienteID();
         registerUser($nombre, $mail, $pass, $tlf, $id);
     }
-
 ?>  
 <!DOCTYPE html>
 <html lang="en">
