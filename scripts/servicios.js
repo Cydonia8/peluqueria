@@ -12,8 +12,6 @@ exampleModal.addEventListener('show.bs.modal', event => {
     if(button.innerText=="Editar"){
         const modalBodyInput = exampleModal.querySelectorAll('.modal-body input')
 
-        console.log( button.getAttribute('data-id'));
-
         modalBodyInput[0].value = button.parentElement.parentElement.children[0].innerText;
         modalBodyInput[1].value = button.parentElement.parentElement.children[1].innerText;
         modalBodyInput[2].value = button.parentElement.parentElement.children[2].innerText;
