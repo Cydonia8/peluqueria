@@ -2,9 +2,30 @@
     session_start();
     require_once("functions.php");
     closeSession();
+    $conexion=createConnection();
+
+    if(isset($_POST['insertar'])){
+        $preparada=$conexion->prepare("insert into servicios (nombre,duracion,precio) values (?,?,?)");
+        $preparada->bind_param("ssd",$_POST['nombre'],$_POST['duracion'],$_POST['precio']);
+        $preparada->execute();
+        $preparada->close();
+        header("Refresh:0");
+    }else if(isset($_POST['editar'])){
+        $preparada=$conexion->prepare("update servicios set nombre=?, duracion=?, precio=? where id=?");
+        $preparada->bind_param("ssdi",$_POST['nombre'],$_POST['duracion'],$_POST['precio'],$_POST['id']);
+        $preparada->execute();
+        $preparada->close();
+        header("Refresh:0");
+    }else if(isset($_POST['estado'])){
+        $preparada=$conexion->prepare("update servicios set activo=? where id=?");
+        $preparada->bind_param("ii",$_POST['valor'],$_POST['id']);
+        $preparada->execute();
+        $preparada->close();
+        header("Refresh:0");
+    }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -60,13 +81,14 @@
                                 <form action='#' method='post'>
                                     <input type='hidden' name='id' value='$lista[id]'>
                                     <input type='hidden' name='valor' value='$valor'>
-                                    <input class='btn btn-primary' type='submit' name='estado' value='$act'></input>
+                                    <input class='recargar btn btn-primary' type='submit' name='estado' value='$act'></input>
                                 </form>
                             </td>
                         </tr>
                         ";
                     }
                     $consulta->close();
+                    $conexion->close();
                 ?>
             </tbody>
         </table>
@@ -97,36 +119,11 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <input type="submit" class="btn btn-primary" name="" value="Enviar">
+                        <input type="submit" class="recargar btn btn-primary" name="" value="Enviar">
                     </div>
                 </form>
             </div>
         </div>
     </div>
-
-    <?php
-        if(isset($_POST['insertar'])){
-            $preparada=$conexion->prepare("insert into servicios (nombre,duracion,precio) values (?,?,?)");
-            $preparada->bind_param("ssd",$_POST['nombre'],$_POST['duracion'],$_POST['precio']);
-            $preparada->execute();
-            $preparada->close();
-            $conexion->close();
-            header("Refresh:0");
-        }else if(isset($_POST['editar'])){
-            $preparada=$conexion->prepare("update servicios set nombre=?, duracion=?, precio=? where id=?");
-            $preparada->bind_param("ssdi",$_POST['nombre'],$_POST['duracion'],$_POST['precio'],$_POST['id']);
-            $preparada->execute();
-            $preparada->close();
-            $conexion->close();
-            // header("Refresh:0");
-        }else if(isset($_POST['estado'])){
-            $preparada=$conexion->prepare("update servicios set activo=? where id=?");
-            $preparada->bind_param("ii",$_POST['valor'],$_POST['id']);
-            $preparada->execute();
-            $preparada->close();
-            $conexion->close();
-            // header("Refresh:0");
-        }
-    ?>
 </body>
 </html>
