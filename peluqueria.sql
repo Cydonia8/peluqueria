@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 21-04-2023 a las 13:50:05
--- Versión del servidor: 10.4.27-MariaDB
--- Versión de PHP: 8.2.0
+-- Tiempo de generación: 24-04-2023 a las 11:39:11
+-- Versión del servidor: 10.4.24-MariaDB
+-- Versión de PHP: 8.1.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -33,7 +33,7 @@ CREATE TABLE `citas` (
   `fecha` date NOT NULL,
   `hora` time NOT NULL,
   `servicio` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -46,7 +46,14 @@ CREATE TABLE `horario` (
   `m_cierre` time NOT NULL,
   `t_apertura` time NOT NULL,
   `t_cierre` time NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `horario`
+--
+
+INSERT INTO `horario` (`m_apertura`, `m_cierre`, `t_apertura`, `t_cierre`) VALUES
+('13:08:00', '13:20:00', '13:25:00', '13:30:00');
 
 -- --------------------------------------------------------
 
@@ -58,17 +65,20 @@ CREATE TABLE `personas` (
   `id` bigint(1) NOT NULL,
   `nombre` varchar(75) NOT NULL,
   `correo` varchar(75) NOT NULL,
-  `pass` varchar(20) NOT NULL,
   `telefono` char(9) NOT NULL,
-  `tipo` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `tipo` bigint(20) NOT NULL,
+  `pass` varchar(20) NOT NULL,
+  `activo` tinyint(4) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `personas`
 --
 
-INSERT INTO `personas` (`id`, `nombre`, `correo`, `pass`, `telefono`, `tipo`) VALUES
-(1, 'Alvaro', 'alv@gmail.com', 'alv', '633522998', 1);
+INSERT INTO `personas` (`id`, `nombre`, `correo`, `telefono`, `tipo`, `pass`, `activo`) VALUES
+(1, 'admin', 'admin', '', 3, '', 1),
+(2, 'cliente', '', '', 1, '', 1),
+(3, 'trabajador', '', '', 2, '', 1);
 
 -- --------------------------------------------------------
 
@@ -80,8 +90,16 @@ CREATE TABLE `servicios` (
   `id` bigint(20) NOT NULL,
   `nombre` varchar(50) NOT NULL,
   `duracion` time NOT NULL,
-  `precio` float(5,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `precio` float(5,2) NOT NULL,
+  `activo` tinyint(4) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `servicios`
+--
+
+INSERT INTO `servicios` (`id`, `nombre`, `duracion`, `precio`, `activo`) VALUES
+(1, 'Corte', '00:30:00', 10.00, 0);
 
 -- --------------------------------------------------------
 
@@ -92,7 +110,7 @@ CREATE TABLE `servicios` (
 CREATE TABLE `tipos` (
   `id` bigint(20) NOT NULL,
   `nombre` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `tipos`
@@ -116,11 +134,16 @@ ALTER TABLE `citas`
   ADD KEY `fk_cit_servicio` (`servicio`);
 
 --
+-- Indices de la tabla `horario`
+--
+ALTER TABLE `horario`
+  ADD PRIMARY KEY (`m_apertura`,`m_cierre`,`t_apertura`,`t_cierre`);
+
+--
 -- Indices de la tabla `personas`
 --
 ALTER TABLE `personas`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `correo` (`correo`),
   ADD KEY `fk_per_tipo` (`tipo`);
 
 --
@@ -143,13 +166,13 @@ ALTER TABLE `tipos`
 -- AUTO_INCREMENT de la tabla `personas`
 --
 ALTER TABLE `personas`
-  MODIFY `id` bigint(1) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(1) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `servicios`
 --
 ALTER TABLE `servicios`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `tipos`
