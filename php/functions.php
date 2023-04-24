@@ -18,7 +18,17 @@ function closeSession(){
         }
     }
 }
-
+function getTypeUser($mail){
+    $con = createConnection();
+    $consulta = $con->prepare("SELECT t.nombre tipo from personas p, tipos t where t.id = p.tipo and correo = ?");
+    $consulta->bind_param('s', $mail);
+    $consulta->bind_result($tipo);
+    $consulta->execute();
+    $consulta->fetch();
+    $consulta->close();
+    $con->close();
+    return $tipo;
+}
 function printMenu(){
     if(isset($_SESSION["user"])){
         if($_SESSION["user"] == "admin@admin.com"){
