@@ -48,16 +48,16 @@ function getEmployees(){
                 <td>$fila[nombre]</td>
                 <td>$fila[correo]</td>
                 <td>$fila[telefono]</td>";    
-            if($activo == 1){
-                echo "<form action=\"#\" method=\"post\">
+            if($fila["activo"] == 1){
+                echo "<td><form action=\"#\" method=\"post\">
                     <input hidden name=\"id\" value=\"$fila[id]\">
-                    <input name=\"desactivar\" value=\"Desactivar\" type=\"submit\" class=\"btn btn-outline-danger\">
-                </form>";
+                    <input name=\"desactivar\" value=\"Desactivar\" type=\"submit\" class=\"btn btn-danger\">
+                </form></td>";
             }else{
-                echo "<form action=\"#\" method=\"post\">
+                echo "<td><form action=\"#\" method=\"post\">
                 <input hidden name=\"id\" value=\"$fila[id]\">
-                <input name=\"activar\" value=\"Activar\" type=\"submit\" class=\"btn btn-outline-success\">
-            </form>";
+                <input name=\"activar\" value=\"Activar\" type=\"submit\" class=\"btn btn-success\">
+            </form></td>";
             }
             echo "</tr>";
     }
@@ -69,6 +69,16 @@ function activateEmployee($id){
     $activacion = $con->prepare("UPDATE personas set activo = 1 where id = ?");
     $activacion->bind_param('i', $id);
     $activacion->execute();
+    $activacion->close();
+    $con->close();
+}
+function deactivateEmployee($id){
+    $con = createConnection();
+    $activacion = $con->prepare("UPDATE personas set activo = 0 where id = ?");
+    $activacion->bind_param('i', $id);
+    $activacion->execute();
+    $activacion->close();
+    $con->close();
 }
 
 function checkEmailUnique($mail){

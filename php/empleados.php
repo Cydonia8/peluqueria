@@ -12,6 +12,11 @@
             createEmployee($nombre, $pass, $mail, $tlf, 2);
         }
     }
+    if(isset($_POST["activar"])){
+        activateEmployee($_POST["id"]);
+    }elseif(isset($_POST["desactivar"])){
+        deactivateEmployee($_POST["id"]);
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -48,7 +53,7 @@
                 <label for="pass">Contraseña</label>
                 <input name="pass" required type="password" class="form-control" aria-describedby="emailHelp" placeholder="Contraseña">
             </div>
-            <input type="submit" class="btn btn-primary" value="Crear empleado" name="insertar">
+            <input type="submit" class="mt-3 btn btn-primary" value="Crear empleado" name="insertar">
         </form>
     </section>
     <button id="button-insertar-empleado">Insertar empleado</button>
