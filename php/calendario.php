@@ -229,7 +229,7 @@
             //     <input type='submit' name='enviar' value='Buscar'>
             //     </form>
             //     </div>";
-            // }
+            }
 
             $conexion=createConnection();
             
@@ -245,72 +245,90 @@
                 </thead>
                 <tbody>";
 
-            // if(isset($_GET['dia'])){{
-            //     $busqueda="$_GET[año]-$_GET[mes]-$_GET[dia]";
-            //     $consulta=$conexion->prepare("select personas.id id,fecha,hora,cliente,trabajador,servicio from citas,personas,servicios where citas.cliente!=0 and personas.id=cliente and servicios.id=servicio and fecha=? order by fecha desc");
+            if(isset($_GET['dia'])){
+                $busqueda="$_GET[año]-$_GET[mes]-$_GET[dia]";
+                $preparada=$conexion->prepare("select fecha,hora,cliente,trabajador,nombre from citas,servicios where citas.cliente!=0 and servicios.id=servicio and fecha=? order by fecha desc");
 
-            //     $consulta->bind_param("s",$busqueda);
-            //     $consulta->bind_result($id,$fecha,$hora,$cliente,$trabajador,$servicio);
-            //     $consulta->execute();
-            //     $consulta->store_result();
-            //     if($consulta->num_rows>0){
-            //         while($consulta->fetch()){
-            //             $fecha=date('d-m-Y',strtotime($fecha));
-            //             echo "<tr>
-            //                 <td>$fecha</td>
-            //                 <td>$hora</td>
-            //                 <td>$cliente</td>
-            //                 <td>$trabajador</td>
-            //                 <td>$servicio</td>";
+                $preparada->bind_param("s",$busqueda);
+                $preparada->bind_result($fecha,$hora,$cliente,$trabajador,$servicio);
+                $preparada->execute();
+                $preparada->store_result();
 
-            //             $hoy=getdate()['year']."-".getdate()['mon']."-".getdate()['mday'];
-            //             if($fecha>$hoy){
-            //                 if($_SESSION['usuario']!=="admin"){
-            //                     echo "<td></td>";
-            //                 }else{
-            //                     echo "<td>
-            //                         <a href='borrar_cita.php?fecha=$fecha&hora=$hora&cliente=$id' class='mod mod_prod'>Borrar</a>
-            //                     </td>";
-            //                 }
-            //             }else{
-            //                 echo "<td></td>";
-            //             }
-            //             echo "</tr>";
-            //         }
-            //     }else{
-            //         echo "<tr>
-            //             <td colspan=5 class='tabla_vacia'>No hay coincidencias</td>
-            //         </tr>";
-            //     }
+                // if($preparada->num_rows>0){
+                //     while($preparada->fetch()){
+                //         $fecha2=date('d-m-Y',strtotime($fecha));
 
-            //     $consulta->close();
+                //         $consulta=$conexion->query("select nombre from personas where id=$cliente");
+                //         $cliente=$consulta->fetch_array(MYSQLI_NUM);
+                //         $consulta->close();
 
-            // }else{
+                //         $consulta=$conexion->query("select nombre from personas where id=$trabajador");
+                //         $trabajador=$consulta->fetch_array(MYSQLI_NUM);
+                //         $consulta->close();
+
+                //         echo "<tr>
+                //             <td>$fecha2</td>
+                //             <td>$hora</td>
+                //             <td>$cliente[0]</td>
+                //             <td>$trabajador[0]</td>
+                //             <td>$servicio</td>";
+
+                //         $hoy=getdate()['year']."-".getdate()['mon']."-".getdate()['mday'];
+                //         if($fecha>$hoy){
+                //             if($_SESSION['user']!=="admin@admin.com"){
+                //                 echo "<td></td>";
+                //             }else{
+                //                 echo "<td>
+                //                     <a href='borrar_cita.php?fecha=$fecha&hora=$hora class='mod mod_prod'>Borrar</a>
+                //                 </td>";
+                //             }
+                //         }else{
+                //             echo "<td></td>";
+                //         }
+                //         echo "</tr>";
+                //     }
+                // }else{
+                //     echo "<tr>
+                //         <td colspan=5 class='tabla_vacia'>No hay coincidencias</td>
+                //     </tr>";
+                // }
+
+                // $preparada->close();
+
+            }else{
                 $dia_actual=date('d');
 
-                echo $dia_actual;
-                echo "<br>";
-                echo $anio_consulta;
-                echo "<br>";
-                echo $mes_consulta;
                 if($_SESSION['user']!=="admin@admin.com"){
-                    $consulta=$conexion->query("select fecha,hora,cliente,trabajador,servicio from citas where citas.cliente!=0 and month(fecha)=$mes_consulta and year(fecha)=$anio_consulta and day(fecha)=$dia_actual order by fecha asc");
+                    $preparada=$conexion->prepare("select fecha,hora,cliente,trabajador,nombre from citas,servicios where citas.cliente!=0 and servicios.id=servicio and month(fecha)=? and year(fecha)=? and day(fecha)=? order by fecha asc");
                 }else{
-                    $consulta=$conexion->query("select fecha,hora,cliente,trabajador,servicio from citas where citas.cliente!=0 and month(fecha)=$mes_consulta and year(fecha)=$anio_consulta and day(fecha)=$dia_actual order by fecha asc");
+                    $preparada=$conexion->prepare("select fecha,hora,cliente,trabajador,nombre from citas,servicios where citas.cliente!=0 and servicios.id=servicio and month(fecha)=? and year(fecha)=? and day(fecha)=? order by fecha asc");
                 }
-                
-                if($consulta->num_rows>0){
-                    while($fila=$consulta->fetch_array(MYSQLI_ASSOC)){
-                        $fecha=date('d-m-Y',strtotime($fila['fecha']));
+                $preparada->bind_param("iii",$mes_consulta,$anio_consulta,$dia_actual);
+                $preparada->bind_result($fecha,$hora,$cliente,$trabajador,$servicio);
+                $preparada->execute();
+                $preparada->store_result();
+            }
+                if($preparada->num_rows>0){
+                    while($preparada->fetch()){
+                        $fecha2=date('d-m-Y',strtotime($fecha));
+
+                        $consulta=$conexion->query("select nombre from personas where id=$cliente");
+                        $cliente=$consulta->fetch_array(MYSQLI_NUM);
+                        $consulta->close();
+
+                        $consulta=$conexion->query("select nombre from personas where id=$trabajador");
+                        $trabajador=$consulta->fetch_array(MYSQLI_NUM);
+                        $consulta->close();
+
                         echo "<tr>
-                            <td>$fila[fecha]</td>
-                            <td>$fila[hora]</td>
-                            <td>$fila[cliente]</td>
-                            <td>$fila[trabajador]</td>
-                            <td>$fila[servicio]</td>";
+                            <td>$fecha2</td>
+                            <td>$hora</td>
+                            <td>$cliente[0]</td>
+                            <td>$trabajador[0]</td>
+                            <td>$servicio</td>";
     
                             $hoy=getdate()['year']."-".getdate()['mon']."-".getdate()['mday'];
-                            if($fila['fecha']>$hoy){
+                            if($fecha>$hoy){
                                 if($_SESSION['user']!=="admin@admin.com"){
                                     echo "<td></td>";
                                 }else{
@@ -328,12 +346,11 @@
                         <td colspan=5 class='tabla_vacia'>No hay citas para hoy</td>
                     </tr>";
                 }
-            }
+                
+            echo "</tbody>
+            </table>";
 
-                    echo "</tbody>
-                    </table>";
-
-                    $conexion->close();
+            $conexion->close();
         }
     ?>
     </section>
