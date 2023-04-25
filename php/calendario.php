@@ -237,14 +237,16 @@
                 }else{
                     echo "<td>$i</td>";
                 }
-                if($contador==7){
+                if($contador==7 and $i<$fin_mes){
                     echo "</tr><tr>";
                     $contador=0;
                 }
                 $contador++;
             }
-            for($i=$contador;$i<=7;$i++){
-                echo "<td></td>";
+            if($contador>1){
+                for($i=$contador;$i<=7;$i++){
+                    echo "<td></td>";
+                }
             }
 
             echo "</tr>
