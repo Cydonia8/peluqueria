@@ -66,7 +66,7 @@
                 </div>
             </div>
             <div class='w-100'>
-                <button type="button" id="mod" class="d-block btn btn-primary mx-auto mt-3">Modificar</button>
+                <button id="mod" type="button" class="d-block btn btn-primary mx-auto mt-3">Modificar</button>
                 <input type="submit" class="btn btn-primary mx-auto mt-3 d-none" name="enviar" value="Enviar">
             </div>
         </form>
