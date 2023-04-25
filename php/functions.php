@@ -177,3 +177,15 @@ function createEmployee($nombre, $pass, $mail, $telefono, $tipo){
     $insercion->close();
     $con->close();
 }
+
+function getIDCliente($mail){
+    $con = createConnection();
+    $consulta = $con->prepare("SELECT id from personas where correo = ?");
+    $consulta->bind_param('s', $mail);
+    $consulta->bind_result($id);
+    $consulta->execute();
+    $consulta->fetch();
+    $consulta->close();
+    $con->close();
+    return $id;
+}

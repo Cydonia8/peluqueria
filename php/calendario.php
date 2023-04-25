@@ -3,10 +3,13 @@
     require_once("functions.php");
     closeSession();
     $conexion=createConnection();
-
+    echo $_SESSION["user"];
     if(isset($_POST['insertar'])){
         $preparada=$conexion->prepare("insert into citas (cliente,trabajador,fecha,hora,servicio) values (?,?,?,?,?)");
-        $preparada->bind_param("iissi",$_SESSION['user'],$_POST['trabajador'],$_POST['fecha'],$_POST['hora'],$_POST['servicio']);
+        $id_cliente = getIDCliente($_SESSION["user"]);
+        echo $id_cliente;
+        echo "entro";
+        $preparada->bind_param("iissi",$id_cliente,$_POST['empleado'],$_POST['fecha'],$_POST['hora'],$_POST['servicio']);
         $preparada->execute();
         $preparada->close();
         header("Refresh:0");
@@ -120,7 +123,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <input type="submit" class="recargar btn btn-primary" name="" value="Enviar">
+                        <input type="submit" class="recargar btn btn-primary" name="insertar" value="Enviar">
                     </div>
                 </form>
             </div>
@@ -170,7 +173,7 @@
                 $fila=$consulta->fetch_array(MYSQLI_ASSOC);
                 $dia=$fila['dia'];
             }
-            $consulta->close();
+            
 
             $mes_siguiente = $mes + 1;
             $mes_anterior = $mes - 1;
@@ -244,6 +247,7 @@
                 $contador++;
             }
             if($contador>1){
+                $consulta->close();
                 for($i=$contador;$i<=7;$i++){
                     echo "<td></td>";
                 }
