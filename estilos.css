@@ -89,8 +89,14 @@ table td,th{
  table{
     text-align: center
 }
- table thead, tr{
+ table:not(#calendario) thead, tr{
     border-bottom: 2px solid black;
+}
+#calendario th, td{
+    border-right: 1px solid black;
+}
+#calendario tr:last-child{
+    border: none;
 }
 .color-principal{
     color: ;
