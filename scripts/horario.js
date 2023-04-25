@@ -1,5 +1,5 @@
 "use strict"
-const boton = document.querySelector("button");
+const boton = document.getElementById("mod");
 const campos=document.querySelectorAll("input[type='time']");
 
 

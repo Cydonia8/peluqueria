@@ -87,7 +87,7 @@
                         <div class="mb-3">
                             <label for="recipient-name" class="col-form-label">Hora:</label>
                             <select name="hora" class="form-select" aria-label="Default select example">
-                                <option selected hidden disabled>Elige un servicio</option>
+                                <option selected hidden disabled>Elige una hora</option>
                                 <?php
                                     $consulta=$conexion->query("select * from horario");
                                     $lista=$consulta->fetch_array(MYSQLI_NUM);
