@@ -253,48 +253,6 @@
                 $preparada->bind_result($fecha,$hora,$cliente,$trabajador,$servicio);
                 $preparada->execute();
                 $preparada->store_result();
-
-                // if($preparada->num_rows>0){
-                //     while($preparada->fetch()){
-                //         $fecha2=date('d-m-Y',strtotime($fecha));
-
-                //         $consulta=$conexion->query("select nombre from personas where id=$cliente");
-                //         $cliente=$consulta->fetch_array(MYSQLI_NUM);
-                //         $consulta->close();
-
-                //         $consulta=$conexion->query("select nombre from personas where id=$trabajador");
-                //         $trabajador=$consulta->fetch_array(MYSQLI_NUM);
-                //         $consulta->close();
-
-                //         echo "<tr>
-                //             <td>$fecha2</td>
-                //             <td>$hora</td>
-                //             <td>$cliente[0]</td>
-                //             <td>$trabajador[0]</td>
-                //             <td>$servicio</td>";
-
-                //         $hoy=getdate()['year']."-".getdate()['mon']."-".getdate()['mday'];
-                //         if($fecha>$hoy){
-                //             if($_SESSION['user']!=="admin@admin.com"){
-                //                 echo "<td></td>";
-                //             }else{
-                //                 echo "<td>
-                //                     <a href='borrar_cita.php?fecha=$fecha&hora=$hora class='mod mod_prod'>Borrar</a>
-                //                 </td>";
-                //             }
-                //         }else{
-                //             echo "<td></td>";
-                //         }
-                //         echo "</tr>";
-                //     }
-                // }else{
-                //     echo "<tr>
-                //         <td colspan=5 class='tabla_vacia'>No hay coincidencias</td>
-                //     </tr>";
-                // }
-
-                // $preparada->close();
-
             }else{
                 $dia_actual=date('d');
 
@@ -346,7 +304,7 @@
                         <td colspan=5 class='tabla_vacia'>No hay citas para hoy</td>
                     </tr>";
                 }
-                
+
             echo "</tbody>
             </table>";
 
