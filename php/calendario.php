@@ -6,13 +6,16 @@
 
     if(isset($_POST['insertar'])){
         $preparada=$conexion->prepare("insert into citas (cliente,trabajador,fecha,hora,servicio) values (?,?,?,?,?)");
-        $preparada->bind_param("iissi",$_SESSION['user'],$_POST['trabajador'],$_POST['fecha'],$_POST['hora'],$_POST['servicio']);
+        $id_cliente = getIDCliente($_SESSION["user"]);
+        echo $id_cliente;
+        echo "entro";
+        $preparada->bind_param("iissi",$id_cliente,$_POST['empleado'],$_POST['fecha'],$_POST['hora'],$_POST['servicio']);
         $preparada->execute();
         $preparada->close();
         header("Refresh:0");
     }else if(isset($_POST['editar'])){
-        $preparada=$conexion->prepare("update citas set trabajador=?, fecha=?, hora=? where id=?");
-        $preparada->bind_param("ssdi",$_POST['nombre'],$_POST['duracion'],$_POST['precio'],$_POST['id']);
+        $preparada=$conexion->prepare("update citas set cliente=?,trabajador=?,fecha=?,hora=?,servicio=? where cliente=? and trabajador=? and fecha=? and hora=?");
+        $preparada->bind_param("iissiiiss",$_POST['id'],$_POST['empleado'],$_POST['fecha'],$_POST['hora'],$_POST['servicio'],$_POST['id'],$_POST['empleado2'],$_POST['fecha2'],$_POST['hora2']);
         $preparada->execute();
         $preparada->close();
         header("Refresh:0");
@@ -33,7 +36,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../estilos.css">
-    <!-- <script src="../scripts/servicios.js" defer></script> -->
+    <script src="../scripts/calendario.js" defer></script>
     <title>Bienvenido</title>
 </head>
 <body>
@@ -117,10 +120,13 @@
                             </select>
                         </div>
                         <input type='hidden' name='id' value=''>
+                        <input type='hidden' name='trabajador2' value=''>
+                        <input type='hidden' name='fecha2' value=''>
+                        <input type='hidden' name='hora2' value=''>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <input type="submit" class="recargar btn btn-primary" name="" value="Enviar">
+                        <input type="submit" class="recargar btn btn-primary" name="insertar" value="Enviar">
                     </div>
                 </form>
             </div>
@@ -259,8 +265,8 @@
                     <tr>
                         <th>Fecha</th>
                         <th>Hora</th>
-                        <th>Socio</th>
-                        <th>Teléfono</th>
+                        <th>Cliente</th>
+                        <th>Trabajador</th>
                         <th>Servicio</th>
                     </tr>
                 </thead>
@@ -268,53 +274,55 @@
 
             if(isset($_GET['dia'])){
                 $busqueda="$_GET[año]-$_GET[mes]-$_GET[dia]";
-                $preparada=$conexion->prepare("select fecha,hora,cliente,trabajador,nombre from citas,servicios where citas.cliente!=0 and servicios.id=servicio and fecha=? order by fecha desc");
-
-                $preparada->bind_param("s",$busqueda);
-                $preparada->bind_result($fecha,$hora,$cliente,$trabajador,$servicio);
-                $preparada->execute();
-                $preparada->store_result();
+                $preparada=$conexion->prepare("select fecha,hora,cliente,trabajador,nombre,servicio from citas,servicios where citas.cliente!=0 and servicios.id=servicio and fecha=? order by fecha desc");
             }else{
                 $dia_actual=date('d');
                 $busqueda="$anio_consulta-$mes_consulta-$dia_actual";
 
                 if($_SESSION['user']!=="admin@admin.com"){
-                    $preparada=$conexion->prepare("select fecha,hora,cliente,trabajador,nombre from citas,servicios where citas.cliente!=0 and servicios.id=servicio and fecha=? order by fecha asc");
+                    $preparada=$conexion->prepare("select fecha,hora,cliente,trabajador,nombre,servicio from citas,servicios where citas.cliente!=0 and servicios.id=servicio and fecha=? order by fecha asc");
                 }else{
-                    $preparada=$conexion->prepare("select fecha,hora,cliente,trabajador,nombre from citas,servicios where citas.cliente!=0 and servicios.id=servicio and fecha=? order by fecha asc");
+                    $preparada=$conexion->prepare("select fecha,hora,cliente,trabajador,nombre,servicio from citas,servicios where citas.cliente!=0 and servicios.id=servicio and fecha=? order by fecha asc");
                 }
+            }
                 $preparada->bind_param("s",$busqueda);
-                $preparada->bind_result($fecha,$hora,$cliente,$trabajador,$servicio);
+                $preparada->bind_result($fecha,$hora,$cliente,$trabajador,$servicio_nom,$servicio);
                 $preparada->execute();
                 $preparada->store_result();
-            }
                 if($preparada->num_rows>0){
                     while($preparada->fetch()){
                         $fecha2=date('d-m-Y',strtotime($fecha));
+                        $formato=explode(":",$hora);
+                        $hora=$formato[0].":".$formato[1];
 
                         $consulta=$conexion->query("select nombre from personas where id=$cliente");
-                        $cliente=$consulta->fetch_array(MYSQLI_NUM);
+                        $cliente_nom=$consulta->fetch_array(MYSQLI_NUM);
                         $consulta->close();
 
                         $consulta=$conexion->query("select nombre from personas where id=$trabajador");
-                        $trabajador=$consulta->fetch_array(MYSQLI_NUM);
+                        $trabajador_nom=$consulta->fetch_array(MYSQLI_NUM);
                         $consulta->close();
 
                         echo "<tr>
-                            <td>$fecha2</td>
+                            <td data-fecha='$fecha'>$fecha2</td>
                             <td>$hora</td>
-                            <td>$cliente[0]</td>
-                            <td>$trabajador[0]</td>
-                            <td>$servicio</td>";
+                            <td data-id='$cliente'>$cliente_nom[0]</td>
+                            <td data-id='$trabajador'>$trabajador_nom[0]</td>
+                            <td data-id='$servicio'>$servicio_nom</td>";
     
-                            $hoy=getdate()['year']."-".getdate()['mon']."-".getdate()['mday'];
+                            $month=getdate()['mon'];
+                            if($month<10){
+                                $month="0".$month;
+                            }
+
+                            $hoy=getdate()['year']."-".$month."-".getdate()['mday'];
                             if($fecha>$hoy){
-                                if($_SESSION['user']!=="admin@admin.com"){
-                                    echo "<td></td>";
-                                }else{
+                                if($_SESSION['tipo']!=="Cliente"){
                                     echo "<td>
-                                        <button'>Borrar</button>
+                                    <button type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#exampleModal' data-bs-whatever='Editar'>Editar</button>
                                     </td>";
+                                }else{
+                                    echo "<td></td>";
                                 }
                             }else{
                                 echo "<td></td>";
