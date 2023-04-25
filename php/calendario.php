@@ -144,26 +144,26 @@
             $conexion=createConnection();
             
             $mes_actual=date('m',time());
-            $minnio_actual=date('Y');
+            $anio_actual=date('Y');
 
             if(isset($_GET['mes'])){
                 $mes=$_GET['mes'];
-                $minnio=$_GET['año'];
+                $anio=$_GET['año'];
             }else{
                 $mes=$mes_actual;
-                $minnio=$minnio_actual;
+                $anio=$anio_actual;
             }
 
-            $fecha=mktime(0,0,0,$mes,1,$minnio);
+            $fecha=mktime(0,0,0,$mes,1,$anio);
             $inicio_mes=date('N',$fecha);
             $fin_mes=date('t',$fecha);
             $nombre_mes=ucfirst(strftime('%B',$fecha));
             $dia=0;
 
             if($_SESSION['user']!="admin@admin.com"){
-                $consulta=$conexion->query("select day(fecha) dia from citas where (cliente=$id or trabajador=$id) and year(fecha)=$minnio and month(fecha)=$mes order by fecha asc");
+                $consulta=$conexion->query("select day(fecha) dia from citas where (cliente=$id or trabajador=$id) and year(fecha)=$anio and month(fecha)=$mes order by fecha asc");
             }else{
-                $consulta=$conexion->query("select day(fecha) dia from citas where year(fecha)=$minnio and month(fecha)=$mes order by fecha asc");
+                $consulta=$conexion->query("select day(fecha) dia from citas where year(fecha)=$anio and month(fecha)=$mes order by fecha asc");
             }
             $num_filas=$consulta->num_rows;
             if($num_filas>0){
@@ -174,29 +174,29 @@
 
             $mes_siguiente = $mes + 1;
             $mes_anterior = $mes - 1;
-            $minño_siguiente = $minnio;
-            $minño_anterior = $minnio;
+            $año_siguiente = $anio;
+            $año_anterior = $anio;
 
             if($mes_siguiente > 12)
             {
                 $mes_siguiente = 1;
                 $mes=$mes_siguiente;
-                $minño_siguiente++;
-                $minnio=$minño_anterior;
+                $año_siguiente++;
+                $anio=$año_anterior;
             }
             if($mes_anterior<1)
             {
                 $mes_anterior=12;
                 $mes=$mes_anterior;
-                $minño_anterior--;
-                $minnio=$minño_anterior;
+                $año_anterior--;
+                $anio=$año_anterior;
             }
             // echo "<table class='w-100 text-center'>
             echo "<table id=\"calendario\">
                 <caption class=\"text-center\">
-                    <a href='calendario.php?mes=$mes_anterior&año=$minño_anterior'><-</a>
+                    <a href='calendario.php?mes=$mes_anterior&año=$año_anterior'><-</a>
                     $nombre_mes
-                    <a href='calendario.php?mes=$mes_siguiente&año=$minño_siguiente'>-></a>
+                    <a href='calendario.php?mes=$mes_siguiente&año=$año_siguiente'>-></a>
                 </caption>
                 <thead>
                     <tr>
@@ -212,10 +212,10 @@
                 <tbody>
                     <tr>";
 
-            $minnio_consulta=$minnio;
+            $anio_consulta=$anio;
             if($mes==12){
                 $mes_consulta=1;
-                $minnio_consulta++;
+                $anio_consulta++;
             }else if($mes==1){
                 $mes_consulta=12;
             }else{
@@ -229,7 +229,7 @@
             $contador=$inicio_mes;
             for($i=1;$i<=$fin_mes;$i++){
                 if($i==$dia){
-                    echo "<td class='cita'><a href='?mes=$mes_consulta&año=$minnio_consulta&dia=$i'>$i</a></td>";
+                    echo "<td class='cita'><a href='?mes=$mes_consulta&año=$anio_consulta&dia=$i'>$i</a></td>";
                     $fila=$consulta->fetch_array(MYSQLI_ASSOC);
                     if($fila!=false){
                         $dia=$fila['dia'];
@@ -275,7 +275,7 @@
                 $preparada->store_result();
             }else{
                 $dia_actual=date('d');
-                $busqueda="$minnio_consulta-$mes_consulta-$dia_actual";
+                $busqueda="$anio_consulta-$mes_consulta-$dia_actual";
 
                 if($_SESSION['user']!=="admin@admin.com"){
                     $preparada=$conexion->prepare("select fecha,hora,cliente,trabajador,nombre from citas,servicios where citas.cliente!=0 and servicios.id=servicio and fecha=? order by fecha asc");
