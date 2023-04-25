@@ -98,7 +98,7 @@
                                         $tiempo=explode(":",$tiempo)[0].":".explode(":",$tiempo)[1];
                                         $i++;
                                         $limite=explode(":",$lista[$i])[0].":".explode(":",$lista[$i])[1];
-                                        while($tiempo<=$limite){
+                                        while($tiempo<$limite){
                                             echo "<option value=$tiempo>$tiempo</option>";
                                             $min=explode(":",$tiempo);
                                             $min[1]+=30;
@@ -170,7 +170,6 @@
                 $fila=$consulta->fetch_array(MYSQLI_ASSOC);
                 $dia=$fila['dia'];
             }
-            $consulta->close();
 
             $mes_siguiente = $mes + 1;
             $mes_anterior = $mes - 1;
@@ -248,6 +247,7 @@
                     echo "<td></td>";
                 }
             }
+            $consulta->close();
 
             echo "</tr>
                 </tbody>
@@ -258,8 +258,8 @@
                     <tr>
                         <th>Fecha</th>
                         <th>Hora</th>
-                        <th>Socio</th>
-                        <th>Teléfono</th>
+                        <th>Cliente</th>
+                        <th>Trabajador</th>
                         <th>Servicio</th>
                     </tr>
                 </thead>

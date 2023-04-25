@@ -2,6 +2,15 @@
     session_start();
     require_once("functions.php");
     closeSession();
+
+    $conexion=createConnection();
+    if(isset($_POST['enviar'])){
+        $preparada=$conexion->prepare("update horario set m_apertura=?,m_cierre=?,t_apertura=?,t_cierre=?,m_plantilla=?,t_plantilla=?");
+        $preparada->bind_param("ssssii",$_POST['m_apertura'],$_POST['m_cierre'],$_POST['t_apertura'],$_POST['t_cierre'],$_POST['m_plantilla'],$_POST['t_plantilla']);
+        $preparada->execute();
+        $preparada->close();
+        header("Refresh:0");
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,15 +34,16 @@
                 <h3>Mañana</h3>
                 <div>
                     <?php
-                        
-                        $conexion=createConnection();
-
                         $consulta=$conexion->query("select * from horario");
                         $lista=$consulta->fetch_array(MYSQLI_NUM);
 
                         echo"
+                            <span>Horario:</span>
                             <input type='time' name='m_apertura' disabled value='$lista[0]'>
+                            <span>-</span>
                             <input type='time' name='m_cierre' disabled value='$lista[1]'>
+                            <br><span>Plantilla:</span>
+                            <input type='number' name='m_plantilla' disabled value='$lista[4]'>
                         ";
                     ?>
                 </div>
@@ -43,28 +53,23 @@
                 <div>
                     <?php
                         echo"
+                            <span>Horario:</span>
                             <input type='time' name='t_apertura' disabled value='$lista[2]'>
+                            <span>-</span>
                             <input type='time' name='t_cierre' disabled value='$lista[3]'>
+                            <br><span>Plantilla:</span>
+                            <input type='number' name='t_plantilla' disabled value='$lista[5]'>
                         ";
                         $consulta->close();
+                        $conexion->close();
                     ?>
                 </div>
             </div>
             <div class='w-100'>
-                <button type="button" class="d-block btn btn-primary mx-auto mt-3">Modificar</button>
+                <button type="button" id="mod" class="d-block btn btn-primary mx-auto mt-3">Modificar</button>
                 <input type="submit" class="btn btn-primary mx-auto mt-3 d-none" name="enviar" value="Enviar">
             </div>
         </form>
-        <?php
-            if(isset($_POST['enviar'])){
-                $preparada=$conexion->prepare("update horario set m_apertura=?,m_cierre=?,t_apertura=?,t_cierre=?");
-                $preparada->bind_param("ssss",$_POST['m_apertura'],$_POST['m_cierre'],$_POST['t_apertura'],$_POST['t_cierre']);
-                $preparada->execute();
-                $preparada->close();
-                $conexion->close();
-                header("Refresh:0");
-            }
-        ?>
     </section>
 </body>
 </html>

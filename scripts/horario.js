@@ -1,8 +1,6 @@
 "use strict"
-const boton = document.querySelector("button");
-const campos=document.querySelectorAll("input[type='time']");
-
-
+const boton = document.getElementById("mod");
+const campos=document.querySelectorAll("input");
 
 boton.addEventListener("click", (event)=>{
     const pulsado = event.target;
