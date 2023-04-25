@@ -1,6 +1,7 @@
 <?php
     session_start();
     require_once("functions.php");
+    closeSession();
     $conexion=createConnection();
 
     if(isset($_POST['insertar'])){
@@ -61,6 +62,7 @@
                                     while($lista=$consulta->fetch_array(MYSQLI_ASSOC)){
                                         echo "<option value=$lista[id]>$lista[nombre]</option>";
                                     }
+                                    $consulta->close();
                                 ?>
                             </select>
                         </div>
@@ -74,6 +76,7 @@
                                         $duracion=explode(":",$lista['duracion']);
                                         echo "<option value=$lista[id]>$lista[nombre] - $duracion[0]:$duracion[1]</option>";
                                     }
+                                    $consulta->close();
                                 ?>
                             </select>
                         </div>
@@ -83,7 +86,35 @@
                         </div>
                         <div class="mb-3">
                             <label for="recipient-name" class="col-form-label">Hora:</label>
-                            <input type="time" name="hora" class="form-control" id="recipient-name" required>
+                            <select name="hora" class="form-select" aria-label="Default select example">
+                                <option selected hidden disabled>Elige un servicio</option>
+                                <?php
+                                    $consulta=$conexion->query("select * from horario");
+                                    $lista=$consulta->fetch_array(MYSQLI_NUM);
+                                    $consulta->close();
+                                    $i=0;
+                                    while($i<count($lista)){
+                                        $tiempo=$lista[$i];
+                                        $tiempo=explode(":",$tiempo)[0].":".explode(":",$tiempo)[1];
+                                        $i++;
+                                        $limite=explode(":",$lista[$i])[0].":".explode(":",$lista[$i])[1];
+                                        while($tiempo<=$limite){
+                                            echo "<option value=$tiempo>$tiempo</option>";
+                                            $min=explode(":",$tiempo);
+                                            $min[1]+=30;
+                                            if($min[1]>=60){
+                                                $min[1]-=60;
+                                                if($min[1]==0){
+                                                    $min[1]="00";
+                                                }
+                                                $min[0]++;
+                                            }
+                                            $tiempo=$min[0].":".$min[1];
+                                        }
+                                        $i++;
+                                    }
+                                ?>
+                            </select>
                         </div>
                         <input type='hidden' name='id' value=''>
                     </div>
@@ -113,58 +144,59 @@
             $conexion=createConnection();
             
             $mes_actual=date('m',time());
-            $anio_actual=date('Y');
+            $minnio_actual=date('Y');
 
             if(isset($_GET['mes'])){
                 $mes=$_GET['mes'];
-                $anio=$_GET['año'];
+                $minnio=$_GET['año'];
             }else{
                 $mes=$mes_actual;
-                $anio=$anio_actual;
+                $minnio=$minnio_actual;
             }
 
-            $fecha=mktime(0,0,0,$mes,1,$anio);
+            $fecha=mktime(0,0,0,$mes,1,$minnio);
             $inicio_mes=date('N',$fecha);
             $fin_mes=date('t',$fecha);
             $nombre_mes=ucfirst(strftime('%B',$fecha));
             $dia=0;
 
             if($_SESSION['user']!="admin@admin.com"){
-                $consulta=$conexion->query("select day(fecha) dia from citas where (cliente=$id or trabajador=$id) and year(fecha)=$anio and month(fecha)=$mes order by fecha asc");
+                $consulta=$conexion->query("select day(fecha) dia from citas where (cliente=$id or trabajador=$id) and year(fecha)=$minnio and month(fecha)=$mes order by fecha asc");
             }else{
-                $consulta=$conexion->query("select day(fecha) dia from citas where year(fecha)=$anio and month(fecha)=$mes order by fecha asc");
+                $consulta=$conexion->query("select day(fecha) dia from citas where year(fecha)=$minnio and month(fecha)=$mes order by fecha asc");
             }
             $num_filas=$consulta->num_rows;
             if($num_filas>0){
                 $fila=$consulta->fetch_array(MYSQLI_ASSOC);
                 $dia=$fila['dia'];
             }
+            $consulta->close();
 
             $mes_siguiente = $mes + 1;
             $mes_anterior = $mes - 1;
-            $año_siguiente = $anio;
-            $año_anterior = $anio;
+            $minño_siguiente = $minnio;
+            $minño_anterior = $minnio;
 
             if($mes_siguiente > 12)
             {
                 $mes_siguiente = 1;
                 $mes=$mes_siguiente;
-                $año_siguiente++;
-                $anio=$año_anterior;
+                $minño_siguiente++;
+                $minnio=$minño_anterior;
             }
             if($mes_anterior<1)
             {
                 $mes_anterior=12;
                 $mes=$mes_anterior;
-                $año_anterior--;
-                $anio=$año_anterior;
+                $minño_anterior--;
+                $minnio=$minño_anterior;
             }
-
+            // echo "<table class='w-100 text-center'>
             echo "<table id=\"calendario\">
                 <caption>
-                    <a href='calendario.php?mes=$mes_anterior&año=$año_anterior'><-</a>
+                    <a href='calendario.php?mes=$mes_anterior&año=$minño_anterior'><-</a>
                     $nombre_mes
-                    <a href='calendario.php?mes=$mes_siguiente&año=$año_siguiente'>-></a>
+                    <a href='calendario.php?mes=$mes_siguiente&año=$minño_siguiente'>-></a>
                 </caption>
                 <thead>
                     <tr>
@@ -180,10 +212,10 @@
                 <tbody>
                     <tr>";
 
-            $anio_consulta=$anio;
+            $minnio_consulta=$minnio;
             if($mes==12){
                 $mes_consulta=1;
-                $anio_consulta++;
+                $minnio_consulta++;
             }else if($mes==1){
                 $mes_consulta=12;
             }else{
@@ -197,7 +229,7 @@
             $contador=$inicio_mes;
             for($i=1;$i<=$fin_mes;$i++){
                 if($i==$dia){
-                    echo "<td class='cita'><a href='?mes=$mes_consulta&año=$anio_consulta&dia=$i'>$i</a></td>";
+                    echo "<td class='cita'><a href='?mes=$mes_consulta&año=$minnio_consulta&dia=$i'>$i</a></td>";
                     $fila=$consulta->fetch_array(MYSQLI_ASSOC);
                     if($fila!=false){
                         $dia=$fila['dia'];
@@ -217,23 +249,9 @@
 
             echo "</tr>
                 </tbody>
-            </table>";
-
-            $conexion->close();
-
-            if($_SESSION['user']==="admin@admin.com"){
-            // echo "<div class='funcionalidades'>";
-            //     echo "<a href='insertar_citas.php'>Añadir cita</a>";
-            //     echo "<form  action='#' method='post' enctype='multipart/form-data'>
-            //     <input id='buscar' type='text' name='buscar' maxlength='50' placeholder='Nombre, fecha o servicio'>
-            //     <input type='submit' name='enviar' value='Buscar'>
-            //     </form>
-            //     </div>";
-            }
-
-            $conexion=createConnection();
+            </table>
             
-            echo "<table id='tabla_citas' class='con_mod'>
+            <table>
                 <thead>
                     <tr>
                         <th>Fecha</th>
@@ -255,13 +273,14 @@
                 $preparada->store_result();
             }else{
                 $dia_actual=date('d');
+                $busqueda="$minnio_consulta-$mes_consulta-$dia_actual";
 
                 if($_SESSION['user']!=="admin@admin.com"){
-                    $preparada=$conexion->prepare("select fecha,hora,cliente,trabajador,nombre from citas,servicios where citas.cliente!=0 and servicios.id=servicio and month(fecha)=? and year(fecha)=? and day(fecha)=? order by fecha asc");
+                    $preparada=$conexion->prepare("select fecha,hora,cliente,trabajador,nombre from citas,servicios where citas.cliente!=0 and servicios.id=servicio and fecha=? order by fecha asc");
                 }else{
-                    $preparada=$conexion->prepare("select fecha,hora,cliente,trabajador,nombre from citas,servicios where citas.cliente!=0 and servicios.id=servicio and month(fecha)=? and year(fecha)=? and day(fecha)=? order by fecha asc");
+                    $preparada=$conexion->prepare("select fecha,hora,cliente,trabajador,nombre from citas,servicios where citas.cliente!=0 and servicios.id=servicio and fecha=? order by fecha asc");
                 }
-                $preparada->bind_param("iii",$mes_consulta,$anio_consulta,$dia_actual);
+                $preparada->bind_param("s",$busqueda);
                 $preparada->bind_result($fecha,$hora,$cliente,$trabajador,$servicio);
                 $preparada->execute();
                 $preparada->store_result();
