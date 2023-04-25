@@ -47,7 +47,7 @@
                 <th>Nombre</th>
                 <th>Correo</th>
                 <th>Teléfono</th>
-                <th>Modificar estado</th>
+                <th>Activar/Desactivar</th>
             </thead>
             <tbody>
                 <?php
