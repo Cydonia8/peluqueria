@@ -193,7 +193,7 @@
             }
             // echo "<table class='w-100 text-center'>
             echo "<table id=\"calendario\">
-                <caption>
+                <caption class=\"text-center\">
                     <a href='calendario.php?mes=$mes_anterior&año=$minño_anterior'><-</a>
                     $nombre_mes
                     <a href='calendario.php?mes=$mes_siguiente&año=$minño_siguiente'>-></a>
