@@ -92,32 +92,32 @@
                             <label for="recipient-name" class="col-form-label">Hora:</label>
                             <select id="select-hora" name="hora" class="form-select" aria-label="Default select example">
                                 <option selected hidden disabled>Elige una hora</option>
-                                <?php
-                                    $consulta=$conexion->query("select m_apertura,m_cierre,t_apertura,t_cierre from horario");
-                                    $lista=$consulta->fetch_array(MYSQLI_NUM);
-                                    $consulta->close();
-                                    $i=0;
-                                    while($i<count($lista)){
-                                        $tiempo=$lista[$i];
-                                        $tiempo=explode(":",$tiempo)[0].":".explode(":",$tiempo)[1];
-                                        $i++;
-                                        $limite=explode(":",$lista[$i])[0].":".explode(":",$lista[$i])[1];
-                                        while($tiempo<$limite){
-                                            echo "<option value=$tiempo:00>$tiempo</option>";
-                                            $min=explode(":",$tiempo);
-                                            $min[1]+=15;
-                                            if($min[1]>=60){
-                                                $min[1]-=60;
-                                                if($min[1]==0){
-                                                    $min[1]="00";
-                                                }
-                                                $min[0]++;
-                                            }
-                                            $tiempo=$min[0].":".$min[1];
-                                        }
-                                        $i++;
-                                    }
-                                ?>
+                                <!-- <?php
+                                    // $consulta=$conexion->query("select m_apertura,m_cierre,t_apertura,t_cierre from horario");
+                                    // $lista=$consulta->fetch_array(MYSQLI_NUM);
+                                    // $consulta->close();
+                                    // $i=0;
+                                    // while($i<count($lista)){
+                                    //     $tiempo=$lista[$i];
+                                    //     $tiempo=explode(":",$tiempo)[0].":".explode(":",$tiempo)[1];
+                                    //     $i++;
+                                    //     $limite=explode(":",$lista[$i])[0].":".explode(":",$lista[$i])[1];
+                                    //     while($tiempo<$limite){
+                                    //         echo "<option value=$tiempo:00>$tiempo</option>";
+                                    //         $min=explode(":",$tiempo);
+                                    //         $min[1]+=15;
+                                    //         if($min[1]>=60){
+                                    //             $min[1]-=60;
+                                    //             if($min[1]==0){
+                                    //                 $min[1]="00";
+                                    //             }
+                                    //             $min[0]++;
+                                    //         }
+                                    //         $tiempo=$min[0].":".$min[1];
+                                    //     }
+                                    //     $i++;
+                                    // }
+                                ?> -->
                             </select>
                         </div>
                         <h3 class="text-center d-none delete">Confirma la cancelación de la cita</h3>
