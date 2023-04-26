@@ -14,14 +14,14 @@
         $preparada->close();
         header("Refresh:0");
     }else if(isset($_POST['editar'])){
-        $preparada=$conexion->prepare("update citas set cliente=?,trabajador=?,fecha=?,hora=?,servicio=? where cliente=? and trabajador=? and fecha=? and hora=?");
-        $preparada->bind_param("iissiiiss",$_POST['id'],$_POST['empleado'],$_POST['fecha'],$_POST['hora'],$_POST['servicio'],$_POST['id'],$_POST['empleado2'],$_POST['fecha2'],$_POST['hora2']);
+        $preparada=$conexion->prepare("update citas set trabajador=?,fecha=?,hora=?,servicio=? where cliente=? and trabajador=? and fecha=? and hora=?");
+        $preparada->bind_param("issiiiss",$_POST['empleado'],$_POST['fecha'],$_POST['hora'],$_POST['servicio'],$_POST['id'],$_POST['empleado2'],$_POST['fecha2'],$_POST['hora2']);
         $preparada->execute();
         $preparada->close();
         header("Refresh:0");
-    }else if(isset($_POST['borrar'])){
-        $preparada=$conexion->prepare("delete from citas where ...");
-        $preparada->bind_param("ii",$_POST['valor'],$_POST['id']);
+    }else if(isset($_POST['cancelar'])){
+        $preparada=$conexion->prepare("delete from citas where cliente=? and trabajador=? and fecha=? and hora=?");
+        $preparada->bind_param("iiss",$_POST['id'],$_POST['empleado2'],$_POST['fecha2'],$_POST['hora2']);
         $preparada->execute();
         $preparada->close();
         header("Refresh:0");
@@ -56,7 +56,7 @@
                 </div>
                 <form action="#" method="post">
                     <div class="modal-body">
-                        <div class="mb-3">
+                        <div class="mb-3 no-delete">
                             <label for="recipient-name" class="col-form-label">Empleado:</label>
                             <select name="trabajador" class="form-select" aria-label="Default select example">
                                 <option selected hidden disabled>Elige con quien quieres la cita</option>
@@ -69,7 +69,7 @@
                                 ?>
                             </select>
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3 no-delete">
                             <label for="recipient-name" class="col-form-label">Servicio:</label>
                             <select name="servicio" class="form-select" aria-label="Default select example">
                                 <option selected hidden disabled>Elige un servicio</option>
@@ -83,11 +83,11 @@
                                 ?>
                             </select>
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3 no-delete">
                             <label for="recipient-name" class="col-form-label">Fecha:</label>
                             <input type="date" name="fecha" class="form-control" id="recipient-name" required>
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3 no-delete">
                             <label for="recipient-name" class="col-form-label">Hora:</label>
                             <select name="hora" class="form-select" aria-label="Default select example">
                                 <option selected hidden disabled>Elige una hora</option>
@@ -102,7 +102,7 @@
                                         $i++;
                                         $limite=explode(":",$lista[$i])[0].":".explode(":",$lista[$i])[1];
                                         while($tiempo<$limite){
-                                            echo "<option value=$tiempo>$tiempo</option>";
+                                            echo "<option value=$tiempo:00>$tiempo</option>";
                                             $min=explode(":",$tiempo);
                                             $min[1]+=30;
                                             if($min[1]>=60){
@@ -119,13 +119,14 @@
                                 ?>
                             </select>
                         </div>
+                        <h3 class="text-center d-none delete">Confirma la cancelación de la cita</h3>
                         <input type='hidden' name='id' value=''>
-                        <input type='hidden' name='trabajador2' value=''>
+                        <input type='hidden' name='empleado2' value=''>
                         <input type='hidden' name='fecha2' value=''>
                         <input type='hidden' name='hora2' value=''>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                         <input type="submit" class="recargar btn btn-primary" name="insertar" value="Enviar">
                     </div>
                 </form>
@@ -319,7 +320,10 @@
                             if($fecha>$hoy){
                                 if($_SESSION['tipo']!=="Cliente"){
                                     echo "<td>
-                                    <button type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#exampleModal' data-bs-whatever='Editar'>Editar</button>
+                                        <button type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#exampleModal' data-bs-whatever='Editar'>Editar</button>
+                                    </td>
+                                    <td>
+                                        <button type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#exampleModal' data-bs-whatever='Cancelar'>Cancelar</button>
                                     </td>";
                                 }else{
                                     echo "<td></td>";
