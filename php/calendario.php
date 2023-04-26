@@ -58,7 +58,7 @@
                     <div class="modal-body">
                         <div class="mb-3 no-delete">
                             <label for="recipient-name" class="col-form-label">Empleado:</label>
-                            <select name="trabajador" class="form-select" aria-label="Default select example">
+                            <select name="empleado" class="form-select" aria-label="Default select example">
                                 <option selected hidden disabled>Elige con quien quieres la cita</option>
                                 <?php
                                     $consulta=$conexion->query("select personas.id,personas.nombre from personas,tipos where tipo=tipos.id and tipos.nombre='Trabajador'");
@@ -104,7 +104,7 @@
                                         while($tiempo<$limite){
                                             echo "<option value=$tiempo:00>$tiempo</option>";
                                             $min=explode(":",$tiempo);
-                                            $min[1]+=30;
+                                            $min[1]+=15;
                                             if($min[1]>=60){
                                                 $min[1]-=60;
                                                 if($min[1]==0){
