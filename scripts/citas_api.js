@@ -30,7 +30,7 @@ async function updateSelects(){
     select_horas.addEventListener("click", ()=>{
         if(fecha.length > 0 && trab.length > 0){
             options.forEach(option=>{
-
+                
             })
         }
     })
