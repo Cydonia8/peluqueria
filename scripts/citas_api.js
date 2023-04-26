@@ -12,6 +12,35 @@ async function datos(){
     // console.log(datos)
 }
 
+let horario=[];
+let horas=[];
+horario.push(select_horas.getAttribute("data-mi"));
+horario.push(select_horas.getAttribute("data-mf"));
+horario.push(select_horas.getAttribute("data-ti"));
+horario.push(select_horas.getAttribute("data-tf"));
+let i=0;
+
+while(i<horario.length){
+    let tiempo=horario[i];
+    tiempo=tiempo.split(":")[0]+":"+tiempo.split(":")[1];
+    i++;
+    let limite=horario[i].split(":")[0]+":"+horario[i].split(":")[1];
+    while(tiempo<limite){
+        horas.push(tiempo);
+        let min=tiempo.split(":");
+        min[1]=parseInt(min[1])+15;
+        if(min[1]>=60){
+            min[1]-=60;
+            if(min[1]==0){
+                min[1]="00";
+            }
+            min[0]++;
+        }
+        tiempo=min[0]+":"+min[1];
+    }
+    i++;
+}
+    
 select_horas.addEventListener("click", ()=>{
     console.log(select_fecha.value);
     if(select_fecha.value != ''){

@@ -90,7 +90,12 @@
                         </div>
                         <div class="mb-3 no-delete">
                             <label for="recipient-name" class="col-form-label">Hora:</label>
-                            <select id="select-hora" name="hora" class="form-select" aria-label="Default select example">
+                            <?php
+                                $consulta=$conexion->query("select m_apertura,m_cierre,t_apertura,t_cierre from horario");
+                                $lista=$consulta->fetch_array(MYSQLI_NUM);
+                                $consulta->close();
+                                echo "<select id='select-hora' data-mi='$lista[0]' data-mf='$lista[1]' data-ti='$lista[2]' data-tf='$lista[3]' name='hora' class='form-select' aria-label='Default select example'>";
+                            ?>
                                 <option selected hidden disabled>Elige una hora</option>
                                 <!-- <?php
                                     // $consulta=$conexion->query("select m_apertura,m_cierre,t_apertura,t_cierre from horario");
