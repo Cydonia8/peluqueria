@@ -9,13 +9,13 @@
         $id_cliente = getIDCliente($_SESSION["user"]);
         echo $id_cliente;
         echo "entro";
-        $preparada->bind_param("iissi",$id_cliente,$_POST['empleado'],$_POST['fecha'],$_POST['hora'],$_POST['servicio']);
+        $preparada->bind_param("iissi",$id_cliente,$_POST['trabajador'],$_POST['fecha'],$_POST['hora'],$_POST['servicio']);
         $preparada->execute();
         $preparada->close();
         header("Refresh:0");
     }else if(isset($_POST['editar'])){
         $preparada=$conexion->prepare("update citas set trabajador=?,fecha=?,hora=?,servicio=? where cliente=? and trabajador=? and fecha=? and hora=?");
-        $preparada->bind_param("issiiiss",$_POST['empleado'],$_POST['fecha'],$_POST['hora'],$_POST['servicio'],$_POST['id'],$_POST['empleado2'],$_POST['fecha2'],$_POST['hora2']);
+        $preparada->bind_param("issiiiss",$_POST['trabajador'],$_POST['fecha'],$_POST['hora'],$_POST['servicio'],$_POST['id'],$_POST['empleado2'],$_POST['fecha2'],$_POST['hora2']);
         $preparada->execute();
         $preparada->close();
         header("Refresh:0");
@@ -37,6 +37,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../estilos.css">
     <script src="../scripts/calendario.js" defer></script>
+    <script src="../scripts/citas_api.js" defer></script>
     <title>Bienvenido</title>
 </head>
 <body>
@@ -58,7 +59,7 @@
                     <div class="modal-body">
                         <div class="mb-3 no-delete">
                             <label for="recipient-name" class="col-form-label">Empleado:</label>
-                            <select name="empleado" class="form-select" aria-label="Default select example">
+                            <select id="select-trabajador" name="trabajador" class="form-select" aria-label="Default select example">
                                 <option selected hidden disabled>Elige con quien quieres la cita</option>
                                 <?php
                                     $consulta=$conexion->query("select personas.id,personas.nombre from personas,tipos where tipo=tipos.id and tipos.nombre='Trabajador'");
@@ -85,11 +86,11 @@
                         </div>
                         <div class="mb-3 no-delete">
                             <label for="recipient-name" class="col-form-label">Fecha:</label>
-                            <input type="date" name="fecha" class="form-control" id="recipient-name" required>
+                            <input id="select-fecha" type="date" name="fecha" class="form-control" id="recipient-name" required>
                         </div>
                         <div class="mb-3 no-delete">
                             <label for="recipient-name" class="col-form-label">Hora:</label>
-                            <select name="hora" class="form-select" aria-label="Default select example">
+                            <select id="select-hora" name="hora" class="form-select" aria-label="Default select example">
                                 <option selected hidden disabled>Elige una hora</option>
                                 <?php
                                     $consulta=$conexion->query("select m_apertura,m_cierre,t_apertura,t_cierre from horario");
