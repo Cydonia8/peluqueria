@@ -17,8 +17,6 @@
             $preparada->execute();
             header("Refresh:0");
         }
-        $preparada->bind_param("iissi",$id_cliente,$_POST['trabajador'],$_POST['fecha'],$_POST['hora'],$_POST['servicio']);
-        $preparada->execute();
         $preparada->close();
         
     }else if(isset($_POST['editar'])){
