@@ -42,49 +42,49 @@ while(i<horario.length){
 }
     
 select_horas.addEventListener("click", ()=>{
-    console.log(select_fecha.value);
+    let ocupadas=[];
     if(select_fecha.value != ''){
-        let filtrado = lista.filter(cita=>cita.id_trab===select_trabajador.value && cita.fecha === select_fecha.value)
+        let filtrado = lista.filter(cita=>(cita.id_trab===select_trabajador.value && cita.fecha === select_fecha.value && cita.hora ==select_horas.value+":00") || (cita.id_trab===select_trabajador.value && cita.fecha === select_fecha.value))
         filtrado.forEach(opcion=>{
             let dur=opcion.duracion.split(":");
             let time=opcion.hora.split(":");
-            let ocupado_min=dur[1]+time[1];
-            let ocupado_h=dur[0]+time[0];
-            if(ocupado_min>60){
-                ocupado_h+=ocupado_min/60;
-                ocupado_min%=60;
+            let ocupado_min=parseInt(dur[1])+parseInt(time[1]);
+            let ocupado_h=parseInt(dur[0])+parseInt(time[0]);
+            if(ocupado_min>=60){
+                ocupado_h=parseInt(ocupado_h)+parseInt(ocupado_min)/60;
+                ocupado_min=parseInt(ocupado_min)%60;
             }
+            if(ocupado_min==0){
+                ocupado_min="00";
+            }
+            let inicio=opcion.hora.split(":")[0]+":"+opcion.hora.split(":")[1];
             let fin=ocupado_h+":"+ocupado_min;
-            console.log(fin)
-            
-            
-            // select_horas.children.forEach(child=>{
-            //     if(!(child.innerText>=opcion.duracion && child.innerText<=fin)){
-            //         const option1 = createOption()
-            //     }
-            // })
+
+            while(inicio!=fin){
+                ocupadas.push(inicio);
+                let min2=inicio.split(":");
+                min2[1]=parseInt(min2[1])+15;
+                if(min2[1]>=60){
+                    min2[1]-=60;
+                    if(min2[1]==0){
+                        min2[1]="00";
+                    }
+                    min2[0]++;
+                }
+                inicio=min2[0]+":"+min2[1];
+            }
+        })
+
+        let disponibles=horas.filter(item => !ocupadas.includes(item));
+        select_horas.innerHTML='';
+        disponibles.forEach(h=>{
+            const option = createOption(h, h);
+            select_horas.appendChild(option);
         })
     }else{
         const option = createOption('', "Elige trabajador y fecha")
         select_horas.innerHTML=''
         select_horas.appendChild(option)
-        
-        filtrado.forEach(opcion=>{
-            let dur=opcion.duracion.split(":");
-            let time=opcion.hora.split(":");
-            let ocupado_min=dur[1]+time[1];
-            let ocupado_h=dur[0]+time[0];
-            if(ocupado_min>60){
-                ocupado_h+=ocupado_min/60;
-                ocupado_min%=60;
-            }
-            let fin=ocupado_h+":"+ocupado_min;
-            select_horas.children.forEach(child=>{
-                if(child.innerText>=opcion.duracion && child.innerText<=fin){
-                    child.style.display="none";
-                }
-            })
-        })
     }
 })
 

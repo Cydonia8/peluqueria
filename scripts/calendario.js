@@ -24,7 +24,7 @@ exampleModal.addEventListener('show.bs.modal', event => {
 
         modalBodySelect[0].value = button.parentElement.parentElement.children[3].getAttribute('data-id');
         modalBodySelect[1].value = button.parentElement.parentElement.children[4].getAttribute('data-id');
-        modalBodySelect[2].value = button.parentElement.parentElement.children[1].innerText+":00";
+        modalBodySelect[2].value = button.parentElement.parentElement.children[1].innerText;;
         modalBodyInput[0].value = button.parentElement.parentElement.children[0].getAttribute('data-fecha');
         modalBodyInput[1].value = button.parentElement.parentElement.children[2].getAttribute('data-id');
         modalBodyInput[2].value = button.parentElement.parentElement.children[3].getAttribute('data-id');
