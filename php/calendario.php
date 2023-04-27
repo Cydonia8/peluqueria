@@ -312,7 +312,7 @@
 
                         echo "<tr>
                             <td data-fecha='$fecha'>$fecha2</td>
-                            <td>$hora</td>
+                            <td class='hora-cita'>$hora</td>
                             <td data-id='$cliente'>$cliente_nom[0]</td>
                             <td data-id='$trabajador'>$trabajador_nom[0]</td>
                             <td data-id='$servicio'>$servicio_nom</td>";
@@ -326,7 +326,7 @@
                             if($fecha>$hoy){
                                 if($_SESSION['tipo']!=="Cliente"){
                                     echo "<td>
-                                        <button type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#exampleModal' data-bs-whatever='Editar'>Editar</button>
+                                        <button type='button' class='btn btn-primary editar-button' data-bs-toggle='modal' data-bs-target='#exampleModal' data-bs-whatever='Editar'>Editar</button>
                                     </td>
                                     <td>
                                         <button type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#exampleModal' data-bs-whatever='Cancelar'>Cancelar</button>
