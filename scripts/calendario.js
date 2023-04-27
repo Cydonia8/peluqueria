@@ -9,6 +9,7 @@ btn_close_modal.addEventListener("click", ()=>{
 btn_close.addEventListener("click", ()=>{
     location.reload()
 })
+
 exampleModal.addEventListener('show.bs.modal', event => {
     const button = event.relatedTarget
 
@@ -45,6 +46,12 @@ exampleModal.addEventListener('show.bs.modal', event => {
     }else if(button.innerText=="Añadir nuevo"){
         modalFooter.querySelector("input").name = `insertar`
     }else if(button.innerText=="Cancelar"){
+        const modalBodyInput = exampleModal.querySelectorAll('.modal-body input')
+        modalBodyInput[1].value = button.parentElement.parentElement.children[2].getAttribute('data-id');
+        modalBodyInput[2].value = button.parentElement.parentElement.children[3].getAttribute('data-id');
+        modalBodyInput[3].value = button.parentElement.parentElement.children[0].getAttribute('data-fecha');
+        modalBodyInput[4].value = button.parentElement.parentElement.children[1].innerText;
+
         modalFooter.querySelector("input").name = `cancelar`;
         
         if(util.classList.contains("d-none")){
