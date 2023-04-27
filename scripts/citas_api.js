@@ -41,7 +41,7 @@ while(i<horario.length){
     }
     i++;
 }
-let pillada;
+let pillada=0;
 editar_btn.forEach(boton=>{
     boton.addEventListener("click",()=>{
         pillada=boton.parentElement.parentElement.children[1].innerText+":00";
@@ -51,7 +51,6 @@ editar_btn.forEach(boton=>{
 select_horas.addEventListener("click", ()=>{
     let ocupadas=[];
     if(select_fecha.value != ''){
-        console.log(pillada);
         let filtrado = lista.filter(cita=>cita.id_trab===select_trabajador.value && cita.fecha === select_fecha.value)
         filtrado.forEach(opcion=>{
             if(opcion.id_trab===select_trabajador.value && opcion.fecha === select_fecha.value && opcion.hora !== pillada){
@@ -67,8 +66,14 @@ select_horas.addEventListener("click", ()=>{
                     ocupado_min="00";
                 }
                 let inicio=opcion.hora.split(":")[0]+":"+opcion.hora.split(":")[1];
+                if(ocupado_h<10){
+                    ocupado_h="0"+ocupado_h;
+                }
                 let fin=ocupado_h+":"+ocupado_min;
-                let i = 0
+    
+                console.log(inicio);
+                console.log(fin);
+
                 while(inicio!=fin){
                     ocupadas.push(inicio);
                     let min2=inicio.split(":");
