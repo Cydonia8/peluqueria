@@ -1,6 +1,14 @@
 const exampleModal = document.getElementById('exampleModal')
 const btn_close = document.querySelector(".btn-close")
 const btn_close_modal = document.querySelector(".modal-footer button")
+const editar_btn = document.querySelector(".editar-button")
+const columna_hora = document.querySelector(".hora-cita")
+let hora_cita
+
+editar_btn.addEventListener("click", ()=>{
+    hora_cita = columna_hora.innerText
+    console.log(hora_cita)
+})
 
 btn_close_modal.addEventListener("click", ()=>{
     location.reload()
