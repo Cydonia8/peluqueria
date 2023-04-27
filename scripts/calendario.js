@@ -1,6 +1,15 @@
 const exampleModal = document.getElementById('exampleModal')
 const btn_close = document.querySelector(".btn-close")
 const btn_close_modal = document.querySelector(".modal-footer button")
+const input_date = document.querySelector("input[type=date]")
+
+let today = new Date()
+let dia = formatDate(today.getDate())
+let mes = formatDate(today.getMonth()+1)
+let anio = today.getFullYear()
+let fecha_completa = `${anio}-${mes}-${dia}`
+
+input_date.setAttribute("min", fecha_completa)
 
 btn_close_modal.addEventListener("click", ()=>{
     location.reload()
@@ -55,3 +64,17 @@ exampleModal.addEventListener('show.bs.modal', event => {
         }
     }
 })
+
+function formatDate(fecha){
+    if(fecha < 10){
+        return `0${fecha}`
+    }else{
+        return fecha
+    }
+}
+
+setTimeout(()=> {
+    $(".alert").fadeTo(500, 0).slideUp(500, ()=>{
+        $(this).remove(); 
+    });
+}, 3000);

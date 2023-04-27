@@ -7,18 +7,32 @@
     if(isset($_POST['insertar'])){
         $preparada=$conexion->prepare("insert into citas (cliente,trabajador,fecha,hora,servicio) values (?,?,?,?,?)");
         $id_cliente = getIDCliente($_SESSION["user"]);
-        echo $id_cliente;
-        echo "entro";
-        $preparada->bind_param("iissi",$id_cliente,$_POST['trabajador'],$_POST['fecha'],$_POST['hora'],$_POST['servicio']);
-        $preparada->execute();
+        // echo $id_cliente;
+        // echo "entro";
+        if(!isset($_POST["trabajador"]) or $_POST["fecha"] == '' or !isset($_POST['hora']) or !isset($_POST["servicio"])){
+            echo "<div class='alert alert-danger' role='alert'>
+           Faltan datos por rellenar. Cita no insertada.
+          </div>";
+        }else{
+            $preparada->bind_param("iissi",$id_cliente,$_POST['trabajador'],$_POST['fecha'],$_POST['hora'],$_POST['servicio']);
+            $preparada->execute();
+            header("Refresh:0");
+        }
         $preparada->close();
-        header("Refresh:0");
+        
     }else if(isset($_POST['editar'])){
         $preparada=$conexion->prepare("update citas set trabajador=?,fecha=?,hora=?,servicio=? where cliente=? and trabajador=? and fecha=? and hora=?");
         $preparada->bind_param("issiiiss",$_POST['trabajador'],$_POST['fecha'],$_POST['hora'],$_POST['servicio'],$_POST['id'],$_POST['empleado2'],$_POST['fecha2'],$_POST['hora2']);
-        $preparada->execute();
+        if(!isset($_POST['hora'])){
+            echo "<div class='alert alert-danger' role='alert'>
+           Falta la hora. Cita no modificada.
+          </div>";
+        }else{
+            $preparada->execute();
+            header("Refresh:0");
+        }
         $preparada->close();
-        header("Refresh:0");
+        
     }else if(isset($_POST['cancelar'])){
         $preparada=$conexion->prepare("delete from citas where cliente=? and trabajador=? and fecha=? and hora=?");
         $preparada->bind_param("iiss",$_POST['id'],$_POST['empleado2'],$_POST['fecha2'],$_POST['hora2']);
@@ -38,6 +52,7 @@
     <link rel="stylesheet" href="../estilos.css">
     <script src="../scripts/calendario.js" defer></script>
     <script src="../scripts/citas_api.js" defer></script>
+    <script src="../scripts/jquery-3.2.1.min.js" defer></script>
     <title>Bienvenido</title>
 </head>
 <body>
@@ -86,7 +101,7 @@
                         </div>
                         <div class="mb-3 no-delete">
                             <label for="recipient-name" class="col-form-label">Fecha:</label>
-                            <input id="select-fecha" type="date" name="fecha" class="form-control" id="recipient-name" required>
+                            <input id="select-fecha" type="date" name="fecha" class="form-control" id="recipient-name">
                         </div>
                         <div class="mb-3 no-delete">
                             <label for="recipient-name" class="col-form-label">Hora:</label>

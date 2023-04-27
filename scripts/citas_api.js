@@ -49,6 +49,8 @@ editar_btn.forEach(boton=>{
 })
 
 select_horas.addEventListener("click", ()=>{
+    
+    console.log(select_horas)
     let ocupadas=[];
     if(select_fecha.value != ''){
         let filtrado = lista.filter(cita=>cita.id_trab===select_trabajador.value && cita.fecha === select_fecha.value)
@@ -91,9 +93,7 @@ select_horas.addEventListener("click", ()=>{
                 }
             }
         })
-
-        let disponibles=horas.filter(item => !ocupadas.includes(item));
-        // select_horas.innerHTML='';
+        
         disponibles.forEach(h=>{
             const option = createOption(h, h);
             select_horas.appendChild(option);
