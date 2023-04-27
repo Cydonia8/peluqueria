@@ -6,8 +6,6 @@
     if(isset($_POST['insertar'])){
         $preparada=$conexion->prepare("insert into citas (cliente,trabajador,fecha,hora,servicio) values (?,?,?,?,?)");
         $id_cliente = getIDCliente($_SESSION["user"]);
-        // echo $id_cliente;
-        // echo "entro";
         if(!isset($_POST["trabajador"]) or $_POST["fecha"] == '' or !isset($_POST['hora']) or !isset($_POST["servicio"])){
             echo "<div class='alert alert-danger' role='alert'>
            Faltan datos por rellenar. Cita no insertada.
