@@ -2,7 +2,7 @@
 const select_trabajador = document.getElementById("select-trabajador")
 const select_fecha = document.getElementById("select-fecha")
 const select_horas = document.getElementById("select-hora")
-const botones_tabla=document.querySelectorAll("table button");
+const editar_btn = document.querySelectorAll(".editar-button")
 let lista = []
 
 datos()
@@ -41,38 +41,47 @@ while(i<horario.length){
     }
     i++;
 }
-    
+let pillada;
+editar_btn.forEach(boton=>{
+    boton.addEventListener("click",()=>{
+        pillada=boton.parentElement.parentElement.children[1].innerText+":00";
+    })
+})
+
 select_horas.addEventListener("click", ()=>{
     let ocupadas=[];
     if(select_fecha.value != ''){
-        let filtrado = lista.filter(cita=>(cita.id_trab===select_trabajador.value && cita.fecha === select_fecha.value && cita.hora == pillada) || (cita.id_trab===select_trabajador.value && cita.fecha === select_fecha.value))
+        console.log(pillada);
+        let filtrado = lista.filter(cita=>cita.id_trab===select_trabajador.value && cita.fecha === select_fecha.value)
         filtrado.forEach(opcion=>{
-            let dur=opcion.duracion.split(":");
-            let time=opcion.hora.split(":");
-            let ocupado_min=parseInt(dur[1])+parseInt(time[1]);
-            let ocupado_h=parseInt(dur[0])+parseInt(time[0]);
-            if(ocupado_min>=60){
-                ocupado_h=parseInt(ocupado_h)+parseInt(ocupado_min)/60;
-                ocupado_min=parseInt(ocupado_min)%60;
-            }
-            if(ocupado_min==0){
-                ocupado_min="00";
-            }
-            let inicio=opcion.hora.split(":")[0]+":"+opcion.hora.split(":")[1];
-            let fin=ocupado_h+":"+ocupado_min;
-
-            while(inicio!=fin){
-                ocupadas.push(inicio);
-                let min2=inicio.split(":");
-                min2[1]=parseInt(min2[1])+15;
-                if(min2[1]>=60){
-                    min2[1]-=60;
-                    if(min2[1]==0){
-                        min2[1]="00";
-                    }
-                    min2[0]++;
+            if(opcion.id_trab===select_trabajador.value && opcion.fecha === select_fecha.value && opcion.hora !== pillada){
+                let dur=opcion.duracion.split(":");
+                let time=opcion.hora.split(":");
+                let ocupado_min=parseInt(dur[1])+parseInt(time[1]);
+                let ocupado_h=parseInt(dur[0])+parseInt(time[0]);
+                if(ocupado_min>=60){
+                    ocupado_h=parseInt(ocupado_h)+parseInt(ocupado_min)/60;
+                    ocupado_min=parseInt(ocupado_min)%60;
                 }
-                inicio=min2[0]+":"+min2[1];
+                if(ocupado_min==0){
+                    ocupado_min="00";
+                }
+                let inicio=opcion.hora.split(":")[0]+":"+opcion.hora.split(":")[1];
+                let fin=ocupado_h+":"+ocupado_min;
+    
+                while(inicio!=fin){
+                    ocupadas.push(inicio);
+                    let min2=inicio.split(":");
+                    min2[1]=parseInt(min2[1])+15;
+                    if(min2[1]>=60){
+                        min2[1]-=60;
+                        if(min2[1]==0){
+                            min2[1]="00";
+                        }
+                        min2[0]++;
+                    }
+                    inicio=min2[0]+":"+min2[1];
+                }
             }
         })
 
