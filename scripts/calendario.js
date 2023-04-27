@@ -1,5 +1,10 @@
 const exampleModal = document.getElementById('exampleModal')
 const btn_close = document.querySelector(".btn-close")
+const btn_close_modal = document.querySelector(".modal-footer button")
+
+btn_close_modal.addEventListener("click", ()=>{
+    location.reload()
+})
 
 btn_close.addEventListener("click", ()=>{
     location.reload()
