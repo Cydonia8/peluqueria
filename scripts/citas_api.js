@@ -2,6 +2,7 @@
 const select_trabajador = document.getElementById("select-trabajador")
 const select_fecha = document.getElementById("select-fecha")
 const select_horas = document.getElementById("select-hora")
+const botones_tabla=document.querySelectorAll("table button");
 let lista = []
 
 datos()
@@ -40,13 +41,11 @@ while(i<horario.length){
     }
     i++;
 }
-console.log(horas)
-console.log(horario)
     
 select_horas.addEventListener("click", ()=>{
     let ocupadas=[];
     if(select_fecha.value != ''){
-        let filtrado = lista.filter(cita=>(cita.id_trab===select_trabajador.value && cita.fecha === select_fecha.value && cita.hora ==select_horas.value+":00") || (cita.id_trab===select_trabajador.value && cita.fecha === select_fecha.value))
+        let filtrado = lista.filter(cita=>(cita.id_trab===select_trabajador.value && cita.fecha === select_fecha.value && cita.hora == pillada) || (cita.id_trab===select_trabajador.value && cita.fecha === select_fecha.value))
         filtrado.forEach(opcion=>{
             let dur=opcion.duracion.split(":");
             let time=opcion.hora.split(":");
