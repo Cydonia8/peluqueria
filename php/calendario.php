@@ -7,8 +7,6 @@
     if(isset($_POST['insertar'])){
         $preparada=$conexion->prepare("insert into citas (cliente,trabajador,fecha,hora,servicio) values (?,?,?,?,?)");
         $id_cliente = getIDCliente($_SESSION["user"]);
-        echo $id_cliente;
-        echo "entro";
         $preparada->bind_param("iissi",$id_cliente,$_POST['trabajador'],$_POST['fecha'],$_POST['hora'],$_POST['servicio']);
         $preparada->execute();
         $preparada->close();
@@ -86,7 +84,7 @@
                         </div>
                         <div class="mb-3 no-delete">
                             <label for="recipient-name" class="col-form-label">Fecha:</label>
-                            <input id="select-fecha" type="date" name="fecha" class="form-control" id="recipient-name" required>
+                            <input id="select-fecha" type="date" name="fecha" class="form-control" id="recipient-name">
                         </div>
                         <div class="mb-3 no-delete">
                             <label for="recipient-name" class="col-form-label">Hora:</label>
@@ -97,32 +95,6 @@
                                 echo "<select id='select-hora' data-mi='$lista[0]' data-mf='$lista[1]' data-ti='$lista[2]' data-tf='$lista[3]' name='hora' class='form-select' aria-label='Default select example'>";
                             ?>
                                 <option selected hidden disabled>Elige una hora</option>
-                                <!-- <?php
-                                    // $consulta=$conexion->query("select m_apertura,m_cierre,t_apertura,t_cierre from horario");
-                                    // $lista=$consulta->fetch_array(MYSQLI_NUM);
-                                    // $consulta->close();
-                                    // $i=0;
-                                    // while($i<count($lista)){
-                                    //     $tiempo=$lista[$i];
-                                    //     $tiempo=explode(":",$tiempo)[0].":".explode(":",$tiempo)[1];
-                                    //     $i++;
-                                    //     $limite=explode(":",$lista[$i])[0].":".explode(":",$lista[$i])[1];
-                                    //     while($tiempo<$limite){
-                                    //         echo "<option value=$tiempo:00>$tiempo</option>";
-                                    //         $min=explode(":",$tiempo);
-                                    //         $min[1]+=15;
-                                    //         if($min[1]>=60){
-                                    //             $min[1]-=60;
-                                    //             if($min[1]==0){
-                                    //                 $min[1]="00";
-                                    //             }
-                                    //             $min[0]++;
-                                    //         }
-                                    //         $tiempo=$min[0].":".$min[1];
-                                    //     }
-                                    //     $i++;
-                                    // }
-                                ?> -->
                             </select>
                         </div>
                         <h3 class="text-center d-none delete">Confirma la cancelación de la cita</h3>
@@ -312,7 +284,7 @@
 
                         echo "<tr>
                             <td data-fecha='$fecha'>$fecha2</td>
-                            <td class='hora-cita'>$hora</td>
+                            <td>$hora</td>
                             <td data-id='$cliente'>$cliente_nom[0]</td>
                             <td data-id='$trabajador'>$trabajador_nom[0]</td>
                             <td data-id='$servicio'>$servicio_nom</td>";
@@ -326,7 +298,7 @@
                             if($fecha>$hoy){
                                 if($_SESSION['tipo']!=="Cliente"){
                                     echo "<td>
-                                        <button type='button' class='btn btn-primary editar-button' data-bs-toggle='modal' data-bs-target='#exampleModal' data-bs-whatever='Editar'>Editar</button>
+                                        <button type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#exampleModal' data-bs-whatever='Editar'>Editar</button>
                                     </td>
                                     <td>
                                         <button type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#exampleModal' data-bs-whatever='Cancelar'>Cancelar</button>
