@@ -3,7 +3,6 @@
     require_once("functions.php");
     closeSession();
     $conexion=createConnection();
-
     if(isset($_POST['insertar'])){
         $preparada=$conexion->prepare("insert into citas (cliente,trabajador,fecha,hora,servicio) values (?,?,?,?,?)");
         $id_cliente = getIDCliente($_SESSION["user"]);
@@ -18,6 +17,8 @@
             $preparada->execute();
             header("Refresh:0");
         }
+        $preparada->bind_param("iissi",$id_cliente,$_POST['trabajador'],$_POST['fecha'],$_POST['hora'],$_POST['servicio']);
+        $preparada->execute();
         $preparada->close();
         
     }else if(isset($_POST['editar'])){
@@ -112,32 +113,6 @@
                                 echo "<select id='select-hora' data-mi='$lista[0]' data-mf='$lista[1]' data-ti='$lista[2]' data-tf='$lista[3]' name='hora' class='form-select' aria-label='Default select example'>";
                             ?>
                                 <option selected hidden disabled>Elige una hora</option>
-                                <!-- <?php
-                                    // $consulta=$conexion->query("select m_apertura,m_cierre,t_apertura,t_cierre from horario");
-                                    // $lista=$consulta->fetch_array(MYSQLI_NUM);
-                                    // $consulta->close();
-                                    // $i=0;
-                                    // while($i<count($lista)){
-                                    //     $tiempo=$lista[$i];
-                                    //     $tiempo=explode(":",$tiempo)[0].":".explode(":",$tiempo)[1];
-                                    //     $i++;
-                                    //     $limite=explode(":",$lista[$i])[0].":".explode(":",$lista[$i])[1];
-                                    //     while($tiempo<$limite){
-                                    //         echo "<option value=$tiempo:00>$tiempo</option>";
-                                    //         $min=explode(":",$tiempo);
-                                    //         $min[1]+=15;
-                                    //         if($min[1]>=60){
-                                    //             $min[1]-=60;
-                                    //             if($min[1]==0){
-                                    //                 $min[1]="00";
-                                    //             }
-                                    //             $min[0]++;
-                                    //         }
-                                    //         $tiempo=$min[0].":".$min[1];
-                                    //     }
-                                    //     $i++;
-                                    // }
-                                ?> -->
                             </select>
                         </div>
                         <h3 class="text-center d-none delete">Confirma la cancelación de la cita</h3>
@@ -296,69 +271,65 @@
 
             if(isset($_GET['dia'])){
                 $busqueda="$_GET[año]-$_GET[mes]-$_GET[dia]";
-                $preparada=$conexion->prepare("select fecha,hora,cliente,trabajador,nombre,servicio from citas,servicios where citas.cliente!=0 and servicios.id=servicio and fecha=? order by fecha desc");
             }else{
                 $dia_actual=date('d');
                 $busqueda="$anio_consulta-$mes_consulta-$dia_actual";
 
-                if($_SESSION['user']!=="admin@admin.com"){
-                    $preparada=$conexion->prepare("select fecha,hora,cliente,trabajador,nombre,servicio from citas,servicios where citas.cliente!=0 and servicios.id=servicio and fecha=? order by fecha asc");
-                }else{
-                    $preparada=$conexion->prepare("select fecha,hora,cliente,trabajador,nombre,servicio from citas,servicios where citas.cliente!=0 and servicios.id=servicio and fecha=? order by fecha asc");
-                }
             }
-                $preparada->bind_param("s",$busqueda);
-                $preparada->bind_result($fecha,$hora,$cliente,$trabajador,$servicio_nom,$servicio);
-                $preparada->execute();
-                $preparada->store_result();
-                if($preparada->num_rows>0){
-                    while($preparada->fetch()){
-                        $fecha2=date('d-m-Y',strtotime($fecha));
-                        $formato=explode(":",$hora);
-                        $hora=$formato[0].":".$formato[1];
+            
+            if($_SESSION['user']=="admin@admin.com"){
+                $preparada=$conexion->prepare("select fecha,hora,cliente,trabajador,nombre,servicio from citas,servicios where servicios.id=servicio and fecha=? order by fecha asc");
+            }else{
+                $preparada=$conexion->prepare("select fecha,hora,cliente,trabajador,nombre,servicio from citas,servicios where (citas.cliente=$id or citas.trabajador=$id) and servicios.id=servicio and fecha=? order by fecha asc");
+            }
+            $preparada->bind_param("s",$busqueda);
+            $preparada->bind_result($fecha,$hora,$cliente,$trabajador,$servicio_nom,$servicio);
+            $preparada->execute();
+            $preparada->store_result();
+            if($preparada->num_rows>0){
+                while($preparada->fetch()){
+                    $fecha2=date('d-m-Y',strtotime($fecha));
+                    $formato=explode(":",$hora);
+                    $hora=$formato[0].":".$formato[1];
 
-                        $consulta=$conexion->query("select nombre from personas where id=$cliente");
-                        $cliente_nom=$consulta->fetch_array(MYSQLI_NUM);
-                        $consulta->close();
+                    $consulta=$conexion->query("select nombre from personas where id=$cliente");
+                    $cliente_nom=$consulta->fetch_array(MYSQLI_NUM);
+                    $consulta->close();
 
-                        $consulta=$conexion->query("select nombre from personas where id=$trabajador");
-                        $trabajador_nom=$consulta->fetch_array(MYSQLI_NUM);
-                        $consulta->close();
+                    $consulta=$conexion->query("select nombre from personas where id=$trabajador");
+                    $trabajador_nom=$consulta->fetch_array(MYSQLI_NUM);
+                    $consulta->close();
 
-                        echo "<tr>
-                            <td data-fecha='$fecha'>$fecha2</td>
-                            <td class='hora-cita'>$hora</td>
-                            <td data-id='$cliente'>$cliente_nom[0]</td>
-                            <td data-id='$trabajador'>$trabajador_nom[0]</td>
-                            <td data-id='$servicio'>$servicio_nom</td>";
-    
-                            $month=getdate()['mon'];
-                            if($month<10){
-                                $month="0".$month;
-                            }
-
-                            $hoy=getdate()['year']."-".$month."-".getdate()['mday'];
-                            if($fecha>$hoy){
-                                if($_SESSION['tipo']!=="Cliente"){
-                                    echo "<td>
-                                        <button type='button' class='btn btn-primary editar-button' data-bs-toggle='modal' data-bs-target='#exampleModal' data-bs-whatever='Editar'>Editar</button>
-                                    </td>
-                                    <td>
-                                        <button type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#exampleModal' data-bs-whatever='Cancelar'>Cancelar</button>
-                                    </td>";
-                                }else{
-                                    echo "<td></td>";
-                                }
-                            }else{
-                                echo "<td></td>";
-                            }
-                        echo "</tr>";
-                    }
-                }else{
                     echo "<tr>
-                        <td colspan=5 class='tabla_vacia'>No hay citas para hoy</td>
-                    </tr>";
+                        <td data-fecha='$fecha'>$fecha2</td>
+                        <td>$hora</td>
+                        <td data-id='$cliente'>$cliente_nom[0]</td>
+                        <td data-id='$trabajador'>$trabajador_nom[0]</td>
+                        <td data-id='$servicio'>$servicio_nom</td>";
+
+                        $month=getdate()['mon'];
+                        if($month<10){
+                            $month="0".$month;
+                        }
+
+                        $hoy=getdate()['year']."-".$month."-".getdate()['mday'];
+                        if($fecha>$hoy){
+                            if($_SESSION['tipo']!=="Cliente"){
+                                echo "<td>
+                                    <button type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#exampleModal' data-bs-whatever='Editar'>Editar</button>
+                                </td>
+                                <td>
+                                    <button type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#exampleModal' data-bs-whatever='Cancelar'>Cancelar</button>
+                                </td>";
+                            }
+                        }
+                    echo "</tr>";
                 }
+            }else{
+                echo "<tr>
+                    <td colspan=5 class='tabla_vacia'>No hay citas para hoy</td>
+                </tr>";
+            }
 
             echo "</tbody>
             </table>";

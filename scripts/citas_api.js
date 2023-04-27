@@ -94,6 +94,8 @@ select_horas.addEventListener("click", ()=>{
             }
         })
         
+
+        let disponibles=horas.filter(item => !ocupadas.includes(item));
         disponibles.forEach(h=>{
             const option = createOption(h, h);
             select_horas.appendChild(option);
@@ -101,6 +103,9 @@ select_horas.addEventListener("click", ()=>{
     }else{
         const option = createOption('', "Elige trabajador y fecha")
         select_horas.innerHTML=''
+        option.setAttribute("selected",'');
+        option.setAttribute("hidden",'');
+        option.setAttribute("disabled",'');
         select_horas.appendChild(option)
     }
 })
