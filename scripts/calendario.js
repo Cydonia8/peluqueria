@@ -1,4 +1,9 @@
 const exampleModal = document.getElementById('exampleModal')
+const btn_close = document.querySelector(".btn-close")
+
+btn_close.addEventListener("click", ()=>{
+    location.reload()
+})
 exampleModal.addEventListener('show.bs.modal', event => {
     const button = event.relatedTarget
 
