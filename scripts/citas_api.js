@@ -68,7 +68,7 @@ select_horas.addEventListener("click", ()=>{
                 }
                 let inicio=opcion.hora.split(":")[0]+":"+opcion.hora.split(":")[1];
                 let fin=ocupado_h+":"+ocupado_min;
-    
+                let i = 0
                 while(inicio!=fin){
                     ocupadas.push(inicio);
                     let min2=inicio.split(":");
@@ -81,12 +81,14 @@ select_horas.addEventListener("click", ()=>{
                         min2[0]++;
                     }
                     inicio=min2[0]+":"+min2[1];
+                    i++
+                    console.log(i)
                 }
             }
         })
 
         let disponibles=horas.filter(item => !ocupadas.includes(item));
-        select_horas.innerHTML='';
+        // select_horas.innerHTML='';
         disponibles.forEach(h=>{
             const option = createOption(h, h);
             select_horas.appendChild(option);
