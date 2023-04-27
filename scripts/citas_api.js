@@ -40,6 +40,8 @@ while(i<horario.length){
     }
     i++;
 }
+console.log(horas)
+console.log(horario)
     
 select_horas.addEventListener("click", ()=>{
     let ocupadas=[];
@@ -87,33 +89,6 @@ select_horas.addEventListener("click", ()=>{
         select_horas.appendChild(option)
     }
 })
-
-// select_horas.addEventListener("click", ()=>{
-//     let filtrado=lista.filter(cit=>cit.fecha===select_fecha.value);
-//     if(select_trabajador.value!='Elige con quien quieres la cita'){
-//         filtrado=filtrado.filter(cit=>cit.id_trab===select_trabajador.value);
-//     }
-//     filtrado.forEach(opcion=>{
-//         let dur=opcion.duracion.split(":");
-//         let time=opcion.hora.split(":");
-//         let ocupado_min=dur[1]+time[1];
-//         let ocupado_h=dur[0]+time[0];
-//         if(ocupado_min>60){
-//             ocupado_h+=ocupado_min/60;
-//             ocupado_min%=60;
-//         }
-//         let fin=ocupado_h+":"+ocupado_min;
-//         select_horas.children.forEach(child=>{
-//             if(!child.innerText>=opcion.duracion && child.innerText<=fin){
-//                 child.style.display="none";
-//             }
-//         })
-//     })
-//     console.log(filtrado);
-// })
-
-
-
 
 function createOption(value, texto){
     const elemento = document.createElement("option")
