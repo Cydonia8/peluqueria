@@ -74,7 +74,7 @@
                             <select id="select-trabajador" name="trabajador" class="form-select" aria-label="Default select example">
                                 <option selected hidden disabled>Elige con quien quieres la cita</option>
                                 <?php
-                                    $consulta=$conexion->query("select personas.id,personas.nombre from personas,tipos where tipo=tipos.id and tipos.nombre='Trabajador'");
+                                    $consulta=$conexion->query("select personas.id,personas.nombre from personas,tipos where tipo=tipos.id and tipos.nombre='Trabajador' and personas.activo = 1");
                                     while($lista=$consulta->fetch_array(MYSQLI_ASSOC)){
                                         echo "<option value=$lista[id]>$lista[nombre]</option>";
                                     }
