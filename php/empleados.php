@@ -23,6 +23,27 @@
             $id = getLastID();
             employeeShift($id, $inicio_m, $fin_m, $inicio_t, $fin_t);
         }
+    }else if(isset($_POST['editar'])){
+        $conexion=createConnection();
+        if($_POST['pass']==''){
+            $preparada=$conexion->prepare("update personas set nombre=?, correo=?, telefono=? where id=?");
+            $preparada->bind_param("sssi",$_POST['nombre'],$_POST['correo'],$_POST['telefono'],$_POST['id']);
+        }else{
+            $preparada=$conexion->prepare("update personas set nombre=?, correo=?, telefono=?, pass=? where id=?");
+            $preparada->bind_param("ssssi",$_POST['nombre'],$_POST['correo'],$_POST['telefono'],$_POST['pass'],$_POST['id']);
+        }
+        $preparada->execute();
+        $preparada->close();
+        
+        $inicio_m = $_POST["inicio_m"] != '' ? $_POST["inicio_m"] : NULL;
+        $fin_m = isset($_POST["fin_m"]) ? $_POST["fin_m"] : NULL;
+        $inicio_t = $_POST["inicio_t"] != '' ? $_POST["inicio_t"] : NULL;
+        $fin_t = isset($_POST["fin_t"]) ? $_POST["fin_t"] : NULL;
+        $preparada=$conexion->prepare("update trabaja set m_inicio=?, m_fin=?, t_inicio=?, t_fin=? where empleado=?");
+        $preparada->bind_param("ssssi",$inicio_m,$fin_m,$inicio_t,$fin_t,$_POST['id']);
+        $preparada->execute();
+        $preparada->close();
+        header("Refresh:0");
     }
     if(isset($_POST["activar"])){
         activateEmployee($_POST["id"]);
@@ -64,6 +85,8 @@
                 <th>Nombre</th>
                 <th>Correo</th>
                 <th>Teléfono</th>
+                <th>Horario</th>
+                <th>Editar</th>
                 <th>Activar/Desactivar</th>
             </thead>
             <tbody>
@@ -115,6 +138,7 @@
                                 <label for="fin_t">Fin del turno de tarde</label>
                                 <input disabled <?php echo "max='$horario[cierre_t]'"; ?> id="fin_t" name="fin_t"  type="time" class="form-control">
                         </div>
+                        <input type='hidden' name='id' value=''>
                     </div>
 
                     <div class="modal-footer">
@@ -154,12 +178,12 @@
         </div>
     </div>
     <?php
-            if(isset($unico)){
-                if(!$unico){
-                    echo "<div class=\"alert alert-danger\" role=\"alert\">Correo electrónico ya registrado</div>";
-                }
+        if(isset($unico)){
+            if(!$unico){
+                echo "<div class=\"alert alert-danger\" role=\"alert\">Correo electrónico ya registrado</div>";
             }
-        ?>
+        }
+    ?>
     
 </body>
 </html>
