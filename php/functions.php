@@ -117,17 +117,20 @@ function getEmployees(){
     $consulta = $con->query("SELECT id, nombre, correo, telefono, activo, m_inicio, m_fin, t_inicio, t_fin from personas,trabaja where id=empleado and tipo = 2");
     while($fila = $consulta->fetch_array(MYSQLI_ASSOC)){
         if(is_null($fila['m_inicio'])){
+            $rango='tarde';
             $horario=cortarSeg($fila['t_inicio'])."-".cortarSeg($fila['t_fin']);
         }else if(is_null($fila['t_inicio'])){
+            $rango='mañana';
             $horario=cortarSeg($fila['m_inicio'])."-".cortarSeg($fila['m_fin']);
         }else{
+            $rango='dia';
             $horario=cortarSeg($fila['m_inicio'])."-".cortarSeg($fila['m_fin'])."/".cortarSeg($fila['t_inicio'])."-".cortarSeg($fila['t_fin']);
         }
         echo "<tr>
                 <td>$fila[nombre]</td>
                 <td>$fila[correo]</td>
                 <td>$fila[telefono]</td>    
-                <td>$horario</td>
+                <td data-rango='$rango'>$horario</td>
                 <td>
                     <button data-id='$fila[id]' type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#exampleModal' data-bs-whatever='Editar'>Editar</button>
                 </td>";    
@@ -199,6 +202,36 @@ function getIDCliente($mail){
     $consulta->close();
     $con->close();
     return $id;
+}
+
+function getLastID(){
+    $con = createConnection();
+    $consulta_id = $con->query("SELECT id from personas order by id desc limit 1");
+    $fila = $consulta_id->fetch_array(MYSQLI_ASSOC);
+    $id = $fila["id"];
+    $con->close();    
+    return $id;
+}
+
+function employeeShift($id, $m_inicio, $m_fin, $t_inicio, $t_fin){
+    $con = createConnection();
+    $insert = $con->prepare("INSERT into trabaja (empleado, m_inicio, m_fin, t_inicio, t_fin) values (?,?,?,?,?)");
+    $insert->bind_param('issss', $id, $m_inicio, $m_fin, $t_inicio, $t_fin);
+    $insert->execute();
+    $insert->close();
+    $con->close();
+}
+
+function getSchedule(){
+    $con = createConnection();
+    $consulta = $con->query("SELECT m_apertura, m_cierre, t_apertura, t_cierre from horario");
+    $fila = $consulta->fetch_array(MYSQLI_ASSOC);
+    $horario["apertura_m"] = $fila["m_apertura"];
+    $horario["cierre_m"] = $fila["m_cierre"];
+    $horario["apertura_t"] = $fila["t_apertura"];
+    $horario["cierre_t"] = $fila["t_cierre"];
+    $con->close();
+    return $horario;
 }
 
 function cortarSeg($tiempo){
