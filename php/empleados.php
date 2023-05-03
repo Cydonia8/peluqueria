@@ -12,6 +12,12 @@
         if($unico){
             createEmployee($nombre, $pass, $mail, $tlf, 2);
         }
+    }else if(isset($_POST['editar'])){
+        $preparada=$conexion->prepare("update personas set nombre=?, correo=?, telefono=?, pass=? where id=?");
+        $preparada->bind_param("ssssi",$_POST['nombre'],$_POST['correo'],$_POST['telefono'],$_POST['pass'],$_POST['id']);
+        $preparada->execute();
+        $preparada->close();
+        header("Refresh:0");
     }
     if(isset($_POST["activar"])){
         activateEmployee($_POST["id"]);
@@ -47,6 +53,8 @@
                 <th>Nombre</th>
                 <th>Correo</th>
                 <th>Teléfono</th>
+                <th>Horario</th>
+                <th>Editar</th>
                 <th>Activar/Desactivar</th>
             </thead>
             <tbody>
@@ -70,17 +78,18 @@
                             <input name="nombre" required type="text" class="form-control" aria-describedby="emailHelp" placeholder="Nombre">
                         </div>
                         <div class="mb-3">
-                            <label for="telefono" class="form-label">Teléfono</label>
-                            <input required type="tel" pattern="[6-7]{1}[0-9]{8}" name="telefono" class="form-control">
-                        </div>
-                        <div class="mb-3">
                             <label for="correo">Correo electrónico</label>
                             <input name="correo" required type="email" class="form-control" placeholder="Correo">
+                        </div>
+                        <div class="mb-3">
+                            <label for="telefono" class="form-label">Teléfono</label>
+                            <input required type="tel" pattern="[6-7]{1}[0-9]{8}" name="telefono" class="form-control">
                         </div>
                         <div class="form-group">
                             <label for="pass">Contraseña</label>
                             <input name="pass" required type="password" class="form-control" aria-describedby="emailHelp" placeholder="Contraseña">
                         </div>
+                        <input type='hidden' name='id' value=''>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

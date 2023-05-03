@@ -114,12 +114,23 @@ function checkLogin($mail, $pass){
 
 function getEmployees(){
     $con = createConnection();
-    $consulta = $con->query("SELECT id, nombre, correo, telefono, activo from personas where tipo = 2");
+    $consulta = $con->query("SELECT id, nombre, correo, telefono, activo, m_inicio, m_fin, t_inicio, t_fin from personas,trabaja where id=empleado and tipo = 2");
     while($fila = $consulta->fetch_array(MYSQLI_ASSOC)){
+        if(is_null($fila['m_inicio'])){
+            $horario=cortarSeg($fila['t_inicio'])."-".cortarSeg($fila['t_fin']);
+        }else if(is_null($fila['t_inicio'])){
+            $horario=cortarSeg($fila['m_inicio'])."-".cortarSeg($fila['m_fin']);
+        }else{
+            $horario=cortarSeg($fila['m_inicio'])."-".cortarSeg($fila['m_fin'])."/".cortarSeg($fila['t_inicio'])."-".cortarSeg($fila['t_fin']);
+        }
         echo "<tr>
                 <td>$fila[nombre]</td>
                 <td>$fila[correo]</td>
-                <td>$fila[telefono]</td>";    
+                <td>$fila[telefono]</td>    
+                <td>$horario</td>
+                <td>
+                    <button data-id='$fila[id]' type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#exampleModal' data-bs-whatever='Editar'>Editar</button>
+                </td>";    
             if($fila["activo"] == 1){
                 echo "<td><form action=\"#\" method=\"post\">
                     <input hidden name=\"id\" value=\"$fila[id]\">
@@ -188,4 +199,9 @@ function getIDCliente($mail){
     $consulta->close();
     $con->close();
     return $id;
+}
+
+function cortarSeg($tiempo){
+    $corte = implode(':', explode(':', $tiempo, -1));
+    return $corte;
 }
