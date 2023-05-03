@@ -100,12 +100,12 @@
         </div>
     </div>
     <?php
-            if(isset($unico)){
-                if(!$unico){
-                    echo "<div class=\"alert alert-danger\" role=\"alert\">Correo electrónico ya registrado</div>";
-                }
+        if(isset($unico)){
+            if(!$unico){
+                echo "<div class=\"alert alert-danger\" role=\"alert\">Correo electrónico ya registrado</div>";
             }
-        ?>
+        }
+    ?>
     
 </body>
 </html>
