@@ -39,9 +39,9 @@
 
                         echo"
                             <span>Horario:</span>
-                            <input type='time' name='m_apertura' disabled value='$lista[0]'>
+                            <input type='time' name='m_apertura' disabled value='$lista[1]'>
                             <span>-</span>
-                            <input type='time' name='m_cierre' disabled value='$lista[1]'>
+                            <input type='time' name='m_cierre' disabled value='$lista[2]'>
                             ";
                             // <br><span>Plantilla:</span>
                             // <input type='number' name='m_plantilla' disabled value='$lista[4]'>
@@ -54,9 +54,9 @@
                     <?php
                         echo"
                             <span>Horario:</span>
-                            <input type='time' name='t_apertura' disabled value='$lista[2]'>
+                            <input type='time' name='t_apertura' disabled value='$lista[3]'>
                             <span>-</span>
-                            <input type='time' name='t_cierre' disabled value='$lista[3]'>
+                            <input type='time' name='t_cierre' disabled value='$lista[4]'>
                         ";
                             // <br><span>Plantilla:</span>
                             // <input type='number' name='t_plantilla' disabled value='$lista[5]'>

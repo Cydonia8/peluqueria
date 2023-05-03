@@ -8,10 +8,15 @@
         $mail = $_POST["correo"];
         $tlf = $_POST["telefono"];
         $unico = checkEmailUnique($mail);
-        $inicio_m = $_POST["inicio_m"];
-        $fin_m = $_POST["fin_m"];
-        $inicio_t = $_POST["inicio_t"];
-        $fin_t = $_POST["fin_t"];
+
+        $inicio_m = $_POST["inicio_m"] != '' ? $_POST["inicio_m"] : NULL;
+        $fin_m = isset($_POST["fin_m"]) ? $_POST["fin_m"] : NULL;
+        $inicio_t = $_POST["inicio_t"] != '' ? $_POST["inicio_t"] : NULL;
+        $fin_t = isset($_POST["fin_t"]) ? $_POST["fin_t"] : NULL;
+        // $inicio_m = $_POST["inicio_m"];
+        // $fin_m = $_POST["fin_m"];
+        // $inicio_t = $_POST["inicio_t"];
+        // $fin_t = $_POST["fin_t"];
 
         if($unico){
             createEmployee($nombre, $pass, $mail, $tlf, 2);           
@@ -23,6 +28,12 @@
         activateEmployee($_POST["id"]);
     }elseif(isset($_POST["desactivar"])){
         deactivateEmployee($_POST["id"]);
+    }
+
+    if(isset($_POST["programar"])){
+        $inicio = $_POST["inicio_desact"];
+        $fin = $_POST["fin_desact"] != '' ? $_POST["fin_desact"] : NULL;
+        setDeactivation($_POST["id"], $inicio, $fin);
     }
 ?>
 <!DOCTYPE html>
@@ -90,25 +101,53 @@
                         </div>
                         <div class="mb-3">
                                 <label for="inicio_m">Inicio del turno de mañana</label>
-                                <input id="inicio_m" name="inicio_m" required type="time" class="form-control" <?php echo "min='$horario[apertura_m]'"; ?>>
+                                <input id="inicio_m" name="inicio_m"  type="time" class="form-control" <?php echo "min='$horario[apertura_m]'"; ?>>
                         </div>
                         <div class="mb-3">
                                 <label for="fin_m">Fin del turno de mañana</label>
-                                <input disabled <?php echo "max='$horario[cierre_m]'"; ?> id="fin_m" name="fin_m" required type="time" class="form-control">
+                                <input disabled <?php echo "max='$horario[cierre_m]'"; ?> id="fin_m" name="fin_m"  type="time" class="form-control">
                         </div>
                         <div class="mb-3">
                                 <label for="inicio_t">Inicio del turno de tarde</label>
-                                <input id="inicio_t" name="inicio_t" required type="time" class="form-control" <?php echo "min='$horario[apertura_t]'"; ?>>
+                                <input id="inicio_t" name="inicio_t"  type="time" class="form-control" <?php echo "min='$horario[apertura_t]'"; ?>>
                         </div>
                         <div class="mb-3">
                                 <label for="fin_t">Fin del turno de tarde</label>
-                                <input disabled <?php echo "max='$horario[cierre_t]'"; ?> id="fin_t" name="fin_t" required type="time" class="form-control">
+                                <input disabled <?php echo "max='$horario[cierre_t]'"; ?> id="fin_t" name="fin_t"  type="time" class="form-control">
                         </div>
                     </div>
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <input type="submit" class="btn btn-primary" value="Crear empleado" name="insertar">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalDesactivar" tabindex="-1" aria-labelledby="modalDesactivar" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalDesactivarLabel"></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="#" method="post">
+                    <input hidden name="id" class="id-js">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                                <label for="inicio_desact">Inicio de la desactivación</label>
+                                <input id="inicio_desact" name="inicio_desact" required type="date" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                                <label for="fin_desact">Fin de la desactivación</label>
+                                <input id="fin_desact" name="fin_desact" type="date" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <input type="submit" class="btn btn-primary" value="Programar" name="programar">
                     </div>
                 </form>
             </div>

@@ -121,10 +121,10 @@ function getEmployees(){
                 <td>$fila[correo]</td>
                 <td>$fila[telefono]</td>";    
             if($fila["activo"] == 1){
-                echo "<td><form action=\"#\" method=\"post\">
-                    <input hidden name=\"id\" value=\"$fila[id]\">
-                    <input name=\"desactivar\" value=\"Desactivar\" type=\"submit\" class=\"btn btn-danger\">
-                </form></td>";
+                echo "<td class='d-flex flex-column gap-3 align-items-center'><form action=\"#\" method=\"post\">
+                    
+                    <button data-id='$fila[id]' data-bs-toggle=\"modal\" data-bs-target=\"#modalDesactivar\" data-bs-whatever=\"Programar desactivacion\" class=\"btn programar-des btn-info\">Programar desactivación</button>
+                    </td>";
             }else{
                 echo "<td><form action=\"#\" method=\"post\">
                 <input hidden name=\"id\" value=\"$fila[id]\">
@@ -218,4 +218,13 @@ function getSchedule(){
     $horario["cierre_t"] = $fila["t_cierre"];
     $con->close();
     return $horario;
+}
+
+function setDeactivation($id, $inicio, $fin){
+    $con = createConnection();
+    $insertar = $con->prepare("UPDATE personas set f_inicio = ?, f_fin = ? where id = ?");
+    $insertar->bind_param('ssi', $inicio, $fin, $id);
+    $insertar->execute();
+    $insertar->close();
+    $con->close();
 }
