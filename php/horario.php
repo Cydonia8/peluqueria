@@ -5,11 +5,36 @@
 
     $conexion=createConnection();
     if(isset($_POST['enviar'])){
-        $preparada=$conexion->prepare("update horario set m_apertura=?,m_cierre=?,t_apertura=?,t_cierre=?,m_plantilla=?,t_plantilla=?");
-        $preparada->bind_param("ssssii",$_POST['m_apertura'],$_POST['m_cierre'],$_POST['t_apertura'],$_POST['t_cierre'],$_POST['m_plantilla'],$_POST['t_plantilla']);
+        $preparada=$conexion->prepare("update horario set m_apertura=?,m_cierre=?,t_apertura=?,t_cierre=? where id=1");
+        $preparada->bind_param("ssss",$_POST['m_apertura'],$_POST['m_cierre'],$_POST['t_apertura'],$_POST['t_cierre']);
         $preparada->execute();
         $preparada->close();
         header("Refresh:0");
+    }
+    if(isset($_POST['insertar']) or isset($_POST['editar'])){
+        $inicio_m = $_POST["inicio_m"] != '' ? $_POST["inicio_m"] : NULL;
+        $fin_m = isset($_POST["fin_m"]) ? $_POST["fin_m"] : NULL;
+        $inicio_t = $_POST["inicio_t"] != '' ? $_POST["inicio_t"] : NULL;
+        $fin_t = isset($_POST["fin_t"]) ? $_POST["fin_t"] : NULL;
+        if(isset($_POST['insertar'])){
+            $preparada=$conexion->prepare("insert into horario (dia,m_apertura,m_cierre,t_apertura,t_cierre) values (?,?,?,?,?)");
+            $preparada->bind_param("sssss",$_POST['dia'],$inicio_m,$fin_m,$inicio_t,$fin_t);
+            $preparada->execute();
+            $preparada->close();
+            header("Refresh:0");
+        }else if(isset($_POST['editar'])){
+            $preparada=$conexion->prepare("update horario set dia=?,m_apertura=?,m_cierre=?,t_apertura=?,t_cierre=? where id=?");
+            $preparada->bind_param("sssssi",$_POST['dia'],$inicio_m,$fin_m,$inicio_t,$fin_t,$_POST['id']);
+            $preparada->execute();
+            $preparada->close();
+            header("Refresh:0");
+        }else if(isset($_POST['borrar'])){
+            $preparada=$conexion->prepare("delete from horario where id=?");
+            $preparada->bind_param("i",$_POST['id']);
+            $preparada->execute();
+            $preparada->close();
+            header("Refresh:0");
+        }
     }
 ?>
 <!DOCTYPE html>
@@ -20,7 +45,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="estilos.css">
+    <link rel="stylesheet" href="../estilos.css">
     <script src="../scripts/horario.js" defer></script>
     <title>Bienvenido</title>
 </head>
@@ -39,9 +64,9 @@
 
                         echo"
                             <span>Horario:</span>
-                            <input type='time' name='m_apertura' disabled value='$lista[0]'>
+                            <input type='time' name='m_apertura' disabled value='$lista[1]'>
                             <span>-</span>
-                            <input type='time' name='m_cierre' disabled value='$lista[1]'>
+                            <input type='time' name='m_cierre' disabled value='$lista[2]'>
                             ";
                             // <br><span>Plantilla:</span>
                             // <input type='number' name='m_plantilla' disabled value='$lista[4]'>
@@ -54,9 +79,9 @@
                     <?php
                         echo"
                             <span>Horario:</span>
-                            <input type='time' name='t_apertura' disabled value='$lista[2]'>
+                            <input type='time' name='t_apertura' disabled value='$lista[3]'>
                             <span>-</span>
-                            <input type='time' name='t_cierre' disabled value='$lista[3]'>
+                            <input type='time' name='t_cierre' disabled value='$lista[4]'>
                         ";
                             // <br><span>Plantilla:</span>
                             // <input type='number' name='t_plantilla' disabled value='$lista[5]'>
@@ -72,8 +97,8 @@
         </form>
     </section>
 
-    <section class="container-fluid px-sm-3 px-0 mt-4 row">
-        <div>
+    <section class="container-fluid px-sm-3 px-0 mt-4 row mx-auto">
+        <div class='mx-auto'>
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="Añadir nuevo">Añadir nuevo</button>
         </div>
 
@@ -91,32 +116,32 @@
                 <?php
                     $conexion=createConnection();
 
-                    $consulta=$conexion->query("select * from servicios");
+                    $consulta=$conexion->query("select * from horario where id!=1");
                     while($lista=$consulta->fetch_array(MYSQLI_ASSOC)){
-                        if($lista["activo"]==1){
-                            $act="Desactivar";
-                            $valor="0";
+                        if($lista['dia']<date("Y-m-d")){
+                            $preparada=$conexion->prepare("delete from horario where id=?");
+                            $preparada->bind_param("i",$lista['id']);
+                            $preparada->execute();
+                            $preparada->close();
+                            // header("Refresh:0");
                         }else{
-                            $act="Activar";
-                            $valor="1";
+                            echo "
+                            <tr>
+                                <td>$lista[dia]</td>
+                                <td>".cortarSeg($lista['m_apertura'])."-".cortarSeg($lista['m_cierre'])."</td>
+                                <td>".cortarSeg($lista['t_apertura'])."-".cortarSeg($lista['t_cierre'])."</td>
+                                <td>
+                                    <button data-id='$lista[id]' type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#exampleModal' data-bs-whatever='Editar'>Editar</button>
+                                </td>
+                                <td>
+                                    <form action='#' method='post'>
+                                        <input type='hidden' name='id' value='$lista[id]'>
+                                        <input class='recargar btn btn-primary' type='submit' name='estado' value='Borrar'></input>
+                                    </form>
+                                </td>
+                            </tr>
+                            ";
                         }
-                        echo "
-                        <tr>
-                            <td>$lista[nombre]</td>
-                            <td>$lista[duracion]</td>
-                            <td>$lista[precio]</td>
-                            <td>
-                                <button data-id='$lista[id]' type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#exampleModal' data-bs-whatever='Editar'>Editar</button>
-                            </td>
-                            <td>
-                                <form action='#' method='post'>
-                                    <input type='hidden' name='id' value='$lista[id]'>
-                                    <input type='hidden' name='valor' value='$valor'>
-                                    <input class='recargar btn btn-primary' type='submit' name='estado' value='$act'></input>
-                                </form>
-                            </td>
-                        </tr>
-                        ";
                     }
                     $consulta->close();
                     $conexion->close();
@@ -135,16 +160,24 @@
                 <form action="#" method="post">
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="recipient-name" class="col-form-label">Nombre:</label>
-                            <input type="text" name="nombre" class="form-control" id="recipient-name" required>
+                            <label for="dia">Fecha</label>
+                            <input name="dia" type="date" class="form-control">
                         </div>
                         <div class="mb-3">
-                            <label for="recipient-name" class="col-form-label">Duración:</label>
-                            <input type="time" name="duracion" class="form-control" id="recipient-name" required>
+                            <label for="inicio_m">Inicio del turno de mañana</label>
+                            <input id="inicio_m" name="inicio_m" type="time" class="form-control">
                         </div>
                         <div class="mb-3">
-                            <label for="recipient-name" class="col-form-label">Precio:</label>
-                            <input type="precio" name="precio" class="form-control" id="recipient-name" required>
+                            <label for="fin_m">Fin del turno de mañana</label>
+                                <input disabled id="fin_m" name="fin_m" type="time" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="inicio_t">Inicio del turno de tarde</label>
+                            <input id="inicio_t" name="inicio_t" type="time" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="fin_t">Fin del turno de tarde</label>
+                            <input disabled id="fin_t" name="fin_t" type="time" class="form-control">
                         </div>
                         <input type='hidden' name='id' value=''>
                     </div>
