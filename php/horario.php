@@ -71,5 +71,90 @@
             </div>
         </form>
     </section>
+
+    <section class="container-fluid px-sm-3 px-0 mt-4 row">
+        <div>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="Añadir nuevo">Añadir nuevo</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Dia</th>
+                    <th>Mañana</th>
+                    <th>Tarde</th>
+                    <th>Editar</th>
+                    <th>Borrar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                    $conexion=createConnection();
+
+                    $consulta=$conexion->query("select * from servicios");
+                    while($lista=$consulta->fetch_array(MYSQLI_ASSOC)){
+                        if($lista["activo"]==1){
+                            $act="Desactivar";
+                            $valor="0";
+                        }else{
+                            $act="Activar";
+                            $valor="1";
+                        }
+                        echo "
+                        <tr>
+                            <td>$lista[nombre]</td>
+                            <td>$lista[duracion]</td>
+                            <td>$lista[precio]</td>
+                            <td>
+                                <button data-id='$lista[id]' type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#exampleModal' data-bs-whatever='Editar'>Editar</button>
+                            </td>
+                            <td>
+                                <form action='#' method='post'>
+                                    <input type='hidden' name='id' value='$lista[id]'>
+                                    <input type='hidden' name='valor' value='$valor'>
+                                    <input class='recargar btn btn-primary' type='submit' name='estado' value='$act'></input>
+                                </form>
+                            </td>
+                        </tr>
+                        ";
+                    }
+                    $consulta->close();
+                    $conexion->close();
+                ?>
+            </tbody>
+        </table>
+    </section>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel"></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="#" method="post">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">Nombre:</label>
+                            <input type="text" name="nombre" class="form-control" id="recipient-name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">Duración:</label>
+                            <input type="time" name="duracion" class="form-control" id="recipient-name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">Precio:</label>
+                            <input type="precio" name="precio" class="form-control" id="recipient-name" required>
+                        </div>
+                        <input type='hidden' name='id' value=''>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <input type="submit" class="recargar btn btn-primary" name="" value="Enviar">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
