@@ -266,3 +266,7 @@ function linkServiceToEmployee($empleado, $servicio){
     $insert->close();
     $con->close();
 }
+
+function formatDate($dia){
+    return $dia < 10 && strlen($dia) < 2 ? '0'.$dia : $dia;
+}

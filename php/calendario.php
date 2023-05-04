@@ -233,7 +233,10 @@
                         $dia=$fila['dia'];
                     }
                 }else{
-                    echo "<td>$i</td>";
+                    $dia = formatDate($i);
+                    $mes_f = formatDate($mes_consulta);
+                    $fecha = "$anio_consulta-$mes_f-$dia";
+                    echo "<td data-date='$fecha'>$i</td>";
                 }
                 if($contador==7 and $i<$fin_mes){
                     echo "</tr><tr>";
