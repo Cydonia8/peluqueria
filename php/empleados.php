@@ -66,7 +66,7 @@
     <?php
         printMenu();
     ?>
-    <section class="tabla-empleados container-fluid px-sm-3 px-0 mt-4 row">
+    <section class="tabla-empleados container-fluid px-sm-3 px-0 mt-4 row mx-auto">
         <div>
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="Añadir nuevo">Añadir nuevo</button>
         </div>
@@ -76,6 +76,7 @@
                 <th>Correo</th>
                 <th>Teléfono</th>
                 <th>Horario</th>
+                <th>Servicios</th>
                 <th>Editar</th>
                 <th>Activar/Desactivar</th>
             </thead>
@@ -138,11 +139,11 @@
                                 $conexion=createConnection();
                                 $consulta=$conexion->query("select id,nombre from servicios");
                                 while($fila=$consulta->fetch_array(MYSQLI_ASSOC)){
-                                    echo '
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="servicios[]" value="'.$fila['id'].'" id="'.$fila['nombre'].'">
-                                        <label class="form-check-label" for="'.$fila['nombre'].'">'.$fila['nombre'].'</label>
-                                    </div>';
+                                    echo "
+                                    <div class='form-check'>
+                                        <input class='form-check-input' type='checkbox' name='servicios[]' value='".$fila['id']."' id='".$fila['nombre']."'>
+                                        <label class='form-check-label' for='".$fila['nombre']."'>".$fila['nombre']."</label>
+                                    </div>";
                                 }
                             ?>
                         </fieldset>

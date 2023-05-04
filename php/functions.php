@@ -132,6 +132,9 @@ function getEmployees(){
                 <td>$fila[telefono]</td>    
                 <td data-rango='$rango'>$horario</td>
                 <td>
+                    <button class='btn btn-primary' type='button' data-bs-toggle='collapse' data-bs-target='#servicios$fila[id]' aria-expanded='false' aria-controls='collapseExample'>Mostrar</button>
+                </td>
+                <td>
                     <button data-id='$fila[id]' type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#exampleModal' data-bs-whatever='Editar'>Editar</button>
                 </td>";    
             if($fila["activo"] == 1){
@@ -145,7 +148,14 @@ function getEmployees(){
                 <input name=\"activar\" value=\"Activar\" type=\"submit\" class=\"btn btn-success\">
             </form></td>";
             }
-            echo "</tr>";
+            echo "</tr>
+            <tr class='border border-top-0 border-end-0 border-start-0 border-dark border-2'>
+                <td class='p-0' colspan=7>
+                    <div class='collapse' id='servicios$fila[id]'>
+                        <p class='m-0 p-3'>servicios</p>
+                    </div>
+                </td>
+            </tr>";
     }
     $con->close();
 }
