@@ -133,14 +133,14 @@
                             </div>
                         </div>
                         <div class='row'>
-                        <div class="mb-3 col-6">
-                            <label for="inicio_t">Inicio del turno de tarde</label>
-                            <input id="inicio_t" name="inicio_t" type="time" class="form-control" <?php echo "min='$horario[apertura_t]'"; ?>>
-                        </div>
-                        <div class="mb-3 col-6">
-                            <label for="fin_t">Fin del turno de tarde</label>
-                            <input disabled <?php echo "max='$horario[cierre_t]'"; ?> id="fin_t" name="fin_t" type="time" class="form-control">
-                        </div>
+                            <div class="mb-3 col-6">
+                                <label for="inicio_t">Inicio del turno de tarde</label>
+                                <input id="inicio_t" name="inicio_t" type="time" class="form-control" <?php echo "min='$horario[apertura_t]'"; ?>>
+                            </div>
+                            <div class="mb-3 col-6">
+                                <label for="fin_t">Fin del turno de tarde</label>
+                                <input disabled <?php echo "max='$horario[cierre_t]'"; ?> id="fin_t" name="fin_t" type="time" class="form-control">
+                            </div>
                         </div>
                         <input type='hidden' name='id' value=''>
                     </div>

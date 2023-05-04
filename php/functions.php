@@ -246,3 +246,14 @@ function cortarSeg($tiempo){
     $corte = implode(':', explode(':', $tiempo, -1));
     return $corte;
 }
+
+function getServicesCheckboxs(){
+    $contador = 1;
+    $con = createConnection();
+    $consulta = $con->query("SELECT id, nombre from servicios where activo = 1");
+    while($fila = $consulta->fetch_array(MYSQLI_ASSOC)){
+        $servicio = "servicio".$contador;
+        echo "<input type='checkbox' value='$fila[id]' name=''"
+    }
+    $con->close();
+}
