@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 28-04-2023 a las 13:55:55
+-- Tiempo de generación: 03-05-2023 a las 13:45:46
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 8.1.6
 
@@ -53,10 +53,10 @@ INSERT INTO `citas` (`cliente`, `trabajador`, `fecha`, `hora`, `servicio`) VALUE
 
 CREATE TABLE `horario` (
   `id` bigint(20) NOT NULL,
-  `m_apertura` time NOT NULL,
-  `m_cierre` time NOT NULL,
-  `t_apertura` time NOT NULL,
-  `t_cierre` time NOT NULL,
+  `m_apertura` time DEFAULT NULL,
+  `m_cierre` time DEFAULT NULL,
+  `t_apertura` time DEFAULT NULL,
+  `t_cierre` time DEFAULT NULL,
   `dia` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -92,7 +92,7 @@ CREATE TABLE `personas` (
 INSERT INTO `personas` (`id`, `nombre`, `correo`, `telefono`, `tipo`, `pass`, `activo`, `f_inicio`, `f_fin`) VALUES
 (1, 'admin', 'admin@admin.com', '', 3, 'admin', 1, NULL, NULL),
 (2, 'cliente', '', '', 1, '', 1, NULL, NULL),
-(3, 'trabajador', 'traba@gmail.com', '', 2, '', 1, NULL, NULL),
+(3, 'trabajador', 'traba@gmail.com', '612123123', 2, 'traba', 1, NULL, NULL),
 (4, 'Pepe', 'pepe@gmail.com', '123123123', 1, 'pepe', 1, NULL, NULL),
 (5, 'juan', 'juan@gmail.com', '111111111', 1, 'juan', 1, NULL, NULL),
 (6, 'maria', 'maria@gmail.com', '', 2, 'maria', 1, NULL, NULL);
@@ -160,8 +160,15 @@ CREATE TABLE `trabaja` (
   `m_inicio` time DEFAULT NULL,
   `m_fin` time DEFAULT NULL,
   `t_inicio` time DEFAULT NULL,
-  `t-fin` time DEFAULT NULL
+  `t_fin` time DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `trabaja`
+--
+
+INSERT INTO `trabaja` (`empleado`, `m_inicio`, `m_fin`, `t_inicio`, `t_fin`) VALUES
+(3, '10:00:00', '13:00:00', NULL, NULL);
 
 --
 -- Índices para tablas volcadas
@@ -222,7 +229,7 @@ ALTER TABLE `trabaja`
 -- AUTO_INCREMENT de la tabla `horario`
 --
 ALTER TABLE `horario`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `personas`
