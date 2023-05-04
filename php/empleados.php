@@ -8,15 +8,22 @@
         $mail = $_POST["correo"];
         $tlf = $_POST["telefono"];
         $unico = checkEmailUnique($mail);
-        $inicio_m = $_POST["inicio_m"];
-        $fin_m = $_POST["fin_m"];
-        $inicio_t = $_POST["inicio_t"];
-        $fin_t = $_POST["fin_t"];
+
+        $inicio_m = $_POST["inicio_m"] != '' ? $_POST["inicio_m"] : NULL;
+        $fin_m = isset($_POST["fin_m"]) ? $_POST["fin_m"] : NULL;
+        $inicio_t = $_POST["inicio_t"] != '' ? $_POST["inicio_t"] : NULL;
+        $fin_t = isset($_POST["fin_t"]) ? $_POST["fin_t"] : NULL;
 
         if($unico){
             createEmployee($nombre, $pass, $mail, $tlf, 2);           
             $id = getLastID();
             employeeShift($id, $inicio_m, $fin_m, $inicio_t, $fin_t);
+            if(is_array($_POST["servicios"])){
+                $total = count($_POST["servicios"]);
+                foreach($_POST["servicios"] as $valor){
+                    linkServiceToEmployee($id, $valor);
+                }
+            }
         }
     }else if(isset($_POST['editar'])){
         $conexion=createConnection();
@@ -29,6 +36,45 @@
         }
         $preparada->execute();
         $preparada->close();
+
+        if(isset($_POST['servicios'])){
+            foreach($_POST["servicios"] as $valor){
+                $preparada=$conexion->prepare("select count(*) from realiza where servicio=? and empleado=?");
+                $preparada->bind_param("ii",$valor,$_POST['id']);
+                $preparada->bind_result($cant);
+                $preparada->execute();
+                $preparada->fetch();
+                $preparada->close();
+                if($cant==0){
+                    $insert = $conexion->prepare("INSERT INTO realiza (empleado, servicio) values (?,?)");
+                    $insert->bind_param('ii', $_POST['id'], $valor);
+                    $insert->execute();
+                    $insert->close();
+                }
+            }
+            $preparada=$conexion->prepare("select servicio from realiza where empleado=?");
+            $preparada->bind_param("i",$_POST['id']);
+            $preparada->bind_result($servicio);
+            $preparada->execute();
+            $insertados=[];
+            while($preparada->fetch()){
+                $insertados[]=$servicio;
+            }
+            $preparada->close();
+            foreach($insertados as $ser){
+                if(!in_array($ser,$_POST['servicios'])){
+                    $delete=$conexion->prepare("delete from realiza where servicio=? and empleado=?");
+                    $delete->bind_param("ii",$ser,$_POST['id']);
+                    $delete->execute();
+                    $delete->close();
+                }
+            }
+        }else{
+            $delete=$conexion->prepare("delete from realiza where empleado=?");
+            $delete->bind_param("i",$_POST['id']);
+            $delete->execute();
+            $delete->close();
+        }
         
         $inicio_m = $_POST["inicio_m"] != '' ? $_POST["inicio_m"] : NULL;
         $fin_m = isset($_POST["fin_m"]) ? $_POST["fin_m"] : NULL;
@@ -45,6 +91,12 @@
         activateEmployee($_POST["id"]);
     }elseif(isset($_POST["desactivar"])){
         deactivateEmployee($_POST["id"]);
+    }
+
+    if(isset($_POST["programar"])){
+        $inicio = $_POST["inicio_desact"];
+        $fin = $_POST["fin_desact"] != '' ? $_POST["fin_desact"] : NULL;
+        setDeactivation($_POST["id"], $inicio, $fin);
     }
 ?>
 <!DOCTYPE html>
@@ -137,12 +189,13 @@
                             <legend class='fs-5'>Servicios</legend>
                             <?php
                                 $conexion=createConnection();
-                                $consulta=$conexion->query("select id,nombre from servicios");
+                                $consulta=$conexion->query("select id, nombre from servicios");
                                 while($fila=$consulta->fetch_array(MYSQLI_ASSOC)){
+                                    $id = $fila["id"];
                                     echo "
                                     <div class='form-check'>
-                                        <input class='form-check-input' type='checkbox' name='servicios[]' value='".$fila['id']."' id='".$fila['nombre']."'>
-                                        <label class='form-check-label' for='".$fila['nombre']."'>".$fila['nombre']."</label>
+                                        <input class='form-check-input' type='checkbox' name='servicios[]' value=\"$id\" id='$fila[nombre]'>
+                                        <label class='form-check-label' for='$fila[nombre]'>$fila[nombre]</label>
                                     </div>";
                                 }
                             ?>
@@ -153,6 +206,34 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <input type="submit" class="btn btn-primary" value="Crear empleado" name="insertar">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalDesactivar" tabindex="-1" aria-labelledby="modalDesactivar" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalDesactivarLabel"></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="#" method="post">
+                    <input hidden name="id" class="id-js">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                                <label for="inicio_desact">Inicio de la desactivación</label>
+                                <input id="inicio_desact" name="inicio_desact" required type="date" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                                <label for="fin_desact">Fin de la desactivación</label>
+                                <input id="fin_desact" name="fin_desact" type="date" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <input type="submit" class="btn btn-primary" value="Programar" name="programar">
                     </div>
                 </form>
             </div>

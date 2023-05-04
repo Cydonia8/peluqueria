@@ -2,6 +2,26 @@ const inicio_m = document.getElementById("inicio_m")
 const fin_m = document.getElementById("fin_m")
 const inicio_t = document.getElementById("inicio_t")
 const fin_t = document.getElementById("fin_t")
+const inicio_desact = document.getElementById("inicio_desact")
+const button_des = document.querySelectorAll(".programar-des")
+const id_js = document.querySelector(".id-js")
+
+button_des.forEach(button=>{
+    button.addEventListener("click", (evt)=>{
+        let id = evt.target.getAttribute("data-id")
+        id_js.setAttribute("value", id)
+    })
+})
+
+
+let today = new Date()
+let dia = formatDate(today.getDate())
+let mes = formatDate(today.getMonth()+1)
+let anio = today.getFullYear()
+let fecha_actual = `${anio}-${mes}-${dia}`
+// let fecha_minima_activacion = 
+inicio_desact.setAttribute("min", fecha_actual)
+inicio_desact.value=fecha_actual
 
 inicio_m.addEventListener("change", ()=>{
     let minimo = inicio_m.value
@@ -21,6 +41,13 @@ setTimeout(()=> {
     });
 }, 3000);
 
+function formatDate(fecha){
+    if(fecha < 10){
+        return `0${fecha}`
+    }else{
+        return fecha
+    }
+}
 const exampleModal = document.getElementById('exampleModal')
 exampleModal.addEventListener('show.bs.modal', event => {
     const button = event.relatedTarget
@@ -32,7 +59,8 @@ exampleModal.addEventListener('show.bs.modal', event => {
     
     modalTitle.textContent = `${recipient}`
     
-    const modalBodyInput = exampleModal.querySelectorAll('.modal-body input');
+    const modalBodyCheckbox = exampleModal.querySelectorAll('.modal-body input[type="checkbox"]');
+    const modalBodyInput = exampleModal.querySelectorAll('.modal-body input:not([type="checkbox"])');
     if(button.innerText=="Editar"){
         const fila=button.parentElement.parentElement;
 
@@ -61,6 +89,13 @@ exampleModal.addEventListener('show.bs.modal', event => {
             fin_t.removeAttribute("disabled");
         }
 
+        const servicios=fila.nextElementSibling.querySelectorAll(".lista_servicios>span");
+        const array=Array.from(modalBodyCheckbox);
+        servicios.forEach(servicio=>{
+            const a=array.filter(ser=>ser.value==servicio.getAttribute("data-ser"));
+            a[0].checked=true;
+        })
+
         modalBodyInput[modalBodyInput.length-1].value = button.getAttribute('data-id');
         modalFooter.querySelector("input").name = `editar`
     }else if(button.innerText=="Añadir nuevo"){
@@ -68,6 +103,7 @@ exampleModal.addEventListener('show.bs.modal', event => {
         fin_m.setAttribute("disabled",true);
         fin_t.setAttribute("disabled",true);
         modalBodyInput.forEach(campo=>campo.value="");
+        modalBodyCheckbox.forEach(campo=>campo.checked=false);
         modalFooter.querySelector("input").name = `insertar`
     }
 })

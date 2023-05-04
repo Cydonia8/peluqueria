@@ -138,21 +138,29 @@ function getEmployees(){
                     <button data-id='$fila[id]' type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#exampleModal' data-bs-whatever='Editar'>Editar</button>
                 </td>";    
             if($fila["activo"] == 1){
-                echo "<td><form action=\"#\" method=\"post\">
-                    <input hidden name=\"id\" value=\"$fila[id]\">
-                    <input name=\"desactivar\" value=\"Desactivar\" type=\"submit\" class=\"btn btn-danger\">
-                </form></td>";
+                echo "<td class='d-flex flex-column gap-3 align-items-center'><form action=\"#\" method=\"post\">
+                    
+                    <button data-id='$fila[id]' data-bs-toggle=\"modal\" data-bs-target=\"#modalDesactivar\" data-bs-whatever=\"Programar desactivacion\" class=\"btn programar-des btn-info\">Programar desactivación</button>
+                    </td>";
             }else{
                 echo "<td><form action=\"#\" method=\"post\">
                 <input hidden name=\"id\" value=\"$fila[id]\">
                 <input name=\"activar\" value=\"Activar\" type=\"submit\" class=\"btn btn-success\">
             </form></td>";
             }
+            $preparada = $con->prepare("select servicio,nombre from realiza,servicios where servicio=id and empleado=?");
+            $preparada->bind_param('i', $fila['id']);
+            $preparada->bind_result($servicio,$nombre);
+            $preparada->execute();
             echo "</tr>
             <tr class='border border-top-0 border-end-0 border-start-0 border-dark border-2'>
                 <td class='p-0' colspan=7>
                     <div class='collapse' id='servicios$fila[id]'>
-                        <p class='m-0 p-3'>servicios</p>
+                        <p class='m-0 p-3 lista_servicios'>- ";
+            while($preparada->fetch()){
+                echo "<span data-ser='$servicio'>$nombre</span> - ";
+            }
+            echo "      </p>
                     </div>
                 </td>
             </tr>";
@@ -244,7 +252,35 @@ function getSchedule(){
     return $horario;
 }
 
+function setDeactivation($id, $inicio, $fin){
+    $con = createConnection();
+    $insertar = $con->prepare("UPDATE personas set f_inicio = ?, f_fin = ? where id = ?");
+    $insertar->bind_param('ssi', $inicio, $fin, $id);
+    $insertar->execute();
+    $insertar->close();
+    $con->close();
+}
 function cortarSeg($tiempo){
     $corte = implode(':', explode(':', $tiempo, -1));
     return $corte;
+}
+
+// function getServicesCheckboxs(){
+//     $contador = 1;
+//     $con = createConnection();
+//     $consulta = $con->query("SELECT id, nombre from servicios where activo = 1");
+//     while($fila = $consulta->fetch_array(MYSQLI_ASSOC)){
+//         $servicio = "servicio".$contador;
+//         echo "<input type='checkbox' value='$fila[id]' name='servicios[]'>$fila[nombre]";
+//     }
+//     $con->close();
+// }
+
+function linkServiceToEmployee($empleado, $servicio){
+    $con = createConnection();
+    $insert = $con->prepare("INSERT INTO realiza (empleado, servicio) values (?,?)");
+    $insert->bind_param('ii', $empleado, $servicio);
+    $insert->execute();
+    $insert->close();
+    $con->close();
 }
