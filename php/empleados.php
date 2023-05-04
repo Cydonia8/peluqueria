@@ -21,7 +21,7 @@
             if(is_array($_POST["servicios"])){
                 $total = count($_POST["servicios"]);
                 foreach($_POST["servicios"] as $valor){
-                    linkServiceToEmployee($id, $valor);                    
+                    linkServiceToEmployee($id, $valor);
                 }
             }
         }
@@ -36,6 +36,45 @@
         }
         $preparada->execute();
         $preparada->close();
+
+        if(isset($_POST['servicios'])){
+            foreach($_POST["servicios"] as $valor){
+                $preparada=$conexion->prepare("select count(*) from realiza where servicio=? and empleado=?");
+                $preparada->bind_param("ii",$valor,$_POST['id']);
+                $preparada->bind_result($cant);
+                $preparada->execute();
+                $preparada->fetch();
+                $preparada->close();
+                if($cant==0){
+                    $insert = $conexion->prepare("INSERT INTO realiza (empleado, servicio) values (?,?)");
+                    $insert->bind_param('ii', $_POST['id'], $valor);
+                    $insert->execute();
+                    $insert->close();
+                }
+            }
+            $preparada=$conexion->prepare("select servicio from realiza where empleado=?");
+            $preparada->bind_param("i",$_POST['id']);
+            $preparada->bind_result($servicio);
+            $preparada->execute();
+            $insertados=[];
+            while($preparada->fetch()){
+                $insertados[]=$servicio;
+            }
+            $preparada->close();
+            foreach($insertados as $ser){
+                if(!in_array($ser,$_POST['servicios'])){
+                    $delete=$conexion->prepare("delete from realiza where servicio=? and empleado=?");
+                    $delete->bind_param("ii",$ser,$_POST['id']);
+                    $delete->execute();
+                    $delete->close();
+                }
+            }
+        }else{
+            $delete=$conexion->prepare("delete from realiza where empleado=?");
+            $delete->bind_param("i",$_POST['id']);
+            $delete->execute();
+            $delete->close();
+        }
         
         $inicio_m = $_POST["inicio_m"] != '' ? $_POST["inicio_m"] : NULL;
         $fin_m = isset($_POST["fin_m"]) ? $_POST["fin_m"] : NULL;
@@ -79,7 +118,7 @@
     <?php
         printMenu();
     ?>
-    <section class="tabla-empleados container-fluid px-sm-3 px-0 mt-4 row">
+    <section class="tabla-empleados container-fluid px-sm-3 px-0 mt-4 row mx-auto">
         <div>
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="Añadir nuevo">Añadir nuevo</button>
         </div>
@@ -89,6 +128,7 @@
                 <th>Correo</th>
                 <th>Teléfono</th>
                 <th>Horario</th>
+                <th>Servicios</th>
                 <th>Editar</th>
                 <th>Activar/Desactivar</th>
             </thead>
