@@ -43,6 +43,7 @@
         $preparada->bind_param("ssssi",$inicio_m,$fin_m,$inicio_t,$fin_t,$_POST['id']);
         $preparada->execute();
         $preparada->close();
+        $conexion->close();
         header("Refresh:0");
     }
     if(isset($_POST["activar"])){
@@ -142,6 +143,20 @@
                                 <input disabled <?php echo "max='$horario[cierre_t]'"; ?> id="fin_t" name="fin_t" type="time" class="form-control">
                             </div>
                         </div>
+                        <fieldset>
+                            <legend class='fs-5'>Servicios</legend>
+                            <?php
+                                $conexion=createConnection();
+                                $consulta=$conexion->query("select id,nombre from servicios");
+                                while($fila=$consulta->fetch_array(MYSQLI_ASSOC)){
+                                    echo '
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="servicios[]" value="'.$fila['id'].'" id="'.$fila['nombre'].'">
+                                        <label class="form-check-label" for="'.$fila['nombre'].'">'.$fila['nombre'].'</label>
+                                    </div>';
+                                }
+                            ?>
+                        </fieldset>
                         <input type='hidden' name='id' value=''>
                     </div>
 
