@@ -59,7 +59,7 @@ exampleModal.addEventListener('show.bs.modal', event => {
     
     modalTitle.textContent = `${recipient}`
     
-    const modalBodyInput = exampleModal.querySelectorAll('.modal-body input');
+    const modalBodyInput = exampleModal.querySelectorAll('.modal-body input:not[type="checkbox"]');
     if(button.innerText=="Editar"){
         const fila=button.parentElement.parentElement;
 

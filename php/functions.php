@@ -247,13 +247,22 @@ function cortarSeg($tiempo){
     return $corte;
 }
 
-function getServicesCheckboxs(){
-    $contador = 1;
+// function getServicesCheckboxs(){
+//     $contador = 1;
+//     $con = createConnection();
+//     $consulta = $con->query("SELECT id, nombre from servicios where activo = 1");
+//     while($fila = $consulta->fetch_array(MYSQLI_ASSOC)){
+//         $servicio = "servicio".$contador;
+//         echo "<input type='checkbox' value='$fila[id]' name='servicios[]'>$fila[nombre]";
+//     }
+//     $con->close();
+// }
+
+function linkServiceToEmployee($empleado, $servicio){
     $con = createConnection();
-    $consulta = $con->query("SELECT id, nombre from servicios where activo = 1");
-    while($fila = $consulta->fetch_array(MYSQLI_ASSOC)){
-        $servicio = "servicio".$contador;
-        echo "<input type='checkbox' value='$fila[id]' name=''"
-    }
+    $insert = $con->prepare("INSERT INTO realiza (empleado, servicio) values (?,?)");
+    $insert->bind_param('ii', $empleado, $servicio);
+    $insert->execute();
+    $insert->close();
     $con->close();
 }

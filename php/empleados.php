@@ -13,15 +13,17 @@
         $fin_m = isset($_POST["fin_m"]) ? $_POST["fin_m"] : NULL;
         $inicio_t = $_POST["inicio_t"] != '' ? $_POST["inicio_t"] : NULL;
         $fin_t = isset($_POST["fin_t"]) ? $_POST["fin_t"] : NULL;
-        // $inicio_m = $_POST["inicio_m"];
-        // $fin_m = $_POST["fin_m"];
-        // $inicio_t = $_POST["inicio_t"];
-        // $fin_t = $_POST["fin_t"];
 
         if($unico){
             createEmployee($nombre, $pass, $mail, $tlf, 2);           
             $id = getLastID();
             employeeShift($id, $inicio_m, $fin_m, $inicio_t, $fin_t);
+            if(is_array($_POST["servicios"])){
+                $total = count($_POST["servicios"]);
+                foreach($_POST["servicios"] as $valor){
+                    linkServiceToEmployee($id, $valor);                    
+                }
+            }
         }
     }else if(isset($_POST['editar'])){
         $conexion=createConnection();
@@ -147,13 +149,14 @@
                             <legend class='fs-5'>Servicios</legend>
                             <?php
                                 $conexion=createConnection();
-                                $consulta=$conexion->query("select id,nombre from servicios");
+                                $consulta=$conexion->query("select id, nombre from servicios");
                                 while($fila=$consulta->fetch_array(MYSQLI_ASSOC)){
-                                    echo '
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="servicios[]" value="'.$fila['id'].'" id="'.$fila['nombre'].'">
-                                        <label class="form-check-label" for="'.$fila['nombre'].'">'.$fila['nombre'].'</label>
-                                    </div>';
+                                    $id = $fila["id"];
+                                    echo "
+                                    <div class='form-check'>
+                                        <input class='form-check-input' type='checkbox' name='servicios[]' value=\"$id\" id='$fila[nombre]'>
+                                        <label class='form-check-label' for='$fila[nombre]'>$fila[nombre]</label>
+                                    </div>";
                                 }
                             ?>
                         </fieldset>
