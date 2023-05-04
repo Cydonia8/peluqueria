@@ -38,6 +38,7 @@
         $preparada->bind_param("ssssi",$inicio_m,$fin_m,$inicio_t,$fin_t,$_POST['id']);
         $preparada->execute();
         $preparada->close();
+        $conexion->close();
         header("Refresh:0");
     }
     if(isset($_POST["activar"])){
@@ -122,15 +123,29 @@
                             </div>
                         </div>
                         <div class='row'>
-                        <div class="mb-3 col-6">
-                            <label for="inicio_t">Inicio del turno de tarde</label>
-                            <input id="inicio_t" name="inicio_t" type="time" class="form-control" <?php echo "min='$horario[apertura_t]'"; ?>>
+                            <div class="mb-3 col-6">
+                                <label for="inicio_t">Inicio del turno de tarde</label>
+                                <input id="inicio_t" name="inicio_t" type="time" class="form-control" <?php echo "min='$horario[apertura_t]'"; ?>>
+                            </div>
+                            <div class="mb-3 col-6">
+                                <label for="fin_t">Fin del turno de tarde</label>
+                                <input disabled <?php echo "max='$horario[cierre_t]'"; ?> id="fin_t" name="fin_t" type="time" class="form-control">
+                            </div>
                         </div>
-                        <div class="mb-3 col-6">
-                            <label for="fin_t">Fin del turno de tarde</label>
-                            <input disabled <?php echo "max='$horario[cierre_t]'"; ?> id="fin_t" name="fin_t" type="time" class="form-control">
-                        </div>
-                        </div>
+                        <fieldset>
+                            <legend class='fs-5'>Servicios</legend>
+                            <?php
+                                $conexion=createConnection();
+                                $consulta=$conexion->query("select id,nombre from servicios");
+                                while($fila=$consulta->fetch_array(MYSQLI_ASSOC)){
+                                    echo '
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="servicios[]" value="'.$fila['id'].'" id="'.$fila['nombre'].'">
+                                        <label class="form-check-label" for="'.$fila['nombre'].'">'.$fila['nombre'].'</label>
+                                    </div>';
+                                }
+                            ?>
+                        </fieldset>
                         <input type='hidden' name='id' value=''>
                     </div>
 
