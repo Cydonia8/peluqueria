@@ -122,19 +122,18 @@
                             <label for="pass">Contraseña</label>
                             <input name="pass" required type="password" class="form-control" aria-describedby="emailHelp" placeholder="Contraseña">
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3 d-flex align-items-center">
                                 <label for="inicio_m">Inicio del turno de mañana</label>
                                 <input id="inicio_m" name="inicio_m"  type="time" class="form-control" <?php echo "min='$horario[apertura_m]'"; ?>>
-                        </div>
-                        <div class="mb-3">
                                 <label for="fin_m">Fin del turno de mañana</label>
                                 <input disabled <?php echo "max='$horario[cierre_m]'"; ?> id="fin_m" name="fin_m"  type="time" class="form-control">
                         </div>
-                        <div class="mb-3">
+                        <!-- <div class="mb-3">
+                                
+                        </div> -->
+                        <div class="mb-3 d-flex align-items-center">
                                 <label for="inicio_t">Inicio del turno de tarde</label>
                                 <input id="inicio_t" name="inicio_t"  type="time" class="form-control" <?php echo "min='$horario[apertura_t]'"; ?>>
-                        </div>
-                        <div class="mb-3">
                                 <label for="fin_t">Fin del turno de tarde</label>
                                 <input disabled <?php echo "max='$horario[cierre_t]'"; ?> id="fin_t" name="fin_t"  type="time" class="form-control">
                         </div>
