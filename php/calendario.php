@@ -129,7 +129,7 @@
     <section class="container-fluid px-sm-3 px-0 mt-4 row">
     <?php
         if(!isset($_SESSION['user'])){
-            header('Refresh: 0; URL=../index.php');
+            echo "<meta http-equiv='refresh' content='0;url=http://domain.com?a=1&b=2'>";
         }else{
             if($_SESSION['user']!=="admin@admin.com"){
                 $usuario=$_SESSION['user'];

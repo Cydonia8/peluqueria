@@ -9,12 +9,18 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    
     <link rel="stylesheet" href="../estilos.css">
-    <!-- <script src="../scripts/calendario.js" defer></script> -->
+    <script src="../scripts/calendario.js" defer></script>
     <script src="../scripts/pedir_cita_api.js" defer></script>
     <script src="../scripts/jquery-3.2.1.min.js" defer></script>
+    <link href="../vanilla-calendar-main/vanilla-calendar-main/package/build/vanilla-calendar.min.css" rel="stylesheet">
+    <link href="../vanilla-calendar-main/vanilla-calendar-main/package/build/themes/dark.min.css" rel="stylesheet">
+    <link href="../vanilla-calendar-main/vanilla-calendar-main/package/build/themes/light.min.css" rel="stylesheet">
+    <!-- Plugin JS -->
+    <script src="../vanilla-calendar-main/vanilla-calendar-main/package/build/vanilla-calendar.min.js" defer></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
     <title>Bienvenido</title>
 </head>
 <body>
@@ -30,130 +36,132 @@
         <select name="empleado" id="select-empleado"></select>
     </section>
     <section class="container-fluid px-sm-3 px-0 mt-4 row">
+    <div class="col-12 col-md-6" id="calendar"></div>
+    
     <?php
-        if(!isset($_SESSION['user'])){
-            header('Refresh: 0; URL=../index.php');
-        }else{
-            if($_SESSION['user']!=="admin@admin.com"){
-                $usuario=$_SESSION['user'];
-                $conexion=createConnection();
-                $consulta=$conexion->query("select id from personas where correo='$usuario'");
-                $num=$consulta->fetch_array(MYSQLI_ASSOC);
-                $id=$num['id'];
-            }
+        // if(!isset($_SESSION['user'])){
+        //     header('Refresh: 0; URL=../index.php');
+        // }else{
+        //     if($_SESSION['user']!=="admin@admin.com"){
+        //         $usuario=$_SESSION['user'];
+        //         $conexion=createConnection();
+        //         $consulta=$conexion->query("select id from personas where correo='$usuario'");
+        //         $num=$consulta->fetch_array(MYSQLI_ASSOC);
+        //         $id=$num['id'];
+        //     }
 
-            setlocale(LC_ALL,"es-ES.UTF-8");
-            $conexion=createConnection();
+        //     setlocale(LC_ALL,"es-ES.UTF-8");
+        //     $conexion=createConnection();
             
-            $mes_actual=date('m',time());
-            $anio_actual=date('Y');
+        //     $mes_actual=date('m',time());
+        //     $anio_actual=date('Y');
 
-            if(isset($_GET['mes'])){
-                $mes=$_GET['mes'];
-                $anio=$_GET['año'];
-            }else{
-                $mes=$mes_actual;
-                $anio=$anio_actual;
-            }
+        //     if(isset($_GET['mes'])){
+        //         $mes=$_GET['mes'];
+        //         $anio=$_GET['año'];
+        //     }else{
+        //         $mes=$mes_actual;
+        //         $anio=$anio_actual;
+        //     }
 
-            $fecha=mktime(0,0,0,$mes,1,$anio);
-            $inicio_mes=date('N',$fecha);
-            $fin_mes=date('t',$fecha);
-            $nombre_mes=ucfirst(strftime('%B',$fecha));
-            $dia=0;
+        //     $fecha=mktime(0,0,0,$mes,1,$anio);
+        //     $inicio_mes=date('N',$fecha);
+        //     $fin_mes=date('t',$fecha);
+        //     $nombre_mes=ucfirst(strftime('%B',$fecha));
+        //     $dia=0;
 
-            if($_SESSION['user']!="admin@admin.com"){
-                $consulta=$conexion->query("select day(fecha) dia from citas where (cliente=$id or trabajador=$id) and year(fecha)=$anio and month(fecha)=$mes order by fecha asc");
-            }else{
-                $consulta=$conexion->query("select day(fecha) dia from citas where year(fecha)=$anio and month(fecha)=$mes order by fecha asc");
-            }
-            $num_filas=$consulta->num_rows;
-            if($num_filas>0){
-                $fila=$consulta->fetch_array(MYSQLI_ASSOC);
-                $dia=$fila['dia'];
-            }
+        //     if($_SESSION['user']!="admin@admin.com"){
+        //         $consulta=$conexion->query("select day(fecha) dia from citas where (cliente=$id or trabajador=$id) and year(fecha)=$anio and month(fecha)=$mes order by fecha asc");
+        //     }else{
+        //         $consulta=$conexion->query("select day(fecha) dia from citas where year(fecha)=$anio and month(fecha)=$mes order by fecha asc");
+        //     }
+        //     $num_filas=$consulta->num_rows;
+        //     if($num_filas>0){
+        //         $fila=$consulta->fetch_array(MYSQLI_ASSOC);
+        //         $dia=$fila['dia'];
+        //     }
 
-            $mes_siguiente = $mes + 1;
-            $mes_anterior = $mes - 1;
-            $año_siguiente = $anio;
-            $año_anterior = $anio;
+        //     $mes_siguiente = $mes + 1;
+        //     $mes_anterior = $mes - 1;
+        //     $año_siguiente = $anio;
+        //     $año_anterior = $anio;
 
-            if($mes_siguiente > 12)
-            {
-                $mes_siguiente = 1;
-                $mes=$mes_siguiente;
-                $año_siguiente++;
-                $anio=$año_anterior;
-            }
-            if($mes_anterior<1)
-            {
-                $mes_anterior=12;
-                $mes=$mes_anterior;
-                $año_anterior--;
-                $anio=$año_anterior;
-            }
-            // echo "<table class='w-100 text-center'>
-            echo "<table id=\"calendario\" class='col-12 col-md-6'>
-                <caption class=\"text-center\">
-                    <a href='calendario.php?mes=$mes_anterior&año=$año_anterior'><-</a>
-                    $nombre_mes
-                    <a href='calendario.php?mes=$mes_siguiente&año=$año_siguiente'>-></a>
-                </caption>
-                <thead>
-                    <tr>
-                        <th>Lunes</th>
-                        <th>Martes</th>
-                        <th>Miércoles</th>
-                        <th>Jueves</th>
-                        <th>Viernes</th>
-                        <th>Sábado</th>
-                        <th>Domingo</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>";
+        //     if($mes_siguiente > 12)
+        //     {
+        //         $mes_siguiente = 1;
+        //         $mes=$mes_siguiente;
+        //         $año_siguiente++;
+        //         $anio=$año_anterior;
+        //     }
+        //     if($mes_anterior<1)
+        //     {
+        //         $mes_anterior=12;
+        //         $mes=$mes_anterior;
+        //         $año_anterior--;
+        //         $anio=$año_anterior;
+        //     }
+        //     // echo "<table class='w-100 text-center'>
+        //     echo "<table id=\"calendario\" class='col-12 col-md-6'>
+        //         <caption class=\"text-center\">
+        //             <a href='calendario.php?mes=$mes_anterior&año=$año_anterior'><-</a>
+        //             $nombre_mes
+        //             <a href='calendario.php?mes=$mes_siguiente&año=$año_siguiente'>-></a>
+        //         </caption>
+        //         <thead>
+        //             <tr>
+        //                 <th>Lunes</th>
+        //                 <th>Martes</th>
+        //                 <th>Miércoles</th>
+        //                 <th>Jueves</th>
+        //                 <th>Viernes</th>
+        //                 <th>Sábado</th>
+        //                 <th>Domingo</th>
+        //             </tr>
+        //         </thead>
+        //         <tbody>
+        //             <tr>";
 
-            $anio_consulta=$anio;
-            if($mes==12){
-                $mes_consulta=1;
-                $anio_consulta++;
-            }else if($mes==1){
-                $mes_consulta=12;
-            }else{
-                $mes_consulta=$mes;
-            }
+        //     $anio_consulta=$anio;
+        //     if($mes==12){
+        //         $mes_consulta=1;
+        //         $anio_consulta++;
+        //     }else if($mes==1){
+        //         $mes_consulta=12;
+        //     }else{
+        //         $mes_consulta=$mes;
+        //     }
 
-            for($i=1;$i<$inicio_mes;$i++){
-                echo "<td></td>";
-            }
+        //     for($i=1;$i<$inicio_mes;$i++){
+        //         echo "<td></td>";
+        //     }
 
-            $contador=$inicio_mes;
-            for($i=1;$i<=$fin_mes;$i++){
-                if($i==$dia){
-                    echo "<td class='cita'><a href='?mes=$mes_consulta&año=$anio_consulta&dia=$i'>$i</a></td>";
-                    $fila=$consulta->fetch_array(MYSQLI_ASSOC);
-                    if($fila!=false){
-                        $dia=$fila['dia'];
-                    }
-                }else{
-                    $dia = formatDate($i);
-                    $mes_f = formatDate($mes_consulta);
-                    $fecha = "$anio_consulta-$mes_f-$dia";
-                    echo "<td data-date='$fecha'>$i</td>";
-                }
-                if($contador==7 and $i<$fin_mes){
-                    echo "</tr><tr>";
-                    $contador=0;
-                }
-                $contador++;
-            }
-            if($contador>1){
-                for($i=$contador;$i<=7;$i++){
-                    echo "<td></td>";
-                }
-            }
+        //     $contador=$inicio_mes;
+        //     for($i=1;$i<=$fin_mes;$i++){
+        //         if($i==$dia){
+        //             echo "<td class='cita'><a href='?mes=$mes_consulta&año=$anio_consulta&dia=$i'>$i</a></td>";
+        //             $fila=$consulta->fetch_array(MYSQLI_ASSOC);
+        //             if($fila!=false){
+        //                 $dia=$fila['dia'];
+        //             }
+        //         }else{
+        //             $dia = formatDate($i);
+        //             $mes_f = formatDate($mes_consulta);
+        //             $fecha = "$anio_consulta-$mes_f-$dia";
+        //             echo "<td data-date='$fecha'>$i</td>";
+        //         }
+        //         if($contador==7 and $i<$fin_mes){
+        //             echo "</tr><tr>";
+        //             $contador=0;
+        //         }
+        //         $contador++;
+        //     }
+        //     if($contador>1){
+        //         for($i=$contador;$i<=7;$i++){
+        //             echo "<td></td>";
+        //         }
+        //     }
             
-            $consulta->close();
+        //     $consulta->close();
            
             // echo "</tr>
             //     </tbody>
@@ -233,15 +241,21 @@
             //     </tr>";
             // }
 
-            echo "</tbody>
-            </table>";
+        //     echo "</tbody>
+        //     </table>";
             echo "<div class='col-12 col-md-6'>
                         <h2 class='text-center'>Horas</h2>  
                 </div>";
 
-            $conexion->close();
-        }
+        //     $conexion->close();
+        // }
     ?>
     </section>
 </body>
 </html>
+<script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const calendar = new VanillaCalendar('#calendar');
+        calendar.init();
+      });
+    </script>

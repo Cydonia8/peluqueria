@@ -8,14 +8,16 @@
 
     $id = $_GET["id"];
     // $id = 2;
-    $sentencia = $conexion->prepare("select nombre from servicios where id = ?");
+    $sentencia = $conexion->prepare("select nombre, duracion, precio from servicios where id = ?");
     $sentencia->bind_param('i', $id);
-    $sentencia->bind_result($nombre);
+    $sentencia->bind_result($nombre, $duracion, $precio);
     $sentencia->execute();
     $datos = [];
     
     while($sentencia->fetch()){
-        $datos[] = $nombre;
+        $datos["nombre"] = $nombre;
+        $datos["diuraciopn"] = $duracion;
+        $datos["preoipo"] = $precio;
     }
     $info['datos'] = $datos;
     // select p.nombre nombre, p.id id, f_inicio, f_fin, m_inicio, m_fin, t_inicio, t_fin ,fecha ,hora ,c.servicio servicio ,duracion 
