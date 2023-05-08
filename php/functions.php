@@ -46,6 +46,9 @@ function printMenu(){
                                 <a class=\"nav-link\" href=\"empleados.php\">Empleados</a>
                             </li>
                             <li class=\"nav-item\">
+                                <a class=\"nav-link\" href=\"pedir_cita.php\">Pedir cita</a>
+                            </li>
+                            <li class=\"nav-item\">
                                 <a class=\"nav-link\" href=\"servicios.php\">Servicios</a>
                             </li>
                             <li class=\"nav-item\">
@@ -67,6 +70,9 @@ function printMenu(){
                         <ul class=\"navbar-nav\">
                         <li class=\"nav-item active\">
                             <form action=\"#\" method=\"post\"><input type=\"submit\" name=\"cerrar-sesion\" value=\"Cerrar sesión\"></form>
+                        </li>
+                        <li class=\"nav-item\">
+                            <a class=\"nav-link\" href=\"pedir_cita.php\">Pedir cita</a>
                         </li>
                         </ul>
                     </div>
@@ -287,4 +293,13 @@ function linkServiceToEmployee($empleado, $servicio){
 
 function formatDate($dia){
     return $dia < 10 && strlen($dia) < 2 ? '0'.$dia : $dia;
+}
+
+function getServiciosSelect(){
+    $con = createConnection();
+    $consulta = $con->query("SELECT nombre, id from servicios where activo = 1");
+    while($fila = $consulta->fetch_array(MYSQLI_ASSOC)){
+        echo "<option value='$fila[id]'>$fila[nombre]</option>";
+    }
+    $con->close();
 }
