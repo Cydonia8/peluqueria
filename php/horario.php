@@ -130,6 +130,7 @@
 
         <section class="container-fluid px-sm-3 px-0 mt-4 row col-6 mx-auto">
             <form action="" method="post" class="col-12 mx-auto row">
+                <h3 class='text-center'>Dias que cierra</h3>
                 <div class="col d-flex align-items-center justify-content-evenly">
                     <?php
                             $consulta=$conexion->query("select dia from descanso");

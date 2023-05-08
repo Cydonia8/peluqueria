@@ -40,3 +40,21 @@ function comprobarFestivos(){
         })
     })
 }
+
+document.addEventListener('DOMContentLoaded',async () => {
+    const respuesta = await fetch('https://date.nager.at/api/v3/PublicHolidays/2023/ES')
+    const datos = await respuesta.json()
+    let fiestas = datos.filter(festivo => festivo.counties == null || festivo.counties.includes("ES-AN")).map(f=>f.date);
+
+
+    console.log(fiestas)
+    const calendar = new VanillaCalendar('#calendar',{
+        settings: {
+            selected: {
+              holidays: fiestas,
+            },
+          },
+    });
+    calendar.settings.lang = 'es';
+    calendar.init();
+  });
