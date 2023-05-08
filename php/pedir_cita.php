@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" href="../estilos.css">
-    <script src="../scripts/calendario.js" defer></script>
+    <!-- <script src="../scripts/calendario.js" defer></script> -->
     <script src="../scripts/pedir_cita_api.js" defer></script>
     <script src="../scripts/jquery-3.2.1.min.js" defer></script>
     <link href="../vanilla-calendar-main/vanilla-calendar-main/package/build/vanilla-calendar.min.css" rel="stylesheet">
@@ -256,6 +256,7 @@
 <script>
       document.addEventListener('DOMContentLoaded', () => {
         const calendar = new VanillaCalendar('#calendar');
+        calendar.settings.lang="es"
         calendar.init();
       });
-    </script>
+</script>
