@@ -11,6 +11,41 @@
         $preparada->close();
         header("Refresh:0");
     }
+    if(isset($_POST['enviar2'])){
+        if(isset($_POST['descanso'])){
+            foreach($_POST["descanso"] as $valor){
+                $preparada=$conexion->prepare("select count(*) from descanso where dia=?");
+                $preparada->bind_param("i",$valor);
+                $preparada->bind_result($cant);
+                $preparada->execute();
+                $preparada->fetch();
+                $preparada->close();
+                if($cant==0){
+                    $insert = $conexion->prepare("INSERT INTO descanso values (?)");
+                    $insert->bind_param('i',$valor);
+                    $insert->execute();
+                    $insert->close();
+                }
+            }
+            $preparada=$conexion->query("select dia from descanso");
+            $insertados=[];
+            while($fila=$preparada->fetch_array(MYSQLI_ASSOC)){
+                $insertados[]=$fila['dia'];
+            }
+            $preparada->close();
+            foreach($insertados as $ser){
+                if(!in_array($ser,$_POST['descanso'])){
+                    $delete=$conexion->prepare("delete from descanso where dia=?");
+                    $delete->bind_param("i",$ser);
+                    $delete->execute();
+                    $delete->close();
+                }
+            }
+        }else{
+            $delete=$conexion->query("delete from descanso");
+            $delete->close();
+        }
+    }
     if(isset($_POST['insertar']) or isset($_POST['editar'])){
         $inicio_m = $_POST["inicio_m"] != '' ? $_POST["inicio_m"] : NULL;
         $fin_m = isset($_POST["fin_m"]) ? $_POST["fin_m"] : NULL;
@@ -53,49 +88,95 @@
     <?php
         printMenu();
     ?>
-    <section class="container-fluid px-sm-3 px-0 mt-4 row">
-        <form action="" method="post" class="col-6 mx-auto row">
-            <div class="col d-flex flex-column align-items-center">
-                <h3>Mañana</h3>
-                <div>
-                    <?php
-                        $consulta=$conexion->query("select * from horario");
-                        $lista=$consulta->fetch_array(MYSQLI_NUM);
+    <div class='row'>
+        <section class="container-fluid px-sm-3 px-0 mt-4 row col-6 mx-auto">
+            <form action="" method="post" class="col-12 mx-auto row">
+                <div class="col d-flex flex-column align-items-center">
+                    <h3>Mañana</h3>
+                    <div>
+                        <?php
+                            $consulta=$conexion->query("select * from horario");
+                            $lista=$consulta->fetch_array(MYSQLI_NUM);
 
-                        echo"
-                            <span>Horario:</span>
-                            <input type='time' name='m_apertura' disabled value='$lista[1]'>
-                            <span>-</span>
-                            <input type='time' name='m_cierre' disabled value='$lista[2]'>
+                            echo"
+                                <span>Horario:</span>
+                                <input type='time' name='m_apertura' disabled value='$lista[1]'>
+                                <span>-</span>
+                                <input type='time' name='m_cierre' disabled value='$lista[2]'>
+                                ";
+                        ?>
+                    </div>
+                </div>
+                <div class="col d-flex flex-column align-items-center">
+                    <h3>Tarde</h3>
+                    <div>
+                        <?php
+                            echo"
+                                <span>Horario:</span>
+                                <input type='time' name='t_apertura' disabled value='$lista[3]'>
+                                <span>-</span>
+                                <input type='time' name='t_cierre' disabled value='$lista[4]'>
                             ";
-                            // <br><span>Plantilla:</span>
-                            // <input type='number' name='m_plantilla' disabled value='$lista[4]'>
-                    ?>
+                            $consulta->close();
+                        ?>
+                    </div>
                 </div>
-            </div>
-            <div class="col d-flex flex-column align-items-center">
-                <h3>Tarde</h3>
-                <div>
+                <div class='w-100'>
+                    <button type="button" class="mod d-block btn btn-primary mx-auto mt-3">Modificar</button>
+                    <input type="submit" class="btn btn-primary mx-auto mt-3 d-none" name="enviar" value="Enviar">
+                </div>
+            </form>
+        </section>
+
+        <section class="container-fluid px-sm-3 px-0 mt-4 row col-6 mx-auto">
+            <form action="" method="post" class="col-12 mx-auto row">
+                <div class="col d-flex align-items-center justify-content-evenly">
                     <?php
-                        echo"
-                            <span>Horario:</span>
-                            <input type='time' name='t_apertura' disabled value='$lista[3]'>
-                            <span>-</span>
-                            <input type='time' name='t_cierre' disabled value='$lista[4]'>
-                        ";
-                            // <br><span>Plantilla:</span>
-                            // <input type='number' name='t_plantilla' disabled value='$lista[5]'>
+                            $consulta=$conexion->query("select dia from descanso");
+                            $check=[];
+                            while($fila=$consulta->fetch_array(MYSQLI_ASSOC)){
+                                $check[]=$fila['dia'];
+                            }
+                            
+                            echo" <div class='form-check d-flex flex-column align-items-center p-0'>
+                                    <input class='form-check-input mx-auto' disabled ".(in_array(1,$check) ? "checked":"")." type='checkbox' name='descanso[]' value='1' id='lunes'>
+                                    <label class='form-check-label' for='lunes'>Lunes</label>
+                                </div>
+                                <div class='form-check d-flex flex-column align-items-center p-0'>
+                                    <input class='form-check-input mx-auto' disabled ".(in_array(2,$check) ? "checked":"")." type='checkbox' name='descanso[]' value='2' id='martes'>
+                                    <label class='form-check-label' for='martes'>Martes</label>
+                                </div>
+                                <div class='form-check d-flex flex-column align-items-center p-0'>
+                                    <input class='form-check-input mx-auto' disabled ".(in_array(3,$check) ? "checked":"")." type='checkbox' name='descanso[]' value='3' id='miercoles'>
+                                    <label class='form-check-label' for='miercoles'>Miércoles</label>
+                                </div>
+                                <div class='form-check d-flex flex-column align-items-center p-0'>
+                                    <input class='form-check-input mx-auto' disabled ".(in_array(4,$check) ? "checked":"")." type='checkbox' name='descanso[]' value='4' id='jueves'>
+                                    <label class='form-check-label' for='jueves'>Jueves</label>
+                                </div>
+                                <div class='form-check d-flex flex-column align-items-center p-0'>
+                                    <input class='form-check-input mx-auto' disabled ".(in_array(5,$check) ? "checked":"")." type='checkbox' name='descanso[]' value='5' id='viernes'>
+                                    <label class='form-check-label' for='viernes'>Viernes</label>
+                                </div>
+                                <div class='form-check d-flex flex-column align-items-center p-0'>
+                                    <input class='form-check-input mx-auto' disabled ".(in_array(6,$check) ? "checked":"")." type='checkbox' name='descanso[]' value='6' id='sabado'>
+                                    <label class='form-check-label' for='sabado'>Sábado</label>
+                                </div>
+                                <div class='form-check d-flex flex-column align-items-center p-0'>
+                                    <input class='form-check-input mx-auto' disabled ".(in_array(7,$check) ? "checked":"")." type='checkbox' name='descanso[]' value='7' id='domingo'>
+                                    <label class='form-check-label' for='domingo'>Domingo</label>
+                                </div>";
+
                         $consulta->close();
-                        $conexion->close();
                     ?>
                 </div>
-            </div>
-            <div class='w-100'>
-                <button id="mod" type="button" class="d-block btn btn-primary mx-auto mt-3">Modificar</button>
-                <input type="submit" class="btn btn-primary mx-auto mt-3 d-none" name="enviar" value="Enviar">
-            </div>
-        </form>
-    </section>
+                <div class='w-100'>
+                    <button type="button" class="mod d-block btn btn-primary mx-auto mt-3">Modificar</button>
+                    <input type="submit" class="btn btn-primary mx-auto mt-3 d-none" name="enviar2" value="Enviar">
+                </div>
+            </form>
+        </section>
+    </div>
 
     <section class="container-fluid px-sm-3 px-0 mt-4 row mx-auto">
         <div class='mx-auto'>
