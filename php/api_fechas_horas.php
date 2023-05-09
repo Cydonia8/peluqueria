@@ -5,24 +5,31 @@
 
     $conexion = new mysqli('localhost', 'root', '', 'peluqueria');
     // sleep(1);
-
-    $id = $_GET["id"];
     $datos = [];
-    // $id = 2;
-    $sentencia = $conexion->prepare("select * from realiza where servicio=?");
-    $sentencia->bind_param('i',$id);
+
+    $sentencia = $conexion->prepare("select * from servicios");
     $sentencia->execute();
     $resultado=$sentencia->get_result();
-    $realiza=[];
+    $servicios=[];
 
     while($fila=$resultado->fetch_assoc()){
-        $realiza[] = $fila;
+        $servicios[] = $fila;
     }
     $sentencia->close();
-    $datos["realiza"]=$realiza;
+    $datos["servicios"]=$servicios;
 
-    $sentencia = $conexion->prepare("select trabaja.* from trabaja,realiza where trabaja.empleado=realiza.empleado and servicio=?");
-    $sentencia->bind_param('i',$id);
+    $sentencia = $conexion->prepare("select * from citas");
+    $sentencia->execute();
+    $resultado=$sentencia->get_result();
+    $citas=[];    
+
+    while($fila=$resultado->fetch_assoc()){
+        $citas[] = $fila;
+    }
+    $sentencia->close();
+    $datos["citas"]=$citas;
+
+    $sentencia = $conexion->prepare("select * from trabaja");
     $sentencia->execute();
     $resultado=$sentencia->get_result();
     $trabaja=[];
@@ -33,18 +40,29 @@
     $sentencia->close();
     $datos["trabaja"]=$trabaja;
 
-    $sentencia = $conexion->prepare("select personas.* from personas,realiza where tipo=2 and empleado=id and servicio=?");
-    $sentencia->bind_param('i',$id);
+    $sentencia = $conexion->prepare("select * from descanso");
     $sentencia->execute();
     $resultado=$sentencia->get_result();
-    $empleados=[];
+    $descanso=[];
 
     while($fila=$resultado->fetch_assoc()){
-        $empleados[] = $fila;
+        $descanso[] = $fila;
     }
     $sentencia->close();
-    $datos["empleados"]=$empleados;
+    $datos["descanso"]=$descanso;
 
+    $sentencia = $conexion->prepare("select * from horario");
+    $sentencia->execute();
+    $resultado=$sentencia->get_result();
+    $horario=[];
+
+    while($fila=$resultado->fetch_assoc()){
+        $horario[] = $fila;
+    }
+    $sentencia->close();
+    $datos["horario"]=$horario;
+
+    $conexion->close();
     $info["datos"] = $datos;
     // select p.nombre nombre, p.id id, f_inicio, f_fin, m_inicio, m_fin, t_inicio, t_fin ,fecha ,hora ,c.servicio servicio ,duracion 
     // from personas p, realiza r, trabaja t, citas c, servicios s where s.id=c.servicio and p.id=trabajador and p.id=t.empleado and p.id = r.empleado and r.servicio=?
