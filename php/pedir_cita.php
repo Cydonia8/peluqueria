@@ -253,14 +253,3 @@
     </section>
 </body>
 </html>
-<script>
-      document.addEventListener('DOMContentLoaded', () => {
-        const calendar = new VanillaCalendar('#calendar',{
-            selected: {
-                holidays: ['2022-12-24', '2022-12-25'],
-            },
-        });
-        calendar.settings.lang = 'es';
-        calendar.init();
-      });
-</script>

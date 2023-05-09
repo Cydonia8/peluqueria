@@ -6,7 +6,7 @@
     $conexion = new mysqli('localhost', 'root', '', 'peluqueria');
     // sleep(1);
 
-    // $id = $_GET["id"];
+    $id = $_GET["id"];
     $datos = [];
     // $id = 2;
     $sentencia = $conexion->prepare("select * from realiza where servicio=?");
