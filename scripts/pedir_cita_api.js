@@ -46,12 +46,15 @@ document.addEventListener('DOMContentLoaded',async () => {
     const datos = await respuesta.json()
     let fiestas = datos.filter(festivo => festivo.counties == null || festivo.counties.includes("ES-AN")).map(f=>f.date);
 
-
     console.log(fiestas)
     const calendar = new VanillaCalendar('#calendar',{
         settings: {
+            range: {
+                disabled: [], // disabled dates
+                enabled: [], // disabled dates
+            },
             selected: {
-              holidays: fiestas,
+                holidays: fiestas,
             },
           },
     });
