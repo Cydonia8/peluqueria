@@ -29,11 +29,14 @@
     ?>
     <section>
         <select name="servicio" id="select-servicio">
+            <option checked hidden>Elige un servicio</option>
             <?php
                 getServiciosSelect();
             ?>
         </select>
-        <select name="empleado" id="select-empleado"></select>
+        <select name="empleado" id="select-empleado">
+            <option checked hidden>Elige un trabajador</option>
+        </select>
     </section>
     <section class="container-fluid px-sm-3 px-0 mt-4 row">
     <div class="col-12 col-md-6" id="calendar"></div>

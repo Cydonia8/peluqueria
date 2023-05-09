@@ -23,7 +23,7 @@ flechas.forEach(flecha=>{
     flecha.addEventListener("click", comprobarFestivos)
 })
 
-select_trabajador.addEventListener("click", async ()=>{
+select_servicio.addEventListener("change", async ()=>{
     const servicio = select_servicio.value
     const res = await fetch(`../php/api_empleados_servicios.php?id=${servicio}`)
     const datos = await res.json()
