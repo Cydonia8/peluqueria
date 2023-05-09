@@ -6,26 +6,7 @@
     $conexion = new mysqli('localhost', 'root', '', 'peluqueria');
     // sleep(1);
 
-<<<<<<< HEAD
     // $id = $_GET["id"];
-    // $id = 2;
-    $sentencia = $conexion->prepare("select nombre, id from personas");
-    // $sentencia->bind_param('i', $id);
-    // $sentencia->bind_result($nombre, $id);
-    $sentencia->execute();
-    $resultado = $sentencia->get_result();
-    $datos = [];
-   
-
-    while($fila=$resultado->fetch_assoc()){
-        $datos[] = $fila;
-        // $datos["diuraciopn"] = $duracion;
-        // $datos["preoipo"] = $precio;
-    }
-    $info["datos"] = $datos;
-    $sentencia->close();
-=======
-    $id = $_GET["id"];
     $datos = [];
     // $id = 2;
     $sentencia = $conexion->prepare("select * from realiza");
@@ -111,7 +92,6 @@
 
 
     $info["datos"] = $datos;
->>>>>>> ad712e154968e2fc52082ffe6eb679e76757b80f
     // select p.nombre nombre, p.id id, f_inicio, f_fin, m_inicio, m_fin, t_inicio, t_fin ,fecha ,hora ,c.servicio servicio ,duracion 
     // from personas p, realiza r, trabaja t, citas c, servicios s where s.id=c.servicio and p.id=trabajador and p.id=t.empleado and p.id = r.empleado and r.servicio=?
     
