@@ -1,9 +1,19 @@
 "use strict"
+
 const calendario = document.querySelectorAll("#calendario td:not(:empty)")
 const flechas = document.querySelectorAll("caption a")
 const select_servicio = document.getElementById("select-servicio")
 const select_trabajador = document.getElementById("select-empleado")
 let fiestas
+
+let fechas_horas
+horarios();
+
+async function horarios(){
+    const res = await fetch(`../php/api_fechas_horas.php`)
+    const datos = await res.json()
+    fechas_horas=datos["datos"]
+}
 
 festivos()
 async function festivos(){
@@ -43,7 +53,7 @@ function comprobarFestivos(){
     })
 }
 
- function selectTrabajador(info){
+function selectTrabajador(info, servicio){
     select_trabajador.innerHTML=''
     if(info["realiza"].length > 1){
         select_trabajador.innerHTML='<option checked hidden>Elige un trabajador</option>'
@@ -57,20 +67,44 @@ function comprobarFestivos(){
         select_trabajador.appendChild(opt)
     })
 }
+
 document.addEventListener('DOMContentLoaded',async () => {
     const respuesta = await fetch('https://date.nager.at/api/v3/PublicHolidays/2023/ES')
     const datos = await respuesta.json()
     let fiestas = datos.filter(festivo => festivo.counties == null || festivo.counties.includes("ES-AN")).map(f=>f.date);
 
-
-    console.log(fiestas)
     const calendar = new VanillaCalendar('#calendar',{
         settings: {
+            range: {
+                disabled: [], // disabled dates
+                enabled: [], // disabled dates
+            },
             selected: {
-              holidays: fiestas,
+                holidays: fiestas,
             },
           },
     });
     calendar.settings.lang = 'es';
     calendar.init();
-  });
+
+
+    const botones=document.getElementById("calendar").querySelectorAll(".vanilla-calendar-days>div>button")
+    const dias=document.getElementById("calendar").querySelectorAll(".vanilla-calendar-days>div")
+    dias.forEach(dia=>dia.addEventListener("click",()=>{
+        console.log("a")
+        formatear_calendario();
+    }))
+    // let descansos=fechas_horas.descanso.map(d=>d.dia);
+    formatear_calendario();
+    function formatear_calendario(){
+        const dias=document.getElementById("calendar").querySelectorAll(".vanilla-calendar-days>div")
+        fechas_horas.descanso.forEach(d=>{
+            
+            for(let i=d.dia-1;i<dias.length;i+=7){
+                dias[i].classList.add("prueba")
+                dias[i].children[0].setAttribute("disabled",true)
+            }
+            
+        })
+    }
+});
