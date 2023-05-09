@@ -27,7 +27,8 @@ select_trabajador.addEventListener("click", async ()=>{
     const servicio = select_servicio.value
     const res = await fetch(`../php/api_empleados_servicios.php?id=${servicio}`)
     const datos = await res.json()
-    console.log(datos)
+    const info = datos["datos"]
+    console.log(info)
 })
 
 function comprobarFestivos(){
