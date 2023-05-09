@@ -23,11 +23,12 @@ flechas.forEach(flecha=>{
     flecha.addEventListener("click", comprobarFestivos)
 })
 
-select_trabajador.addEventListener("click", async ()=>{
+select_servicio.addEventListener("change", async ()=>{
     const servicio = select_servicio.value
     const res = await fetch(`../php/api_empleados_servicios.php?id=${servicio}`)
     const datos = await res.json()
-    console.log(datos)
+    const info = datos["datos"]
+     selectTrabajador(info)
 })
 
 function comprobarFestivos(){
@@ -41,6 +42,16 @@ function comprobarFestivos(){
     })
 }
 
+ function selectTrabajador(info){
+    select_trabajador.innerHTML=''
+    info["realiza"].forEach(trab=>{
+        let opt = document.createElement("option")
+        opt.setAttribute("value", trab.empleado)
+        let nombre = info["empleados"].filter(pers=>pers.id==trab.empleado).map(pers=>pers.nombre)
+        opt.innerText=nombre
+        select_trabajador.appendChild(opt)
+    })
+}
 document.addEventListener('DOMContentLoaded',async () => {
     const respuesta = await fetch('https://date.nager.at/api/v3/PublicHolidays/2023/ES')
     const datos = await respuesta.json()
