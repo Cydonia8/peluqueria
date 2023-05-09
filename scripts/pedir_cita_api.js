@@ -19,6 +19,7 @@ async function festivos(){
         })
     })
 }
+
 flechas.forEach(flecha=>{
     flecha.addEventListener("click", comprobarFestivos)
 })
@@ -28,7 +29,7 @@ select_servicio.addEventListener("change", async ()=>{
     const res = await fetch(`../php/api_empleados_servicios.php?id=${servicio}`)
     const datos = await res.json()
     const info = datos["datos"]
-    selectTrabajador(info, servicio)
+    selectTrabajador(info)
 })
 
 function comprobarFestivos(){
@@ -42,7 +43,7 @@ function comprobarFestivos(){
     })
 }
 
- function selectTrabajador(info, servicio){
+ function selectTrabajador(info){
     select_trabajador.innerHTML=''
     if(info["realiza"].length > 1){
         select_trabajador.innerHTML='<option checked hidden>Elige un trabajador</option>'
