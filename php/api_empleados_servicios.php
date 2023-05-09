@@ -9,7 +9,8 @@
     // $id = $_GET["id"];
     $datos = [];
     // $id = 2;
-    $sentencia = $conexion->prepare("select * from realiza");
+    $sentencia = $conexion->prepare("select * from realiza where servicio=?");
+    $sentencia->bind_param('i',$id);
     $sentencia->execute();
     $resultado=$sentencia->get_result();
     $realiza=[];
@@ -42,7 +43,8 @@
     $sentencia->close();
     $datos["citas"]=$citas;
 
-    $sentencia = $conexion->prepare("select * from trabaja");
+    $sentencia = $conexion->prepare("select trabaja.* from trabaja,realiza where trabaja.empleado=realiza.empleado and servicio=?");
+    $sentencia->bind_param('i',$id);
     $sentencia->execute();
     $resultado=$sentencia->get_result();
     $trabaja=[];
@@ -53,7 +55,8 @@
     $sentencia->close();
     $datos["trabaja"]=$trabaja;
 
-    $sentencia = $conexion->prepare("select * from personas where tipo=2");
+    $sentencia = $conexion->prepare("select personas.* from personas,realiza where tipo=2 and empleado=id and servicio=?");
+    $sentencia->bind_param('i',$id);
     $sentencia->execute();
     $resultado=$sentencia->get_result();
     $empleados=[];
