@@ -34,7 +34,7 @@
                 getServiciosSelect();
             ?>
         </select>
-        <select name="empleado" id="select-empleado">
+        <select disabled name="empleado" id="select-empleado">
             <option checked hidden>Elige un trabajador</option>
         </select>
     </section>
