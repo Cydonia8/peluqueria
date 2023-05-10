@@ -8,8 +8,6 @@ let fiestas=[];
 
 let fechas_horas
 
-
-
 async function horarios(){
     const res = await fetch(`../php/api_fechas_horas.php`)
     const datos = await res.json()
