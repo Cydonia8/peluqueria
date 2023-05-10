@@ -21,8 +21,7 @@ document.addEventListener('DOMContentLoaded',async () => {
     const respuesta = await fetch('https://date.nager.at/api/v3/PublicHolidays/2023/ES')
     const datos = await respuesta.json()
     fiestas = datos.filter(festivo => festivo.counties == null || festivo.counties.includes("ES-AN")).map(f=>f.date);
-    horarios();
-    fiestas.sort()
+    await horarios();
     console.log(fiestas)
     const calendar = new VanillaCalendar('#calendar',{
         settings: {
@@ -39,25 +38,25 @@ document.addEventListener('DOMContentLoaded',async () => {
     calendar.init();
 
 
-    const botones=document.getElementById("calendar").querySelectorAll(".vanilla-calendar-days>div>button")
-    const dias=document.getElementById("calendar").querySelectorAll(".vanilla-calendar-days>div")
-    dias.forEach(dia=>dia.addEventListener("click",()=>{
-        console.log("a")
-        formatear_calendario();
-    }))
-    let descansos=fechas_horas.descanso.map(d=>d.dia);
-    formatear_calendario();
-    function formatear_calendario(){
-        const dias=document.getElementById("calendar").querySelectorAll(".vanilla-calendar-days>div")
-        fechas_horas.descanso.forEach(d=>{
+    // const botones=document.getElementById("calendar").querySelectorAll(".vanilla-calendar-days>div>button")
+    // const dias=document.getElementById("calendar").querySelectorAll(".vanilla-calendar-days>div")
+    // dias.forEach(dia=>dia.addEventListener("click",()=>{
+    //     console.log("a")
+    //     formatear_calendario();
+    // }))
+    // let descansos=fechas_horas.descanso.map(d=>d.dia);
+    // formatear_calendario();
+    // function formatear_calendario(){
+    //     const dias=document.getElementById("calendar").querySelectorAll(".vanilla-calendar-days>div")
+    //     fechas_horas.descanso.forEach(d=>{
             
-            for(let i=d.dia-1;i<dias.length;i+=7){
-                dias[i].classList.add("prueba")
-                dias[i].children[0].setAttribute("disabled",true)
-            }
+    //         for(let i=d.dia-1;i<dias.length;i+=7){
+    //             dias[i].classList.add("prueba")
+    //             dias[i].children[0].setAttribute("disabled",true)
+    //         }
             
-        })
-    }
+    //     })
+    // }
 });
 
 
