@@ -14,7 +14,14 @@ async function horarios(){
     const res = await fetch(`../php/api_fechas_horas.php`)
     const datos = await res.json()
     fechas_horas=datos["datos"]
-    fiestas.push(fechas_horas["horario"][2].dia)
+    let fecha_actual = new Date()
+    fecha_actual.setHours(0,0,0,0)
+    let dias_extra = fechas_horas["horario"].filter(fecha=>{
+        let comparar = new Date(fecha.dia)
+        comparar.setHours(0,0,0,0)
+        return comparar > fecha_actual
+    }).map(fecha=>fecha.dia)
+    dias_extra.forEach(dia=>fiestas.push(dia))
 }
 
 document.addEventListener('DOMContentLoaded',async () => {
