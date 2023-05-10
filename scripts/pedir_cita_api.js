@@ -65,7 +65,7 @@ select_servicio.addEventListener("change", async ()=>{
     selectTrabajador(info)
 })
 
-function selectTrabajador(info, servicio){
+function selectTrabajador(info){
     select_trabajador.innerHTML=''
     if(info["realiza"].length > 1){
         select_trabajador.innerHTML='<option checked hidden>Elige un trabajador</option>'
