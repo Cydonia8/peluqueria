@@ -116,3 +116,21 @@ table td,th{
 td.festivo{
     background-color: red;
 }
+
+
+
+.dia_calendario{
+    display:flex;
+    height:100%;
+    min-height:1.875rem;
+    width:100%;
+    min-width:1.875rem;
+    cursor:default;
+    align-items:center;
+    justify-content:center;
+    border-radius:.5rem;
+    border-width:0px;
+    font-size:.75rem;
+    line-height:1rem;
+    font-weight:400;
+}
