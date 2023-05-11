@@ -41,6 +41,11 @@ document.addEventListener('DOMContentLoaded',async () => {
                 holidays: fiestas,
             },
           },
+          actions: {
+            clickDay(event, dates){
+                console.log(dates)
+            }
+          }
     });
     calendar.settings.lang = 'es';
     calendar.init();
