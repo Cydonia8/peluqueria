@@ -1,4 +1,11 @@
 "use strict"
+// const calendario = document.querySelectorAll("#calendario td:not(:empty)")
+const flechas = document.querySelectorAll("caption a")
+const select_servicio = document.getElementById("select-servicio")
+const select_trabajador = document.getElementById("select-empleado")
+const contenedor_horas = document.getElementById("horas")
+let fiestas=[];
+let fechas_horas
 
 const hoy=(new Date());
 hoy.setHours(0,0,0,0)
@@ -16,13 +23,114 @@ async function datos(){
     // console.log(datos)
 }
 
-// const calendario = document.querySelectorAll("#calendario td:not(:empty)")
-const flechas = document.querySelectorAll("caption a")
-const select_servicio = document.getElementById("select-servicio")
-const select_trabajador = document.getElementById("select-empleado")
-let fiestas=[];
+// datos('2023-05-20');
+let horario=[];
 
-let fechas_horas
+async function datos(dia){
+    const respuesta = await fetch('../php/api_citas.php')
+    const datos = await respuesta.json();
+    lista = datos["datos"];
+    const respuesta2 = await fetch('../php/api_fechas_horas.php')
+    const datos2 = await respuesta2.json();
+    horario.push(datos2["datos"].horario[0].m_apertura);
+    horario.push(datos2["datos"].horario[0].m_cierre);
+    horario.push(datos2["datos"].horario[0].t_apertura);
+    horario.push(datos2["datos"].horario[0].t_cierre);
+
+    let pillada=0;
+    let horas=[];
+    let contador=0;
+
+    while(contador<horario.length){
+        let tiempo=horario[contador];
+        console.log(horario)
+        tiempo=tiempo.split(":")[0]+":"+tiempo.split(":")[1];
+        contador++;
+        let limite=horario[contador].split(":")[0]+":"+horario[contador].split(":")[1];
+        while(tiempo<limite){
+            horas.push(tiempo);
+            let min=tiempo.split(":");
+            min[1]=parseInt(min[1])+15;
+            if(min[1]>=60){
+                min[1]-=60;
+                if(min[1]==0){
+                    min[1]="00";
+                }
+                min[0]++;
+            }
+            tiempo=min[0]+":"+min[1];
+        }
+        contador++;
+    }
+
+
+
+    contenedor_horas.innerHTML="";
+    let ocupadas=[];
+    if(contenedor_horas.value != ''){
+        let filtrado = lista.filter(cita=>cita.id_trab===select_trabajador.value && cita.fecha === dia)
+        filtrado.forEach(opcion=>{
+            if(opcion.id_trab===select_trabajador.value && opcion.fecha === dia && opcion.hora !== pillada){
+                let dur=opcion.duracion.split(":");
+                let time=opcion.hora.split(":");
+                let ocupado_min=parseInt(dur[1])+parseInt(time[1]);
+                let ocupado_h=parseInt(dur[0])+parseInt(time[0]);
+                if(ocupado_min>=60){
+                    ocupado_h=parseInt(ocupado_h)+parseInt(ocupado_min)/60;
+                    ocupado_min=parseInt(ocupado_min)%60;
+                }
+                if(ocupado_min==0){
+                    ocupado_min="00";
+                }
+                let inicio=opcion.hora.split(":")[0]+":"+opcion.hora.split(":")[1];
+                if(ocupado_h<10){
+                    ocupado_h="0"+ocupado_h;
+                }
+                let fin=ocupado_h+":"+ocupado_min;
+
+                while(inicio!=fin){
+                    ocupadas.push(inicio);
+                    let min2=inicio.split(":");
+                    min2[1]=parseInt(min2[1])+15;
+                    if(min2[1]>=60){
+                        min2[1]-=60;
+                        if(min2[1]==0){
+                            min2[1]="00";
+                        }
+                        min2[0]++;
+                    }
+                    inicio=min2[0]+":"+min2[1];
+                }
+            }
+        })        
+        
+        let disponibles=horas.filter(item => !ocupadas.includes(item));
+        console.log(horas)
+        contenedor_horas.innerHTML="";
+        let n=0;
+        disponibles.forEach(h=>{
+            contenedor_horas.innerHTML+=`
+                <input type='checkbox' class='btn-check' value=${h} id='btn-check-2-outlined-${n}' checked autocomplete='off'>
+                <label class='btn btn-outline-secondary' for='btn-check-2-outlined-${n}'>${h}</label>
+            `;
+            n++;
+        })
+    }else{
+        const option = createOption('', "Elige trabajador y fecha")
+        contenedor_horas.innerHTML=''
+        option.setAttribute("selected",'');
+        option.setAttribute("hidden",'');
+        option.setAttribute("disabled",'');
+        contenedor_horas.appendChild(option)
+    }
+    
+}   
+
+// editar_btn.forEach(boton=>{
+//     boton.addEventListener("click",()=>{
+//         pillada=boton.parentElement.parentElement.children[1].innerText+":00";
+//     })
+// })
 
 async function horarios(){
     const res = await fetch(`../php/api_fechas_horas.php`)
@@ -55,8 +163,6 @@ async function horarios(){
         cierra.push(new Date(dia_semana).toLocaleDateString('en-CA').replaceAll("/","-"))
         cierra.forEach(dia=>fiestas.push(dia))
     })
-
-
 }
 
 document.addEventListener('DOMContentLoaded',async () => {
@@ -91,36 +197,14 @@ document.addEventListener('DOMContentLoaded',async () => {
                 daysOutside: true,
                },
           },
-          actions: {
+        actions: {
             clickDay(event, dates){
-                horarioDia(dates[0])
-                console.log(lista)
+                datos(dates[0])
             }
-          }
+        }
     });
     calendar.settings.lang = 'es';
     calendar.init();
-
-    // const dias=document.getElementById("calendar").querySelectorAll(".vanilla-calendar-days>div")
-    // fechas_horas.descanso.forEach(d=>{   
-    //     for(let i=d.dia-1;i<dias.length;i+=7){
-    //         dias[i].children[0].classList.add("vanilla-calendar-day__btn_holiday")
-    //     }
-    // })
-        
-    // dias.forEach(dia=>{
-    //     dia.children[0].classList.add("dia_calendario");
-    //     dia.children[0].setAttribute("disabled",true)
-    //     dia.children[0].removeAttribute("type")
-    //     dia.addEventListener("click",()=>{
-    //         console.log("a")
-    //             fechas_horas.descanso.forEach(d=>{   
-    //                 for(let i=d.dia-1;i<dias.length;i+=7){
-    //                     dias[i].children[0].classList.add("vanilla-calendar-day__btn_holiday")
-    //                 }
-    //             })
-    //     })
-    // })
 });
 
 select_servicio.addEventListener("change", async ()=>{
@@ -146,82 +230,40 @@ function selectTrabajador(info){
     })
 }
 
-function horarioDia(date){
-    let ocupadas=[];
-    if(select_trabajador.value != 'Elige un trabajador'){
-        console.log("entro")
-        
-        let filtrado = lista.filter(cita=>cita.id_trab===select_trabajador.value && cita.fecha === date)
-        console.log(filtrado)
-        filtrado.forEach(opcion=>{
-            console.log("2")
-            if(opcion.id_trab===select_trabajador.value && opcion.fecha === date && opcion.hora !== pillada){
-                console.log(date)
-                let dur=opcion.duracion.split(":");
-                let time=opcion.hora.split(":");
-                let ocupado_min=parseInt(dur[1])+parseInt(time[1]);
-                let ocupado_h=parseInt(dur[0])+parseInt(time[0]);
-                if(ocupado_min>=60){
-                    ocupado_h=parseInt(ocupado_h)+parseInt(ocupado_min)/60;
-                    ocupado_min=parseInt(ocupado_min)%60;
-                }
-                if(ocupado_min==0){
-                    ocupado_min="00";
-                }
-                let inicio=opcion.hora.split(":")[0]+":"+opcion.hora.split(":")[1];
-                if(ocupado_h<10){
-                    ocupado_h="0"+ocupado_h;
-                }
-                let fin=ocupado_h+":"+ocupado_min;
-    
-                console.log(inicio);
-                console.log(fin);
-
-                while(inicio!=fin){
-                    ocupadas.push(inicio);
-                    let min2=inicio.split(":");
-                    min2[1]=parseInt(min2[1])+15;
-                    if(min2[1]>=60){
-                        min2[1]-=60;
-                        if(min2[1]==0){
-                            min2[1]="00";
-                        }
-                        min2[0]++;
-                    }
-                    inicio=min2[0]+":"+min2[1];
-                    i++
-                    console.log(i)
-                }
-            }
-        })
-        
-        console.log(horas)
-        let disponibles=horas.filter(item => !ocupadas.includes(item));
-        console.log(disponibles)
-        disponibles.forEach(h=>{
-            const option = createHour(h, h);
-            horas_container.appendChild(option);
-        })
-    }else{
-        const option = createOption('', "Elige trabajador y fecha")
-        select_horas.innerHTML=''
-        option.setAttribute("selected",'');
-        option.setAttribute("hidden",'');
-        option.setAttribute("disabled",'');
-        select_horas.appendChild(option)
-    }
-}
 
 
 
-// select_horas.addEventListener("click", ()=>{
-    
-//     console.log(select_horas)
+// async function horas_disponibles(dia){
+//     while(contador<horario.length){
+//         let tiempo=horario[contador];
+//         console.log(horario)
+//         tiempo=tiempo.split(":")[0]+":"+tiempo.split(":")[1];
+//         contador++;
+//         let limite=horario[contador].split(":")[0]+":"+horario[contador].split(":")[1];
+//         while(tiempo<limite){
+//             horas.push(tiempo);
+//             let min=tiempo.split(":");
+//             min[1]=parseInt(min[1])+15;
+//             if(min[1]>=60){
+//                 min[1]-=60;
+//                 if(min[1]==0){
+//                     min[1]="00";
+//                 }
+//                 min[0]++;
+//             }
+//             tiempo=min[0]+":"+min[1];
+//         }
+//         contador++;
+//     }
+
+
+
+//     contenedor_horas.innerHTML="";
 //     let ocupadas=[];
-//     if(select_fecha.value != ''){
-//         let filtrado = lista.filter(cita=>cita.id_trab===select_trabajador.value && cita.fecha === select_fecha.value)
+//     if(contenedor_horas.value != ''){
+//         let filtrado = lista.filter(cita=>cita.id_trab===select_trabajador.value && cita.fecha === dia)
 //         filtrado.forEach(opcion=>{
-//             if(opcion.id_trab===select_trabajador.value && opcion.fecha === select_fecha.value && opcion.hora !== pillada){
+//             if(opcion.id_trab===select_trabajador.value && opcion.fecha === dia && opcion.hora !== pillada){
 //                 let dur=opcion.duracion.split(":");
 //                 let time=opcion.hora.split(":");
 //                 let ocupado_min=parseInt(dur[1])+parseInt(time[1]);
@@ -238,9 +280,6 @@ function horarioDia(date){
 //                     ocupado_h="0"+ocupado_h;
 //                 }
 //                 let fin=ocupado_h+":"+ocupado_min;
-    
-//                 console.log(inicio);
-//                 console.log(fin);
 
 //                 while(inicio!=fin){
 //                     ocupadas.push(inicio);
@@ -254,31 +293,30 @@ function horarioDia(date){
 //                         min2[0]++;
 //                     }
 //                     inicio=min2[0]+":"+min2[1];
-//                     i++
-//                     console.log(i)
 //                 }
 //             }
-//         })
+//         })        
         
-
 //         let disponibles=horas.filter(item => !ocupadas.includes(item));
+//         console.log(horas)
 //         disponibles.forEach(h=>{
-//             const option = createOption(h, h);
-//             select_horas.appendChild(option);
+//             const option = createOption(h);
+//             contenedor_horas.appendChild(option);
 //         })
 //     }else{
 //         const option = createOption('', "Elige trabajador y fecha")
-//         select_horas.innerHTML=''
+//         contenedor_horas.innerHTML=''
 //         option.setAttribute("selected",'');
 //         option.setAttribute("hidden",'');
 //         option.setAttribute("disabled",'');
-//         select_horas.appendChild(option)
+//         contenedor_horas.appendChild(option)
 //     }
-// })
+// }
 
-function createHour(value, texto){
-    const elemento = document.createElement("button")
-    elemento.setAttribute("value", value)
-    elemento.innerText=texto
+function createOption(value){
+    const elemento = `
+        <input type='checkbox' class='btn-check' value=${value} id='btn-check-2-outlined' checked autocomplete='off'>
+        <label class='btn btn-outline-secondary' for='btn-check-2-outlined'>${value}</label>
+    `
     return elemento
 }

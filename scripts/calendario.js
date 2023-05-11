@@ -6,7 +6,6 @@ const calendario = document.querySelectorAll("#calendario td:not(:empty)")
 const flechas = document.querySelectorAll("caption a")
 
 let fiestas;
-console.log(calendario)
 let today = new Date()
 let dia = formatDate(today.getDate())
 let mes = formatDate(today.getMonth()+1)
@@ -27,7 +26,6 @@ async function festivos(){
     const respuesta = await fetch('https://date.nager.at/api/v3/PublicHolidays/2023/ES')
     const datos = await respuesta.json()
     fiestas = datos.filter(festivo => festivo.counties == null || festivo.counties.includes("ES-AN"))
-    console.log(fiestas)
     calendario.forEach(cal=>{
         let fecha = cal.getAttribute("data-date")
         fiestas.forEach(festivo=>{
@@ -37,12 +35,10 @@ async function festivos(){
         })
     })
 }
+
 flechas.forEach(flecha=>{
-    console.log(flecha)
     flecha.addEventListener("click", comprobarFestivos)
 })
-
-
 
 exampleModal.addEventListener('show.bs.modal', event => {
     const button = event.relatedTarget
@@ -113,7 +109,6 @@ setTimeout(()=> {
 
 
 function comprobarFestivos(){
-    console.log(calendario)
     calendario.forEach(cal=>{
         let fecha = cal.getAttribute("data-date")
         fiestas.forEach(festivo=>{
