@@ -1,11 +1,20 @@
 "use strict"
+
 const hoy=(new Date());
 hoy.setHours(0,0,0,0)
 let aa=hoy.getTime()+(1000*24*60*60*90)
 const fin=new Date(aa);
+const horas_container = document.querySelector(".horas-container")
+let lista = []
+let horas=[];
 
-console.log(hoy.toLocaleDateString('en-CA').replaceAll("/","-"))
-console.log(fin.toLocaleDateString('en-CA').replaceAll("/","-"))
+datos()
+async function datos(){
+    const respuesta = await fetch('../php/api_citas.php')
+    const datos = await respuesta.json();
+    lista = datos["datos"];
+    // console.log(datos)
+}
 
 // const calendario = document.querySelectorAll("#calendario td:not(:empty)")
 const flechas = document.querySelectorAll("caption a")
@@ -84,7 +93,8 @@ document.addEventListener('DOMContentLoaded',async () => {
           },
           actions: {
             clickDay(event, dates){
-                console.log(dates)
+                horarioDia(dates[0])
+                console.log(lista)
             }
           }
     });
@@ -134,4 +144,141 @@ function selectTrabajador(info){
         opt.innerText=nombre
         select_trabajador.appendChild(opt)
     })
+}
+
+function horarioDia(date){
+    let ocupadas=[];
+    if(select_trabajador.value != 'Elige un trabajador'){
+        console.log("entro")
+        
+        let filtrado = lista.filter(cita=>cita.id_trab===select_trabajador.value && cita.fecha === date)
+        console.log(filtrado)
+        filtrado.forEach(opcion=>{
+            console.log("2")
+            if(opcion.id_trab===select_trabajador.value && opcion.fecha === date && opcion.hora !== pillada){
+                console.log(date)
+                let dur=opcion.duracion.split(":");
+                let time=opcion.hora.split(":");
+                let ocupado_min=parseInt(dur[1])+parseInt(time[1]);
+                let ocupado_h=parseInt(dur[0])+parseInt(time[0]);
+                if(ocupado_min>=60){
+                    ocupado_h=parseInt(ocupado_h)+parseInt(ocupado_min)/60;
+                    ocupado_min=parseInt(ocupado_min)%60;
+                }
+                if(ocupado_min==0){
+                    ocupado_min="00";
+                }
+                let inicio=opcion.hora.split(":")[0]+":"+opcion.hora.split(":")[1];
+                if(ocupado_h<10){
+                    ocupado_h="0"+ocupado_h;
+                }
+                let fin=ocupado_h+":"+ocupado_min;
+    
+                console.log(inicio);
+                console.log(fin);
+
+                while(inicio!=fin){
+                    ocupadas.push(inicio);
+                    let min2=inicio.split(":");
+                    min2[1]=parseInt(min2[1])+15;
+                    if(min2[1]>=60){
+                        min2[1]-=60;
+                        if(min2[1]==0){
+                            min2[1]="00";
+                        }
+                        min2[0]++;
+                    }
+                    inicio=min2[0]+":"+min2[1];
+                    i++
+                    console.log(i)
+                }
+            }
+        })
+        
+        console.log(horas)
+        let disponibles=horas.filter(item => !ocupadas.includes(item));
+        console.log(disponibles)
+        disponibles.forEach(h=>{
+            const option = createHour(h, h);
+            horas_container.appendChild(option);
+        })
+    }else{
+        const option = createOption('', "Elige trabajador y fecha")
+        select_horas.innerHTML=''
+        option.setAttribute("selected",'');
+        option.setAttribute("hidden",'');
+        option.setAttribute("disabled",'');
+        select_horas.appendChild(option)
+    }
+}
+
+
+
+// select_horas.addEventListener("click", ()=>{
+    
+//     console.log(select_horas)
+//     let ocupadas=[];
+//     if(select_fecha.value != ''){
+//         let filtrado = lista.filter(cita=>cita.id_trab===select_trabajador.value && cita.fecha === select_fecha.value)
+//         filtrado.forEach(opcion=>{
+//             if(opcion.id_trab===select_trabajador.value && opcion.fecha === select_fecha.value && opcion.hora !== pillada){
+//                 let dur=opcion.duracion.split(":");
+//                 let time=opcion.hora.split(":");
+//                 let ocupado_min=parseInt(dur[1])+parseInt(time[1]);
+//                 let ocupado_h=parseInt(dur[0])+parseInt(time[0]);
+//                 if(ocupado_min>=60){
+//                     ocupado_h=parseInt(ocupado_h)+parseInt(ocupado_min)/60;
+//                     ocupado_min=parseInt(ocupado_min)%60;
+//                 }
+//                 if(ocupado_min==0){
+//                     ocupado_min="00";
+//                 }
+//                 let inicio=opcion.hora.split(":")[0]+":"+opcion.hora.split(":")[1];
+//                 if(ocupado_h<10){
+//                     ocupado_h="0"+ocupado_h;
+//                 }
+//                 let fin=ocupado_h+":"+ocupado_min;
+    
+//                 console.log(inicio);
+//                 console.log(fin);
+
+//                 while(inicio!=fin){
+//                     ocupadas.push(inicio);
+//                     let min2=inicio.split(":");
+//                     min2[1]=parseInt(min2[1])+15;
+//                     if(min2[1]>=60){
+//                         min2[1]-=60;
+//                         if(min2[1]==0){
+//                             min2[1]="00";
+//                         }
+//                         min2[0]++;
+//                     }
+//                     inicio=min2[0]+":"+min2[1];
+//                     i++
+//                     console.log(i)
+//                 }
+//             }
+//         })
+        
+
+//         let disponibles=horas.filter(item => !ocupadas.includes(item));
+//         disponibles.forEach(h=>{
+//             const option = createOption(h, h);
+//             select_horas.appendChild(option);
+//         })
+//     }else{
+//         const option = createOption('', "Elige trabajador y fecha")
+//         select_horas.innerHTML=''
+//         option.setAttribute("selected",'');
+//         option.setAttribute("hidden",'');
+//         option.setAttribute("disabled",'');
+//         select_horas.appendChild(option)
+//     }
+// })
+
+function createHour(value, texto){
+    const elemento = document.createElement("button")
+    elemento.setAttribute("value", value)
+    elemento.innerText=texto
+    return elemento
 }

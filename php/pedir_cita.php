@@ -246,7 +246,7 @@
 
         //     echo "</tbody>
         //     </table>";
-            echo "<div class='col-12 col-md-6'>
+            echo "<div class='col-12 col-md-6 horas-container'>
                         <h2 class='text-center'>Horas</h2>  
                 </div>";
 
