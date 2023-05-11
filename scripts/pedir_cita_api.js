@@ -1,5 +1,13 @@
 "use strict"
 
+const hoy=(new Date());
+hoy.setHours(0,0,0,0)
+let aa=hoy.getTime()+(1000*24*60*60*90)
+const fin=new Date(aa);
+
+console.log(hoy.toLocaleDateString('en-GB').replaceAll("/","-"))
+console.log(fin.getDate()+"-"+(fin.getMonth()+1)+"-"+fin.getFullYear())
+
 // const calendario = document.querySelectorAll("#calendario td:not(:empty)")
 const flechas = document.querySelectorAll("caption a")
 const select_servicio = document.getElementById("select-servicio")
@@ -34,6 +42,8 @@ document.addEventListener('DOMContentLoaded',async () => {
     const calendar = new VanillaCalendar('#calendar',{
         settings: {
             range: {
+                min: hoy.toLocaleDateString('en-GB').replaceAll("/","-"),
+                max: fin.toLocaleDateString('en-GB').replaceAll("/","-"),
                 disabled: [], // disabled dates
                 enabled: [], // disabled dates
             },
@@ -57,9 +67,19 @@ document.addEventListener('DOMContentLoaded',async () => {
         }
     })
         
-    dias.forEach(dia=>{
-        dia.children[0].setAttribute("disabled",true)
-    })
+    // dias.forEach(dia=>{
+    //     dia.children[0].classList.add("dia_calendario");
+    //     // dia.children[0].setAttribute("disabled",true)
+    //     // dia.children[0].removeAttribute("type")
+    //     dia.addEventListener("click",()=>{
+    //         console.log("a")
+    //             // fechas_horas.descanso.forEach(d=>{   
+    //             //     for(let i=d.dia-1;i<dias.length;i+=7){
+    //             //         dias[i].children[0].classList.add("vanilla-calendar-day__btn_holiday")
+    //             //     }
+    //             // })
+    //     })
+    // })
 });
 
 select_servicio.addEventListener("change", async ()=>{
@@ -84,37 +104,3 @@ function selectTrabajador(info){
         select_trabajador.appendChild(opt)
     })
 }
-
-// let fiestas;
-
-// document.addEventListener('DOMContentLoaded',async () => {
-//     const respuesta = await fetch('https://date.nager.at/api/v3/PublicHolidays/2023/ES')
-//     const datos = await respuesta.json()
-//     fiestas = datos.filter(festivo => festivo.counties == null || festivo.counties.includes("ES-AN")).map(f=>f.date);
- 
-//     const calendar = new VanillaCalendar('#calendar',{
-//         settings: {
-//             range: {
-//                 disabled: [], // disabled dates
-//                 enabled: [], // disabled dates
-//             },
-//             selected: {
-//                 holidays: fiestas,
-//             },
-//         },
-//     });
-//     calendar.settings.lang = 'es';
-//     calendar.init();
-    
-//     const dias=document.getElementById("calendar").querySelectorAll(".vanilla-calendar-days>div")
-//     fechas_horas.descanso.forEach(d=>{   
-//         for(let i=d.dia-1;i<dias.length;i+=7){
-//             dias[i].children[0].classList.add("vanilla-calendar-day__btn_holiday")
-//         }
-//     })
-        
-//     dias.forEach(dia=>{
-//         dia.children[0].setAttribute("disabled",true)
-//     })
-        
-// });
