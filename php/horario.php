@@ -164,7 +164,7 @@
                                     <label class='form-check-label' for='sabado'>Sábado</label>
                                 </div>
                                 <div class='form-check d-flex flex-column align-items-center p-0'>
-                                    <input class='form-check-input mx-auto' disabled ".(in_array(7,$check) ? "checked":"")." type='checkbox' name='descanso[]' value='7' id='domingo'>
+                                    <input class='form-check-input mx-auto' disabled ".(in_array(0,$check) ? "checked":"")." type='checkbox' name='descanso[]' value='0' id='domingo'>
                                     <label class='form-check-label' for='domingo'>Domingo</label>
                                 </div>";
 

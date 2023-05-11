@@ -5,9 +5,6 @@ hoy.setHours(0,0,0,0)
 let aa=hoy.getTime()+(1000*24*60*60*90)
 const fin=new Date(aa);
 
-console.log(hoy.toLocaleDateString('en-GB').replaceAll("/","-"))
-console.log(fin.getDate()+"-"+(fin.getMonth()+1)+"-"+fin.getFullYear())
-
 // const calendario = document.querySelectorAll("#calendario td:not(:empty)")
 const flechas = document.querySelectorAll("caption a")
 const select_servicio = document.getElementById("select-servicio")
@@ -23,7 +20,7 @@ async function horarios(){
 
     let fecha_actual = new Date()
     fecha_actual.setHours(0,0,0,0)
-    console.log(fechas_horas["horario"])
+    // console.log(fechas_horas["horario"])
     let dias_extra = fechas_horas["horario"].filter(fecha=>{
         let comparar = new Date(fecha.dia)
         comparar.setHours(0,0,0,0)
@@ -38,12 +35,12 @@ document.addEventListener('DOMContentLoaded',async () => {
     const datos = await respuesta.json()
     fiestas = datos.filter(festivo => festivo.counties == null || festivo.counties.includes("ES-AN")).map(f=>f.date);
     await horarios();
-    console.log(fiestas)
+    // console.log(fiestas)
     const calendar = new VanillaCalendar('#calendar',{
         settings: {
             range: {
-                min: hoy.toLocaleDateString('en-GB').replaceAll("/","-"),
-                max: fin.toLocaleDateString('en-GB').replaceAll("/","-"),
+                min: hoy.toLocaleDateString('en-CA').replaceAll("/","-"),
+                max: fin.toLocaleDateString('en-CA').replaceAll("/","-"),
                 disabled: [], // disabled dates
                 enabled: [], // disabled dates
             },
