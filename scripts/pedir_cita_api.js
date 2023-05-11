@@ -30,6 +30,24 @@ async function horarios(){
     }).map(fecha=>fecha.dia)
 
     dias_extra.forEach(dia=>fiestas.push(dia))
+
+    const inicio=hoy.getTime();
+    fechas_horas.descanso.forEach(d=>{
+        let cierra=[];
+        let dia_semana=inicio;
+        while(new Date(dia_semana)<=fin){
+            if(new Date(dia_semana).getDay()==d.dia){
+                cierra.push(new Date(dia_semana).toLocaleDateString('en-CA').replaceAll("/","-"))
+                dia_semana+=(1000*24*60*60*7)
+            }else{
+                dia_semana+=(1000*24*60*60)
+            }
+        }
+        cierra.push(new Date(dia_semana).toLocaleDateString('en-CA').replaceAll("/","-"))
+        cierra.forEach(dia=>fiestas.push(dia))
+    })
+
+
 }
 
 document.addEventListener('DOMContentLoaded',async () => {
@@ -49,6 +67,20 @@ document.addEventListener('DOMContentLoaded',async () => {
             selected: {
                 holidays: fiestas,
             },
+            visibility: {
+                // hightlights weekends
+                weekend: false,
+                // highlights today
+                today: true,
+                // abbreviated names of months in the month selection
+                monthShort: true,
+                // show week numbers of the year
+                weekNumbers: false,
+                // show all days, including disabled ones.s
+                disabled: false,
+                // show the days of the past and next month.
+                daysOutside: true,
+               },
           },
           actions: {
             clickDay(event, dates){
@@ -59,24 +91,24 @@ document.addEventListener('DOMContentLoaded',async () => {
     calendar.settings.lang = 'es';
     calendar.init();
 
-    const dias=document.getElementById("calendar").querySelectorAll(".vanilla-calendar-days>div")
-    fechas_horas.descanso.forEach(d=>{ 
-        for(let i=d.dia-1;i<dias.length;i+=7){
-            dias[i].children[0].classList.add("vanilla-calendar-day__btn_holiday")
-        }
-    })
+    // const dias=document.getElementById("calendar").querySelectorAll(".vanilla-calendar-days>div")
+    // fechas_horas.descanso.forEach(d=>{   
+    //     for(let i=d.dia-1;i<dias.length;i+=7){
+    //         dias[i].children[0].classList.add("vanilla-calendar-day__btn_holiday")
+    //     }
+    // })
         
     // dias.forEach(dia=>{
     //     dia.children[0].classList.add("dia_calendario");
-    //     // dia.children[0].setAttribute("disabled",true)
-    //     // dia.children[0].removeAttribute("type")
+    //     dia.children[0].setAttribute("disabled",true)
+    //     dia.children[0].removeAttribute("type")
     //     dia.addEventListener("click",()=>{
     //         console.log("a")
-    //             // fechas_horas.descanso.forEach(d=>{   
-    //             //     for(let i=d.dia-1;i<dias.length;i+=7){
-    //             //         dias[i].children[0].classList.add("vanilla-calendar-day__btn_holiday")
-    //             //     }
-    //             // })
+    //             fechas_horas.descanso.forEach(d=>{   
+    //                 for(let i=d.dia-1;i<dias.length;i+=7){
+    //                     dias[i].children[0].classList.add("vanilla-calendar-day__btn_holiday")
+    //                 }
+    //             })
     //     })
     // })
 });
