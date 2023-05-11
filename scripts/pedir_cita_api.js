@@ -1,5 +1,4 @@
 "use strict"
-
 const hoy=(new Date());
 hoy.setHours(0,0,0,0)
 let aa=hoy.getTime()+(1000*24*60*60*90)
@@ -61,7 +60,7 @@ document.addEventListener('DOMContentLoaded',async () => {
     calendar.init();
 
     const dias=document.getElementById("calendar").querySelectorAll(".vanilla-calendar-days>div")
-    fechas_horas.descanso.forEach(d=>{   
+    fechas_horas.descanso.forEach(d=>{ 
         for(let i=d.dia-1;i<dias.length;i+=7){
             dias[i].children[0].classList.add("vanilla-calendar-day__btn_holiday")
         }
