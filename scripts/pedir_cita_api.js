@@ -5,8 +5,8 @@ hoy.setHours(0,0,0,0)
 let aa=hoy.getTime()+(1000*24*60*60*90)
 const fin=new Date(aa);
 
-console.log(hoy.toLocaleDateString('en-GB').replaceAll("/","-"))
-console.log(fin.getDate()+"-"+(fin.getMonth()+1)+"-"+fin.getFullYear())
+console.log(hoy.toLocaleDateString('en-CA').replaceAll("/","-"))
+console.log(fin.toLocaleDateString('en-CA').replaceAll("/","-"))
 
 // const calendario = document.querySelectorAll("#calendario td:not(:empty)")
 const flechas = document.querySelectorAll("caption a")
@@ -42,8 +42,8 @@ document.addEventListener('DOMContentLoaded',async () => {
     const calendar = new VanillaCalendar('#calendar',{
         settings: {
             range: {
-                min: hoy.toLocaleDateString('en-GB').replaceAll("/","-"),
-                max: fin.toLocaleDateString('en-GB').replaceAll("/","-"),
+                min: hoy.toLocaleDateString('en-CA').replaceAll("/","-"),
+                max: fin.toLocaleDateString('en-CA').replaceAll("/","-"),
                 disabled: [], // disabled dates
                 enabled: [], // disabled dates
             },
