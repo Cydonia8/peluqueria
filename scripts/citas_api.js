@@ -10,7 +10,6 @@ async function datos(){
     const respuesta = await fetch('../php/api_citas.php')
     const datos = await respuesta.json();
     lista = datos["datos"];
-    // console.log(datos)
 }
 
 let horario=[];
@@ -49,8 +48,7 @@ editar_btn.forEach(boton=>{
 })
 
 select_horas.addEventListener("click", ()=>{
-    
-    console.log(select_horas)
+    select_horas.innerHTML="";
     let ocupadas=[];
     if(select_fecha.value != ''){
         let filtrado = lista.filter(cita=>cita.id_trab===select_trabajador.value && cita.fecha === select_fecha.value)
@@ -72,9 +70,6 @@ select_horas.addEventListener("click", ()=>{
                     ocupado_h="0"+ocupado_h;
                 }
                 let fin=ocupado_h+":"+ocupado_min;
-    
-                console.log(inicio);
-                console.log(fin);
 
                 while(inicio!=fin){
                     ocupadas.push(inicio);
@@ -89,11 +84,9 @@ select_horas.addEventListener("click", ()=>{
                     }
                     inicio=min2[0]+":"+min2[1];
                     i++
-                    console.log(i)
                 }
             }
-        })
-        
+        })        
 
         let disponibles=horas.filter(item => !ocupadas.includes(item));
         disponibles.forEach(h=>{
