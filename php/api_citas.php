@@ -4,7 +4,6 @@
 	header("Access-Control-Allow-Origin: *");
     $fecha_actual = date('Y-m-d');
     $conexion = new mysqli('localhost', 'root', '', 'peluqueria');
-    sleep(1);
     $sentencia = $conexion->query("select fecha, s.nombre servicio, p.nombre trab, hora, duracion, p.id id_trab from citas c, servicios s, personas p where c.servicio = s.id and c.trabajador = p.id and fecha >= $fecha_actual");
     $datos = [];
     

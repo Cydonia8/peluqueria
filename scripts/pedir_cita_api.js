@@ -4,6 +4,8 @@ const flechas = document.querySelectorAll("caption a")
 const select_servicio = document.getElementById("select-servicio")
 const select_trabajador = document.getElementById("select-empleado")
 const contenedor_horas = document.getElementById("horas")
+const calendar = document.getElementById("calendar")
+console.log(calendar)
 let fiestas=[];
 let fechas_horas
 
@@ -27,6 +29,8 @@ async function datos(){
 let horario=[];
 
 async function datos_hor(dia){
+    horario.length=0
+    contenedor_horas.innerHTML="";
     const respuesta = await fetch('../php/api_citas.php')
     const datos = await respuesta.json();
     lista = datos["datos"];
@@ -37,8 +41,7 @@ async function datos_hor(dia){
     horario.push(datos2["datos"].horario[0].t_apertura);
     horario.push(datos2["datos"].horario[0].t_cierre);
 
-    let pillada=0;
-    let horas=[];
+    let pillada=0; 
     let contador=0;
 
     while(contador<horario.length){
@@ -206,9 +209,7 @@ document.addEventListener('DOMContentLoaded',async () => {
     calendar.settings.lang = 'es';
     calendar.init();
 });
-function print(){
-    console.log("hola")
-}
+
 select_servicio.addEventListener("change", async ()=>{
     const servicio = select_servicio.value
     const res = await fetch(`../php/api_empleados_servicios.php?id=${servicio}`)
