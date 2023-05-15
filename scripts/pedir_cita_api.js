@@ -4,6 +4,8 @@ const flechas = document.querySelectorAll("caption a")
 const select_servicio = document.getElementById("select-servicio")
 const select_trabajador = document.getElementById("select-empleado")
 const contenedor_horas = document.getElementById("horas")
+const cal=document.getElementById("calendar");
+cal.classList.add("capa")
 let fiestas=[];
 let fechas_horas
 
@@ -11,12 +13,20 @@ const hoy=(new Date());
 hoy.setHours(0,0,0,0)
 let aa=hoy.getTime()+(1000*24*60*60*90)
 const fin=new Date(aa);
+const horas_container = document.querySelector(".horas-container")
+let lista = []
+let horas=[];
 
-// datos('2023-05-20');
-let lista = [];
-let horario=[];
+async function activar_calendario(){
+    if(select_servicio.value!="Elige un servicio" && select_trabajador.value!="Elige un trabajador"){
+        cal.classList.remove("capa")
+    }else{
+        cal.classList.add("capa")
+    }
+}
 
-async function datos(dia){
+async function datos_hor(dia){
+    let horario=[];
     const respuesta = await fetch('../php/api_citas.php')
     const datos = await respuesta.json();
     lista = datos["datos"];
@@ -33,7 +43,6 @@ async function datos(dia){
 
     while(contador<horario.length){
         let tiempo=horario[contador];
-        console.log(horario)
         tiempo=tiempo.split(":")[0]+":"+tiempo.split(":")[1];
         contador++;
         let limite=horario[contador].split(":")[0]+":"+horario[contador].split(":")[1];
@@ -91,9 +100,8 @@ async function datos(dia){
                 }
             }
         })        
-        
+
         let disponibles=horas.filter(item => !ocupadas.includes(item));
-        console.log(horas)
         contenedor_horas.innerHTML="";
         let n=0;
         disponibles.forEach(h=>{
@@ -172,12 +180,17 @@ document.addEventListener('DOMContentLoaded',async () => {
                },
           },
         actions: {
-            clickDay(event, dates) {datos(dates[0])}
+            async clickDay(event, dates){
+                await datos_hor(dates[0])         
+            }
         }
     });
     calendar.settings.lang = 'es';
     calendar.init();
 });
+function print(){
+    console.log("hola")
+}
 
 select_servicio.addEventListener("change", async ()=>{
     const servicio = select_servicio.value
@@ -185,6 +198,16 @@ select_servicio.addEventListener("change", async ()=>{
     const datos = await res.json()
     const info = datos["datos"]
     selectTrabajador(info)
+    activar_calendario()
+})
+select_trabajador.addEventListener("change", async ()=>{
+    activar_calendario()
+    let fecha_selec;
+    const dia=cal.querySelector(".vanilla-calendar-day.vanilla-calendar-day_selected>button");
+    if(dia!=null){
+        fecha_selec=dia.getAttribute("data-calendar-day");
+    }
+    datos_hor(fecha_selec)
 })
 
 function selectTrabajador(info){
