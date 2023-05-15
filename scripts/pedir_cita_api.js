@@ -39,7 +39,11 @@ async function datos_hor(dia){
     horario.push(datos2["datos"].horario[0].t_apertura);
     horario.push(datos2["datos"].horario[0].t_cierre);
 
+<<<<<<< HEAD
     let pillada=0; 
+=======
+    let horas=[];
+>>>>>>> 46cfd4d14da0cda5aad93533370679a8bb80b7f3
     let contador=0;
 
     while(contador<horario.length){
@@ -68,7 +72,7 @@ async function datos_hor(dia){
     if(contenedor_horas.value != ''){
         let filtrado = lista.filter(cita=>cita.id_trab===select_trabajador.value && cita.fecha === dia)
         filtrado.forEach(opcion=>{
-            if(opcion.id_trab===select_trabajador.value && opcion.fecha === dia && opcion.hora !== pillada){
+            if(opcion.id_trab===select_trabajador.value && opcion.fecha === dia && opcion.hora){
                 let dur=opcion.duracion.split(":");
                 let time=opcion.hora.split(":");
                 let ocupado_min=parseInt(dur[1])+parseInt(time[1]);
@@ -86,6 +90,21 @@ async function datos_hor(dia){
                 }
                 let fin=ocupado_h+":"+ocupado_min;
 
+                const dura=fechas_horas.servicios.find(s=>s.id==select_servicio.value).duracion.split(":")[0]+":"+fechas_horas.servicios.find(s=>s.id==select_servicio.value).duracion.split(":")[1]
+                const ciclos=(dura.split(":")[0]*60+dura.split(":")[1])/15-1;
+
+                for(let i=0;i<ciclos;i++){
+                    let h=inicio.split(":")[0]
+                    let m=inicio.split(":")[1]
+                    if(m>0){
+                        m-=15;
+                    }else{
+                        h-=1;
+                        m=45;
+                    }
+                    inicio=h+":"+m;
+                }
+                
                 while(inicio!=fin){
                     ocupadas.push(inicio);
                     let min2=inicio.split(":");
@@ -99,6 +118,37 @@ async function datos_hor(dia){
                     }
                     inicio=min2[0]+":"+min2[1];
                 }
+
+                
+                for(let i=1;i<=horario.length;i+=2){
+                    inicio=horario[i];
+                    for(let i=0;i<ciclos;i++){
+                        let h=inicio.split(":")[0]
+                        let m=inicio.split(":")[1]
+                        if(m>0){
+                            m-=15;
+                        }else{
+                            h-=1;
+                            m=45;
+                        }
+                        inicio=h+":"+m;
+                    }
+
+                    while(inicio!=horario[i].split(":")[0]+":"+horario[i].split(":")[1]){
+                        ocupadas.push(inicio);
+                        let min2=inicio.split(":");
+                        min2[1]=parseInt(min2[1])+15;
+                        if(min2[1]>=60){
+                            min2[1]-=60;
+                            if(min2[1]==0){
+                                min2[1]="00";
+                            }
+                            min2[0]++;
+                        }
+                        inicio=min2[0]+":"+min2[1];
+                    }
+                }
+
             }
         })        
 
