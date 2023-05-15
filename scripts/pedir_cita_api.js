@@ -13,7 +13,7 @@ let aa=hoy.getTime()+(1000*24*60*60*90)
 const fin=new Date(aa);
 
 // datos('2023-05-20');
-let lista = []
+let lista = [];
 let horario=[];
 
 async function datos(dia){
@@ -52,8 +52,6 @@ async function datos(dia){
         }
         contador++;
     }
-
-
 
     contenedor_horas.innerHTML="";
     let ocupadas=[];
@@ -105,22 +103,8 @@ async function datos(dia){
             `;
             n++;
         })
-    }else{
-        const option = createOption('', "Elige trabajador y fecha")
-        contenedor_horas.innerHTML=''
-        option.setAttribute("selected",'');
-        option.setAttribute("hidden",'');
-        option.setAttribute("disabled",'');
-        contenedor_horas.appendChild(option)
     }
-    
 }   
-
-// editar_btn.forEach(boton=>{
-//     boton.addEventListener("click",()=>{
-//         pillada=boton.parentElement.parentElement.children[1].innerText+":00";
-//     })
-// })
 
 async function horarios(){
     const res = await fetch(`../php/api_fechas_horas.php`)
@@ -217,89 +201,6 @@ function selectTrabajador(info){
         select_trabajador.appendChild(opt)
     })
 }
-
-
-
-
-// async function horas_disponibles(dia){
-//     while(contador<horario.length){
-//         let tiempo=horario[contador];
-//         console.log(horario)
-//         tiempo=tiempo.split(":")[0]+":"+tiempo.split(":")[1];
-//         contador++;
-//         let limite=horario[contador].split(":")[0]+":"+horario[contador].split(":")[1];
-//         while(tiempo<limite){
-//             horas.push(tiempo);
-//             let min=tiempo.split(":");
-//             min[1]=parseInt(min[1])+15;
-//             if(min[1]>=60){
-//                 min[1]-=60;
-//                 if(min[1]==0){
-//                     min[1]="00";
-//                 }
-//                 min[0]++;
-//             }
-//             tiempo=min[0]+":"+min[1];
-//         }
-//         contador++;
-//     }
-
-
-
-//     contenedor_horas.innerHTML="";
-//     let ocupadas=[];
-//     if(contenedor_horas.value != ''){
-//         let filtrado = lista.filter(cita=>cita.id_trab===select_trabajador.value && cita.fecha === dia)
-//         filtrado.forEach(opcion=>{
-//             if(opcion.id_trab===select_trabajador.value && opcion.fecha === dia && opcion.hora !== pillada){
-//                 let dur=opcion.duracion.split(":");
-//                 let time=opcion.hora.split(":");
-//                 let ocupado_min=parseInt(dur[1])+parseInt(time[1]);
-//                 let ocupado_h=parseInt(dur[0])+parseInt(time[0]);
-//                 if(ocupado_min>=60){
-//                     ocupado_h=parseInt(ocupado_h)+parseInt(ocupado_min)/60;
-//                     ocupado_min=parseInt(ocupado_min)%60;
-//                 }
-//                 if(ocupado_min==0){
-//                     ocupado_min="00";
-//                 }
-//                 let inicio=opcion.hora.split(":")[0]+":"+opcion.hora.split(":")[1];
-//                 if(ocupado_h<10){
-//                     ocupado_h="0"+ocupado_h;
-//                 }
-//                 let fin=ocupado_h+":"+ocupado_min;
-
-//                 while(inicio!=fin){
-//                     ocupadas.push(inicio);
-//                     let min2=inicio.split(":");
-//                     min2[1]=parseInt(min2[1])+15;
-//                     if(min2[1]>=60){
-//                         min2[1]-=60;
-//                         if(min2[1]==0){
-//                             min2[1]="00";
-//                         }
-//                         min2[0]++;
-//                     }
-//                     inicio=min2[0]+":"+min2[1];
-//                 }
-//             }
-//         })        
-        
-//         let disponibles=horas.filter(item => !ocupadas.includes(item));
-//         console.log(horas)
-//         disponibles.forEach(h=>{
-//             const option = createOption(h);
-//             contenedor_horas.appendChild(option);
-//         })
-//     }else{
-//         const option = createOption('', "Elige trabajador y fecha")
-//         contenedor_horas.innerHTML=''
-//         option.setAttribute("selected",'');
-//         option.setAttribute("hidden",'');
-//         option.setAttribute("disabled",'');
-//         contenedor_horas.appendChild(option)
-//     }
-// }
 
 function createOption(value){
     const elemento = `
