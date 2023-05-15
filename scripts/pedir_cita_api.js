@@ -15,7 +15,7 @@ const horas_container = document.querySelector(".horas-container")
 let lista = []
 let horas=[];
 
-datos()
+// datos()
 async function datos(){
     const respuesta = await fetch('../php/api_citas.php')
     const datos = await respuesta.json();
@@ -26,7 +26,7 @@ async function datos(){
 // datos('2023-05-20');
 let horario=[];
 
-async function datos(dia){
+async function datos_hor(dia){
     const respuesta = await fetch('../php/api_citas.php')
     const datos = await respuesta.json();
     lista = datos["datos"];
@@ -198,15 +198,17 @@ document.addEventListener('DOMContentLoaded',async () => {
                },
           },
         actions: {
-            clickDay(event, dates){
-                datos(dates[0])
+            async clickDay(event, dates){
+                await datos_hor(dates[0])         
             }
         }
     });
     calendar.settings.lang = 'es';
     calendar.init();
 });
-
+function print(){
+    console.log("hola")
+}
 select_servicio.addEventListener("change", async ()=>{
     const servicio = select_servicio.value
     const res = await fetch(`../php/api_empleados_servicios.php?id=${servicio}`)
