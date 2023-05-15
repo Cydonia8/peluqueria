@@ -27,6 +27,8 @@ async function activar_calendario(){
 
 async function datos_hor(dia){
     let horario=[];
+    horario.length=0
+    horas.length=0
     const respuesta = await fetch('../php/api_citas.php')
     const datos = await respuesta.json();
     lista = datos["datos"];
