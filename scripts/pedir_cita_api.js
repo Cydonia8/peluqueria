@@ -28,7 +28,6 @@ async function activar_calendario(){
 async function datos_hor(dia){
     let horario=[];
     horario.length=0
-    horas.length=0
     const respuesta = await fetch('../php/api_citas.php')
     const datos = await respuesta.json();
     lista = datos["datos"];
@@ -39,19 +38,17 @@ async function datos_hor(dia){
     horario.push(datos2["datos"].horario[0].t_apertura);
     horario.push(datos2["datos"].horario[0].t_cierre);
 
-<<<<<<< HEAD
-    let pillada=0; 
-=======
     let horas=[];
->>>>>>> 46cfd4d14da0cda5aad93533370679a8bb80b7f3
     let contador=0;
 
     while(contador<horario.length){
+        
         let tiempo=horario[contador];
         tiempo=tiempo.split(":")[0]+":"+tiempo.split(":")[1];
         contador++;
         let limite=horario[contador].split(":")[0]+":"+horario[contador].split(":")[1];
         while(tiempo<limite){
+            console.log("2")
             horas.push(tiempo);
             let min=tiempo.split(":");
             min[1]=parseInt(min[1])+15;
