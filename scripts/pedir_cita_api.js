@@ -33,10 +33,21 @@ async function datos_hor(dia){
     lista = datos["datos"];
     const respuesta2 = await fetch('../php/api_fechas_horas.php')
     const datos2 = await respuesta2.json();
-    horario.push(datos2["datos"].horario[0].m_apertura);
-    horario.push(datos2["datos"].horario[0].m_cierre);
-    horario.push(datos2["datos"].horario[0].t_apertura);
-    horario.push(datos2["datos"].horario[0].t_cierre);
+    console.log(datos2["datos"].trabaja.find(t=>t.empleado==select_trabajador.value))
+    if(datos2["datos"].trabaja.find(t=>t.empleado==select_trabajador.value)){
+        const personalizado=datos2["datos"].trabaja.find(t=>t.empleado==select_trabajador.value)
+        horario.push(personalizado.m_inicio);
+        horario.push(personalizado.m_fin);
+        horario.push(personalizado.t_inicio);
+        horario.push(personalizado.t_fin);
+        horario=horario.filter(item=>item!=undefined)
+        console.log(horario)
+    }else{
+        horario.push(datos2["datos"].horario[0].m_apertura);
+        horario.push(datos2["datos"].horario[0].m_cierre);
+        horario.push(datos2["datos"].horario[0].t_apertura);
+        horario.push(datos2["datos"].horario[0].t_cierre);
+    }
 
     let horas=[];
     let contador=0;
@@ -66,10 +77,48 @@ async function datos_hor(dia){
 
     contenedor_horas.innerHTML="";
     let ocupadas=[];
+    let inicio;
+    const dura=datos2["datos"].servicios.find(s=>s.id==select_servicio.value).duracion.split(":")[0]+":"+datos2["datos"].servicios.find(s=>s.id==select_servicio.value).duracion.split(":")[1]
+    const ciclos=(dura.split(":")[0]*60+dura.split(":")[1])/15-1;
+
+    for(let i=1;i<horario.length;i+=2){
+        inicio=horario[i];
+        for(let i=0;i<ciclos;i++){
+            let h=inicio.split(":")[0]
+            let m=inicio.split(":")[1]
+            if(m>0){
+                m-=15;
+                if(m==0){
+                    m='00'
+                }
+            }else{
+                h-=1;
+                m=45;
+            }
+            inicio=h+":"+m;
+        }
+
+        while(inicio!=horario[i].split(":")[0]+":"+horario[i].split(":")[1]){
+            ocupadas.push(inicio);
+            let min2=inicio.split(":");
+            min2[1]=parseInt(min2[1])+15;
+            if(min2[1]>=60){
+                min2[1]-=60;
+                if(min2[1]==0){
+                    min2[1]="00";
+                }
+                min2[0]++;
+            }
+            inicio=min2[0]+":"+min2[1];
+        }
+    }  
+
     if(contenedor_horas.value != ''){
         let filtrado = lista.filter(cita=>cita.id_trab===select_trabajador.value && cita.fecha === dia)
         filtrado.forEach(opcion=>{
             if(opcion.id_trab===select_trabajador.value && opcion.fecha === dia && opcion.hora){
+
+
                 let dur=opcion.duracion.split(":");
                 let time=opcion.hora.split(":");
                 let ocupado_min=parseInt(dur[1])+parseInt(time[1]);
@@ -81,20 +130,20 @@ async function datos_hor(dia){
                 if(ocupado_min==0){
                     ocupado_min="00";
                 }
-                let inicio=opcion.hora.split(":")[0]+":"+opcion.hora.split(":")[1];
+                inicio=opcion.hora.split(":")[0]+":"+opcion.hora.split(":")[1];
                 if(ocupado_h<10){
                     ocupado_h="0"+ocupado_h;
                 }
                 let fin=ocupado_h+":"+ocupado_min;
-
-                const dura=fechas_horas.servicios.find(s=>s.id==select_servicio.value).duracion.split(":")[0]+":"+fechas_horas.servicios.find(s=>s.id==select_servicio.value).duracion.split(":")[1]
-                const ciclos=(dura.split(":")[0]*60+dura.split(":")[1])/15-1;
 
                 for(let i=0;i<ciclos;i++){
                     let h=inicio.split(":")[0]
                     let m=inicio.split(":")[1]
                     if(m>0){
                         m-=15;
+                        if(m==0){
+                            m='00'
+                        }
                     }else{
                         h-=1;
                         m=45;
@@ -103,6 +152,7 @@ async function datos_hor(dia){
                 }
                 
                 while(inicio!=fin){
+                    console.log(inicio)
                     ocupadas.push(inicio);
                     let min2=inicio.split(":");
                     min2[1]=parseInt(min2[1])+15;
@@ -115,39 +165,8 @@ async function datos_hor(dia){
                     }
                     inicio=min2[0]+":"+min2[1];
                 }
-
-                
-                for(let i=1;i<=horario.length;i+=2){
-                    inicio=horario[i];
-                    for(let i=0;i<ciclos;i++){
-                        let h=inicio.split(":")[0]
-                        let m=inicio.split(":")[1]
-                        if(m>0){
-                            m-=15;
-                        }else{
-                            h-=1;
-                            m=45;
-                        }
-                        inicio=h+":"+m;
-                    }
-
-                    while(inicio!=horario[i].split(":")[0]+":"+horario[i].split(":")[1]){
-                        ocupadas.push(inicio);
-                        let min2=inicio.split(":");
-                        min2[1]=parseInt(min2[1])+15;
-                        if(min2[1]>=60){
-                            min2[1]-=60;
-                            if(min2[1]==0){
-                                min2[1]="00";
-                            }
-                            min2[0]++;
-                        }
-                        inicio=min2[0]+":"+min2[1];
-                    }
-                }
-
             }
-        })        
+        })  
 
         let disponibles=horas.filter(item => !ocupadas.includes(item));
         contenedor_horas.innerHTML="";
