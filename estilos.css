@@ -147,3 +147,19 @@ td.festivo{
     height: 100%;
     border-radius: 0.75rem;
 }
+nav.navbar{
+    background-color: rgba(37,27,25,1);
+}
+nav.navbar a.navbar-brand{
+    width: 10%;
+}
+nav.navbar a.nav-link, nav.navbar input{
+    color: rgba(245,208,101,1);
+    text-transform: uppercase;
+    font-weight: bolder;
+    transition: color .4s;
+}
+nav.navbar a.nav-link:hover, nav.navbar input:hover{
+    color: white;
+    transition: color .4s;
+}

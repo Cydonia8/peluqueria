@@ -32,13 +32,13 @@ function getTypeUser($mail){
 function printMenu(){
     if(isset($_SESSION["user"])){
         if($_SESSION["user"] == "admin@admin.com"){
-            echo "<nav class=\"ps-2 navbar navbar-expand-lg navbar-light bg-light\">
-                        <a class=\"navbar-brand\" href=\"#\">Peluquería</a>
+            echo "<nav class=\"ps-2 navbar navbar-expand-lg navbar-light\">
+                        <a class=\"navbar-brand\" href=\"#\"><img src='../assets/logo-blanco.png' class='img-fluid'></a>
                         <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarNav\" aria-controls=\"navbarNav\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">
                             <span class=\"navbar-toggler-icon\"></span>
                         </button>
-                        <div class=\"collapse navbar-collapse\" id=\"navbarNav\">
-                            <ul class=\"navbar-nav\">
+                        <div class=\"collapse navbar-collapse justify-content-center\" id=\"navbarNav\">
+                            <ul class=\"navbar-nav gap-3\">
                             <li class=\"nav-item active\">
                                 <a class=\"nav-link\" href=\"calendario.php\">Calendario</span></a>
                             </li>
@@ -61,15 +61,15 @@ function printMenu(){
                         </div>
                 </nav>";
         }else{
-            echo "<nav class=\"ps-2 navbar navbar-expand-lg navbar-light bg-light\">
-                    <a class=\"navbar-brand\" href=\"#\">Peluquería</a>
+            echo "<nav class=\"ps-2 navbar navbar-expand-lg navbar-light \">
+                    <a class=\"navbar-brand\" href=\"#\"><img src='../assets/logo-blanco.png' class='img-fluid'></a>
                     <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarNav\" aria-controls=\"navbarNav\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">
                         <span class=\"navbar-toggler-icon\"></span>
                     </button>
-                    <div class=\"collapse navbar-collapse\" id=\"navbarNav\">
-                        <ul class=\"navbar-nav\">
+                    <div class=\"collapse navbar-collapse justify-content-center\" id=\"navbarNav\">
+                        <ul class=\"navbar-nav gap-3\">
                         <li class=\"nav-item active\">
-                            <form action=\"#\" method=\"post\"><input type=\"submit\" name=\"cerrar-sesion\" value=\"Cerrar sesión\"></form>
+                            <form action=\"#\" method=\"post\"><input class=\"nav-link\" type=\"submit\" name=\"cerrar-sesion\" value=\"Cerrar sesión\"></form>
                         </li>
                         <li class=\"nav-item\">
                             <a class=\"nav-link\" href=\"pedir_cita.php\">Pedir cita</a>
