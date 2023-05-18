@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
 *,::after,::before{
     box-sizing: border-box;
 }
@@ -6,7 +7,13 @@ body{
     /* background: rgb(27,160,195);
 background: linear-gradient(180deg, rgba(27,160,195,1) 50%, rgba(8,6,6,0.9500175070028011) 100%); */
 height: 100vh;
+font-family: 'Ubuntu', sans-serif;
 }
+#index{
+    background-image: url('assets/portada02.jpg');
+    background-size: cover;
+}
+
 .buttons{
     height: 100vh;
     width: 100vw;
@@ -35,17 +42,43 @@ background: linear-gradient(180deg, rgba(255,255,255,0.8995973389355743) 26%, rg
     align-items: center;
     flex-direction: column;
     position: fixed;
-    gap: 4rem;
+    gap: 2rem;
     top: 0;
     /* background: rgb(255,255,255);
 background: linear-gradient(180deg, rgba(255,255,255,0.8995973389355743) 26%, rgba(7,77,119,1) 83%); */
 }
-.login-register-buttons{
+#index .login-register-buttons{
     padding: 0.5rem;
     border-radius: 10px;
+    background-color: rgba(245,208,101,1);
+}
+#index h1{
+    font-size: 3rem;
+}
+#index #atras{
+    padding: 0.5rem;
+    border-radius: 10px;
+    background-color: rgba(245,208,101,1);
+}
+#index label{
+    color: white;
+}
+#index .form-control{
+    background: transparent;
+    color: white;
+    border: none;
+    border-radius: 0;
+    border-bottom: 2px solid white;
+    outline: none;
+}
+#index input.form-control:focus{
+    outline: none;
 }
 #index form{
     display: none;
+    background-color: rgba(37,27,25,1);
+    padding: 1rem;
+    border-radius: 10px;
 }
 #index form.active{
     display: block;

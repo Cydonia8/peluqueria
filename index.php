@@ -36,8 +36,12 @@
     <title>Bienvenido</title>
 </head>
 <body id = "index">
+    <div class="d-flex justify-content-center p-2 flex-column">
+        <img src="assets/logo-blanco.png" class="w-25 mx-auto" alt="">
+        <h1 class="text-center text-light">Servicio online de citas</h1>
+    </div>
     <section class="formularios hidden">
-        <button class="rounded-pill p-2" id="atras">Atrás</button>
+        <button class="rounded-pill p-2 mt-5" id="atras">Atrás</button>
         <form data-form="login" action="#" method="post">
             <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Correo</label>
