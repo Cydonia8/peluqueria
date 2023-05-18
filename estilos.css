@@ -117,7 +117,7 @@ background: linear-gradient(180deg, rgba(255,255,255,0.8995973389355743) 26%, rg
     justify-content: center
 }
 table td,th{
-    padding: 1rem;
+    padding: 0.7rem;
 }
  table{
     text-align: center
@@ -199,6 +199,12 @@ nav.navbar a.nav-link, nav.navbar input{
 nav.navbar a.nav-link:hover, nav.navbar input:hover{
     color: white;
     transition: color .4s;
+}
+.contenedor_tabla{
+    overflow-x: auto;
+}
+.contenedor_tabla>table{
+    width: 100%;
 }
 
 /* PEDIR CITA */

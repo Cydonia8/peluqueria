@@ -237,7 +237,7 @@
             echo "</tr>
                 </tbody>
             </table>
-            
+            <div class='contenedor_tabla'>
             <table>
                 <thead>
                     <tr>
@@ -313,7 +313,8 @@
             }
 
             echo "</tbody>
-            </table>";
+            </table>
+            </div>";
 
             $conexion->close();
         }
