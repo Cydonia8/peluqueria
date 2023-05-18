@@ -33,7 +33,6 @@ async function datos_hor(dia){
     lista = datos["datos"];
     const respuesta2 = await fetch('../php/api_fechas_horas.php')
     const datos2 = await respuesta2.json();
-    console.log(datos2["datos"].trabaja.find(t=>t.empleado==select_trabajador.value))
     if(datos2["datos"].trabaja.find(t=>t.empleado==select_trabajador.value)){
         const personalizado=datos2["datos"].trabaja.find(t=>t.empleado==select_trabajador.value)
         horario.push(personalizado.m_inicio);
@@ -41,7 +40,6 @@ async function datos_hor(dia){
         horario.push(personalizado.t_inicio);
         horario.push(personalizado.t_fin);
         horario=horario.filter(item=>item!=undefined)
-        console.log(horario)
     }else{
         horario.push(datos2["datos"].horario[0].m_apertura);
         horario.push(datos2["datos"].horario[0].m_cierre);
@@ -59,7 +57,6 @@ async function datos_hor(dia){
         contador++;
         let limite=horario[contador].split(":")[0]+":"+horario[contador].split(":")[1];
         while(tiempo<limite){
-            console.log("2")
             horas.push(tiempo);
             let min=tiempo.split(":");
             min[1]=parseInt(min[1])+15;
@@ -117,14 +114,12 @@ async function datos_hor(dia){
         let filtrado = lista.filter(cita=>cita.id_trab===select_trabajador.value && cita.fecha === dia)
         filtrado.forEach(opcion=>{
             if(opcion.id_trab===select_trabajador.value && opcion.fecha === dia && opcion.hora){
-
-
                 let dur=opcion.duracion.split(":");
                 let time=opcion.hora.split(":");
                 let ocupado_min=parseInt(dur[1])+parseInt(time[1]);
                 let ocupado_h=parseInt(dur[0])+parseInt(time[0]);
                 if(ocupado_min>=60){
-                    ocupado_h=parseInt(ocupado_h)+parseInt(ocupado_min)/60;
+                    ocupado_h=parseInt(ocupado_h)+Math.floor(parseInt(ocupado_min)/60);
                     ocupado_min=parseInt(ocupado_min)%60;
                 }
                 if(ocupado_min==0){
@@ -152,7 +147,6 @@ async function datos_hor(dia){
                 }
                 
                 while(inicio!=fin){
-                    console.log(inicio)
                     ocupadas.push(inicio);
                     let min2=inicio.split(":");
                     min2[1]=parseInt(min2[1])+15;
@@ -166,20 +160,25 @@ async function datos_hor(dia){
                     inicio=min2[0]+":"+min2[1];
                 }
             }
-        })  
+        })
+        contenedor_horas.parentElement.parentElement.previousElementSibling.value=dia
 
         let disponibles=horas.filter(item => !ocupadas.includes(item));
         contenedor_horas.innerHTML="";
         let n=0;
-        disponibles.forEach(h=>{
-            contenedor_horas.innerHTML+=`
-                <div>
-                    <input type='radio' class='btn-check' value=${h} id='btn-check-2-outlined-${n}' checked autocomplete='off' name='hora'>
-                    <label class='btn btn-outline-secondary px-3' for='btn-check-2-outlined-${n}'>${h}</label>
-                </div>
-            `;
-            n++;
-        })
+        if(disponibles.length>0){
+            disponibles.forEach(h=>{
+                contenedor_horas.innerHTML+=`
+                    <div>
+                        <input type='radio' class='btn-check' value=${h} id='btn-check-2-outlined-${n}' autocomplete='off' name='hora'>
+                        <label class='btn btn-outline-secondary px-3' for='btn-check-2-outlined-${n}'>${h}</label>
+                    </div>
+                `;
+                n++;
+            })
+        }else{
+            contenedor_horas.innerHTML+="<h3 class='position-absolute top-50 start-50 w-100 text-center translate-middle mt-sm-2 mt-md-0'>No quedan horas libres</h3>";
+        }
     }
 }   
 
@@ -190,7 +189,6 @@ async function horarios(){
 
     let fecha_actual = new Date()
     fecha_actual.setHours(0,0,0,0)
-    // console.log(fechas_horas["horario"])
     let dias_extra = fechas_horas["horario"].filter(fecha=>{
         let comparar = new Date(fecha.dia)
         comparar.setHours(0,0,0,0)
@@ -221,7 +219,6 @@ document.addEventListener('DOMContentLoaded',async () => {
     const datos = await respuesta.json()
     fiestas = datos.filter(festivo => festivo.counties == null || festivo.counties.includes("ES-AN")).map(f=>f.date);
     await horarios();
-    // console.log(fiestas)
     const calendar = new VanillaCalendar('#calendar',{
         settings: {
             range: {
