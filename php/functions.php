@@ -141,7 +141,7 @@ function checkLogin($mail, $pass){
     $consulta->execute();
     $consulta->fetch();
     $con->close();
-    if($count == 0){
+    if($count != 1){
         $correcto = false;
     }
 

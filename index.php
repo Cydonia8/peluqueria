@@ -45,11 +45,11 @@
         <form data-form="login" action="#" method="post">
             <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Correo</label>
-                <input type="email" class="form-control" name="correo" aria-describedby="emailHelp">
+                <input required type="email" class="form-control" name="correo" aria-describedby="emailHelp">
             </div>
             <div class="mb-3">
                 <label for="exampleInputPassword1" class="form-label">Contraseña</label>
-                <input type="password" name="pass" class="form-control">
+                <input required type="password" name="pass" class="form-control">
             </div>
             <input type="submit" class="btn btn-primary" name="login" value="Iniciar sesión">
         </form>
