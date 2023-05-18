@@ -173,8 +173,10 @@ async function datos_hor(dia){
         let n=0;
         disponibles.forEach(h=>{
             contenedor_horas.innerHTML+=`
-                <input type='checkbox' class='btn-check' value=${h} id='btn-check-2-outlined-${n}' checked autocomplete='off'>
-                <label class='btn btn-outline-secondary' for='btn-check-2-outlined-${n}'>${h}</label>
+                <div>
+                    <input type='radio' class='btn-check' value=${h} id='btn-check-2-outlined-${n}' checked autocomplete='off' name='hora'>
+                    <label class='btn btn-outline-secondary px-3' for='btn-check-2-outlined-${n}'>${h}</label>
+                </div>
             `;
             n++;
         })
@@ -288,12 +290,4 @@ function selectTrabajador(info){
         opt.innerText=nombre
         select_trabajador.appendChild(opt)
     })
-}
-
-function createOption(value){
-    const elemento = `
-        <input type='checkbox' class='btn-check' value=${value} id='btn-check-2-outlined' checked autocomplete='off'>
-        <label class='btn btn-outline-secondary' for='btn-check-2-outlined'>${value}</label>
-    `
-    return elemento
 }

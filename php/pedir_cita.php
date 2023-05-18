@@ -27,19 +27,27 @@
     <?php
         printMenu();
     ?>
-    <section>
-        <select name="servicio" id="select-servicio">
-            <option checked hidden>Elige un servicio</option>
-            <?php
-                getServiciosSelect();
-            ?>
-        </select>
-        <select disabled name="empleado" id="select-empleado">
-            <option checked hidden>Elige un trabajador</option>
-        </select>
+    <section class='container-fluid display-flex justify-content-evenly mt-4 row mx-auto'>
+        <div class='col-12 col-sm-6 p-0 p-sm-1'>
+            <select name="servicio" id="select-servicio" class="form-select form-select-lg mb-3 p-2" aria-label=".form-select-lg example">
+                <option checked hidden>Elige un servicio</option>
+                <?php
+                    getServiciosSelect();
+                ?>
+            </select>
+        </div>
+        <div class='col-12 col-sm-6 p-0 p-sm-1'>
+            <select disabled name="empleado" id="select-empleado" class="form-select form-select-lg mb-3 p-2" aria-label=".form-select-lg example">
+                <option checked hidden>Elige un trabajador</option>
+            </select>
+        </div>
+        <div>
+            
     </section>
-    <section class="container-fluid px-sm-3 px-0 mt-4 row">
-    <div class="col-12 col-md-6" id="calendar"></div>
+    <section class="container-fluid px-sm-3 px-0 mt-4 row mx-auto gx-3">
+        <div class='col-12 col-md-6 px-sm-1'>
+            <div class='w-100' id="calendar"></div>
+        </div>
     
     <?php
         // if(!isset($_SESSION['user'])){
@@ -246,11 +254,13 @@
 
         //     echo "</tbody>
         //     </table>";
-            echo "<div class='col-12 col-md-6'>
-                <h2 class='text-center'>Horas</h2>
-                <form id='horas'>
-                
-                </form>  
+            echo "<div class='col-12 col-md-6 px-sm-1'>
+                <div class='border border-2 rounded-4 h-100'>
+                    <h2 class='text-center'>Horas</h2>
+                    <form id='horas''>
+                    
+                    </form>  
+                </div>
             </div>";
 
         //     $conexion->close();

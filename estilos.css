@@ -163,3 +163,14 @@ nav.navbar a.nav-link:hover, nav.navbar input:hover{
     color: white;
     transition: color .4s;
 }
+
+/* PEDIR CITA */
+#horas{
+    display: inline-grid;
+    grid-template-columns: repeat(9,1fr);
+    grid-row-gap: 10px;
+    width: 100%;
+}
+#horas>div{
+    justify-self: center;
+}
