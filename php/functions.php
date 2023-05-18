@@ -70,11 +70,15 @@ function printMenu(){
                     </button>
                     <div class=\"collapse navbar-collapse justify-content-center\" id=\"navbarNav\">
                         <ul class=\"navbar-nav gap-3\">
-                        <li class=\"nav-item active\">
-                            <form action=\"#\" method=\"post\"><input class=\"nav-link\" type=\"submit\" name=\"cerrar-sesion\" value=\"Cerrar sesión\"></form>
+                        
+                        <li class=\"nav-item\">
+                            <a class=\"nav-link\" href=\"calendario.php\">Mis citas</a>
                         </li>
                         <li class=\"nav-item\">
                             <a class=\"nav-link\" href=\"pedir_cita.php\">Pedir cita</a>
+                        </li>
+                        <li class=\"nav-item active\">
+                            <form action=\"#\" method=\"post\"><input class=\"nav-link\" type=\"submit\" name=\"cerrar-sesion\" value=\"Cerrar sesión\"></form>
                         </li>
                         </ul>
                     </div>
@@ -113,7 +117,7 @@ function checkLogin($mail, $pass){
     $consulta->execute();
     $consulta->fetch();
     $con->close();
-    if($count == 0){
+    if($count != 1){
         $correcto = false;
     }
 

@@ -180,21 +180,13 @@
                 </caption>
                 <thead>
                     <tr>
-                        <th>Lunes</th>
-                        <th>Marter</th>
-                        <th>Miércoles</th>
-                        <th>Jueves</th>
-                        <th>Viernes</th>
-                        <th>Sábado</th>
-                        <th>Domingo</th>
-
-                        <th>L</th>
-                        <th>M</th>
-                        <th>X</th>
-                        <th>J</th>
-                        <th>V</th>
-                        <th>S</th>
-                        <th>D</th>
+                        <th class='cabecera-dia'>Lunes</th>
+                        <th class='cabecera-dia'>Martes</th>
+                        <th class='cabecera-dia'>Miércoles</th>
+                        <th class='cabecera-dia'>Jueves</th>
+                        <th class='cabecera-dia'>Viernes</th>
+                        <th class='cabecera-dia'>Sábado</th>
+                        <th class='cabecera-dia'>Domingo</th>
                     </tr>
                 </thead>
                 <tbody>

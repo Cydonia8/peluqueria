@@ -4,7 +4,11 @@ const btn_close_modal = document.querySelector(".modal-footer button")
 const input_date = document.querySelector("input[type=date]")
 const calendario = document.querySelectorAll("#calendario td:not(:empty)")
 const flechas = document.querySelectorAll("caption a")
+const max_width = window.matchMedia("(max-width: 650px)")
+const cabecera_dias = document.querySelectorAll(".cabecera-dia")
 
+const array_dias = ['L', 'M', 'X', 'J', 'V', 'S', 'D']
+const array_dias_comp = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
 let fiestas;
 let today = new Date()
 let dia = formatDate(today.getDate())
@@ -22,6 +26,11 @@ btn_close.addEventListener("click", ()=>{
     location.reload()
 })
 festivos()
+responsiveCalendario(max_width)
+window.addEventListener("resize", ()=>{
+    responsiveCalendario(max_width)
+})  
+
 async function festivos(){
     const respuesta = await fetch('https://date.nager.at/api/v3/PublicHolidays/2023/ES')
     const datos = await respuesta.json()
@@ -36,6 +45,17 @@ async function festivos(){
     })
 }
 
+function responsiveCalendario(width){
+    if(width.matches){
+        cabecera_dias.forEach((dia, index)=>{
+            dia.innerText=array_dias[index]
+        })
+    }else{
+        cabecera_dias.forEach((dia, index)=>{
+            dia.innerText=array_dias_comp[index]
+        })
+    }
+}
 flechas.forEach(flecha=>{
     flecha.addEventListener("click", comprobarFestivos)
 })
