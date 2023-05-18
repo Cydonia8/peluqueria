@@ -3,21 +3,7 @@
     require_once("functions.php");
     closeSession();
     $conexion=createConnection();
-    if(isset($_POST['insertar'])){
-        $preparada=$conexion->prepare("insert into citas (cliente,trabajador,fecha,hora,servicio) values (?,?,?,?,?)");
-        $id_cliente = getIDCliente($_SESSION["user"]);
-        if(!isset($_POST["trabajador"]) or $_POST["fecha"] == '' or !isset($_POST['hora']) or !isset($_POST["servicio"])){
-            echo "<div class='alert alert-danger' role='alert'>
-           Faltan datos por rellenar. Cita no insertada.
-          </div>";
-        }else{
-            $preparada->bind_param("iissi",$id_cliente,$_POST['trabajador'],$_POST['fecha'],$_POST['hora'],$_POST['servicio']);
-            $preparada->execute();
-            header("Refresh:0");
-        }
-        $preparada->close();
-        
-    }else if(isset($_POST['editar'])){
+    if(isset($_POST['editar'])){
         $preparada=$conexion->prepare("update citas set trabajador=?,fecha=?,hora=?,servicio=? where cliente=? and trabajador=? and fecha=? and hora=?");
         $preparada->bind_param("issiiiss",$_POST['trabajador'],$_POST['fecha'],$_POST['hora'],$_POST['servicio'],$_POST['id'],$_POST['empleado2'],$_POST['fecha2'],$_POST['hora2']);
         if(!isset($_POST['hora'])){
@@ -56,10 +42,6 @@
     <?php
         printMenu();
     ?>
-    <div>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="Pedir cita">Pedir cita</button>
-    </div>
-
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -126,7 +108,7 @@
         </div>
     </div>
 
-    <section class="container-fluid px-sm-3 px-0 mt-4 row">
+    <section class="container-fluid px-sm-3 px-0 mt-4 row mx-auto">
     <?php
         if(!isset($_SESSION['user'])){
             echo "<meta http-equiv='refresh' content='0;url=http://domain.com?a=1&b=2'>";
@@ -199,12 +181,20 @@
                 <thead>
                     <tr>
                         <th>Lunes</th>
-                        <th>Martes</th>
+                        <th>Marter</th>
                         <th>Miércoles</th>
                         <th>Jueves</th>
                         <th>Viernes</th>
                         <th>Sábado</th>
                         <th>Domingo</th>
+
+                        <th>L</th>
+                        <th>M</th>
+                        <th>X</th>
+                        <th>J</th>
+                        <th>V</th>
+                        <th>S</th>
+                        <th>D</th>
                     </tr>
                 </thead>
                 <tbody>

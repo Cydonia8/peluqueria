@@ -34,7 +34,7 @@ function printMenu(){
         if($_SESSION["user"] == "admin@admin.com"){
             echo "<nav class=\"ps-2 navbar navbar-expand-lg\">
                     <div class='container-fluid'>
-                        <a class=\"navbar-brand\" href=\"#\"><img src='../assets/logo-blanco.png' class='img-fluid'></a>
+                        <a class=\"navbar-brand\" href=\"calendario.php\"><img src='../assets/logo-blanco.png' class='img-fluid'></a>
                         <button class=\"navbar-toggler bg-light\" type=\"button\" data-bs-toggle=\"collapse\" data-bs-target=\"#navbarNav\" aria-controls=\"navbarNav\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">
                             <span class=\"navbar-toggler-icon\"></span>
                         </button>
@@ -62,38 +62,10 @@ function printMenu(){
                         </div>
                     </div>
                 </nav>";
-            // echo "<nav class=\"ps-2 navbar navbar-expand-lg navbar-light\">
-            //             <a class=\"navbar-brand\" href=\"#\"><img src='../assets/logo-blanco.png' class='img-fluid'></a>
-            //             <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarNav\" aria-controls=\"navbarNav\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">
-            //                 <span class=\"navbar-toggler-icon\"></span>
-            //             </button>
-            //             <div class=\"collapse navbar-collapse justify-content-center\" id=\"navbarNav\">
-            //                 <ul class=\"navbar-nav gap-3\">
-            //                 <li class=\"nav-item active\">
-            //                     <a class=\"nav-link\" href=\"calendario.php\">Calendario</span></a>
-            //                 </li>
-            //                 <li class=\"nav-item\">
-            //                     <a class=\"nav-link\" href=\"empleados.php\">Empleados</a>
-            //                 </li>
-            //                 <li class=\"nav-item\">
-            //                     <a class=\"nav-link\" href=\"pedir_cita.php\">Pedir cita</a>
-            //                 </li>
-            //                 <li class=\"nav-item\">
-            //                     <a class=\"nav-link\" href=\"servicios.php\">Servicios</a>
-            //                 </li>
-            //                 <li class=\"nav-item\">
-            //                     <a class=\"nav-link\" href=\"horario.php\">Horarios</a>
-            //                 </li>
-            //                 <li lass=\"nav-item\">
-            //                     <form action=\"#\" method=\"post\"><input class=\"nav-link\" type=\"submit\" name=\"cerrar-sesion\" value=\"Cerrar sesión\"></form>
-            //                 </li>
-            //                 </ul>
-            //             </div>
-            //     </nav>";
         }else{
             echo "<nav class=\"ps-2 navbar navbar-expand-lg navbar-light \">
-                    <a class=\"navbar-brand\" href=\"#\"><img src='../assets/logo-blanco.png' class='img-fluid'></a>
-                    <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarNav\" aria-controls=\"navbarNav\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">
+                    <a class=\"navbar-brand\" href=\"calendario.php\"><img src='../assets/logo-blanco.png' class='img-fluid'></a>
+                    <button class=\"navbar-toggler bg-light\" type=\"button\" data-bs-toggle=\"collapse\" data-bs-target=\"#navbarNav\" aria-controls=\"navbarNav\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">
                         <span class=\"navbar-toggler-icon\"></span>
                     </button>
                     <div class=\"collapse navbar-collapse justify-content-center\" id=\"navbarNav\">
