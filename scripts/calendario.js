@@ -29,7 +29,7 @@ festivos()
 responsiveCalendario(max_width)
 window.addEventListener("resize", ()=>{
     responsiveCalendario(max_width)
-})  
+})
 
 async function festivos(){
     const respuesta = await fetch('https://date.nager.at/api/v3/PublicHolidays/2023/ES')

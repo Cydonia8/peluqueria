@@ -172,11 +172,11 @@
                 $anio=$año_anterior;
             }
             // echo "<table class='w-100 text-center'>
-            echo "<table id=\"calendario\">
-                <caption class=\"text-center\">
-                    <a href='calendario.php?mes=$mes_anterior&año=$año_anterior'><-</a>
+            echo "<table id=\"calendario\" class='mb-3'>
+                <caption class=\"text-center fs-3\">
+                    <a class='text-decoration-none text-dark' href='calendario.php?mes=$mes_anterior&año=$año_anterior'><-</a>
                     $nombre_mes
-                    <a href='calendario.php?mes=$mes_siguiente&año=$año_siguiente'>-></a>
+                    <a class='text-decoration-none text-dark' href='calendario.php?mes=$mes_siguiente&año=$año_siguiente'>-></a>
                 </caption>
                 <thead>
                     <tr>
@@ -234,21 +234,21 @@
             
             $consulta->close();
 
-            echo "</tr>
-                </tbody>
-            </table>
-            <div class='contenedor_tabla'>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Hora</th>
-                        <th>Cliente</th>
-                        <th>Trabajador</th>
-                        <th>Servicio</th>
-                    </tr>
-                </thead>
-                <tbody>";
+            echo "      </tr>
+                    </tbody>
+                </table>
+            <div class='contenedor_tabla col-12 p-0'>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Cliente</th>
+                            <th>Trabajador</th>
+                            <th>Servicio</th>
+                        </tr>
+                    </thead>
+                    <tbody>";
 
             if(isset($_GET['dia'])){
                 $busqueda="$_GET[año]-$_GET[mes]-$_GET[dia]";

@@ -67,3 +67,26 @@ inicio_t.addEventListener("change", ()=>{
     fin_t.setAttribute("min", minimo)
     fin_t.removeAttribute("disabled")
 })
+
+const array_dias = ['Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab', 'Dom']
+const array_dias_comp = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
+
+function responsiveCalendario(width){
+    if(width.matches){
+        dias_semana.forEach((dia, index)=>{
+            dia.innerText=array_dias[index]
+        })
+    }else{
+        dias_semana.forEach((dia, index)=>{
+            dia.innerText=array_dias_comp[index]
+        })
+    }
+}
+
+const max_width = window.matchMedia("(max-width: 1100px)")
+const dias_semana=document.getElementById("dias_semana").querySelectorAll("label");
+
+responsiveCalendario(max_width)
+window.addEventListener("resize", ()=>{
+    responsiveCalendario(max_width)
+})

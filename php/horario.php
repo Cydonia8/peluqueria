@@ -88,18 +88,18 @@
     <?php
         printMenu();
     ?>
-    <div class='row'>
-        <section class="container-fluid px-sm-3 px-0 mt-4 row col-6 mx-auto">
+    <div class='row w-100 mx-auto'>
+        <section class="container-fluid px-sm-3 px-0 mt-4 row col-12 col-md-7 mx-auto">
             <form action="" method="post" class="col-12 mx-auto row">
-                <div class="col d-flex flex-column align-items-center">
+                <div class="col d-flex flex-column align-items-center p-1">
                     <h3>Mañana</h3>
-                    <div>
+                    <div class=''>
                         <?php
                             $consulta=$conexion->query("select * from horario");
                             $lista=$consulta->fetch_array(MYSQLI_NUM);
 
                             echo"
-                                <span>Horario:</span>
+                                <span class='d-md-block d-sm-inline d-xl-inline d-block text-center'>Horario:<br class='d-xl-none d-md-block d-sm-none'></span>
                                 <input type='time' name='m_apertura' disabled value='$lista[1]'>
                                 <span>-</span>
                                 <input type='time' name='m_cierre' disabled value='$lista[2]'>
@@ -107,12 +107,12 @@
                         ?>
                     </div>
                 </div>
-                <div class="col d-flex flex-column align-items-center">
+                <div class="col d-flex flex-column align-items-center p-1">
                     <h3>Tarde</h3>
                     <div>
                         <?php
                             echo"
-                                <span>Horario:</span>
+                                <span class='d-md-block d-sm-inline d-xl-inline d-block text-center'>Horario:<br class='d-xl-none d-md-block d-sm-none'></span>
                                 <input type='time' name='t_apertura' disabled value='$lista[3]'>
                                 <span>-</span>
                                 <input type='time' name='t_cierre' disabled value='$lista[4]'>
@@ -127,11 +127,10 @@
                 </div>
             </form>
         </section>
-
-        <section class="container-fluid px-sm-3 px-0 mt-4 row col-6 mx-auto">
-            <form action="" method="post" class="col-12 mx-auto row">
+        <section class="container-fluid px-sm-3 px-0 mt-4 row col-12 col-md-5 mx-auto">
+            <form action="" method="post" class="col-12 mx-auto row p-0">
                 <h3 class='text-center'>Dias que cierra</h3>
-                <div class="col d-flex align-items-center justify-content-evenly">
+                <div class="col d-flex align-items-center justify-content-md-between justify-content-evenly p-0" id='dias_semana'>
                     <?php
                             $consulta=$conexion->query("select dia from descanso");
                             $check=[];
@@ -184,52 +183,54 @@
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="Añadir nuevo">Añadir nuevo</button>
         </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Dia</th>
-                    <th>Mañana</th>
-                    <th>Tarde</th>
-                    <th>Editar</th>
-                    <th>Borrar</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                    $conexion=createConnection();
+        <div class='contenedor_tabla'>
+            <table id='tabla_horario'>
+                <thead>
+                    <tr>
+                        <th>Dia</th>
+                        <th>Mañana</th>
+                        <th>Tarde</th>
+                        <th>Editar</th>
+                        <th>Borrar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                        $conexion=createConnection();
 
-                    $consulta=$conexion->query("select * from horario where id!=1");
-                    while($lista=$consulta->fetch_array(MYSQLI_ASSOC)){
-                        if($lista['dia']<date("Y-m-d")){
-                            $preparada=$conexion->prepare("delete from horario where id=?");
-                            $preparada->bind_param("i",$lista['id']);
-                            $preparada->execute();
-                            $preparada->close();
-                            // header("Refresh:0");
-                        }else{
-                            echo "
-                            <tr>
-                                <td>$lista[dia]</td>
-                                <td>".cortarSeg($lista['m_apertura'])."-".cortarSeg($lista['m_cierre'])."</td>
-                                <td>".cortarSeg($lista['t_apertura'])."-".cortarSeg($lista['t_cierre'])."</td>
-                                <td>
-                                    <button data-id='$lista[id]' type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#exampleModal' data-bs-whatever='Editar'>Editar</button>
-                                </td>
-                                <td>
-                                    <form action='#' method='post'>
-                                        <input type='hidden' name='id' value='$lista[id]'>
-                                        <input class='recargar btn btn-primary' type='submit' name='estado' value='Borrar'></input>
-                                    </form>
-                                </td>
-                            </tr>
-                            ";
+                        $consulta=$conexion->query("select * from horario where id!=1");
+                        while($lista=$consulta->fetch_array(MYSQLI_ASSOC)){
+                            if($lista['dia']<date("Y-m-d")){
+                                $preparada=$conexion->prepare("delete from horario where id=?");
+                                $preparada->bind_param("i",$lista['id']);
+                                $preparada->execute();
+                                $preparada->close();
+                                // header("Refresh:0");
+                            }else{
+                                echo "
+                                <tr>
+                                    <td>$lista[dia]</td>
+                                    <td>".cortarSeg($lista['m_apertura'])."-".cortarSeg($lista['m_cierre'])."</td>
+                                    <td>".cortarSeg($lista['t_apertura'])."-".cortarSeg($lista['t_cierre'])."</td>
+                                    <td>
+                                        <button data-id='$lista[id]' type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#exampleModal' data-bs-whatever='Editar'>Editar</button>
+                                    </td>
+                                    <td>
+                                        <form action='#' method='post'>
+                                            <input type='hidden' name='id' value='$lista[id]'>
+                                            <input class='recargar btn btn-primary' type='submit' name='estado' value='Borrar'></input>
+                                        </form>
+                                    </td>
+                                </tr>
+                                ";
+                            }
                         }
-                    }
-                    $consulta->close();
-                    $conexion->close();
-                ?>
-            </tbody>
-        </table>
+                        $consulta->close();
+                        $conexion->close();
+                    ?>
+                </tbody>
+            </table>
+        </div>
     </section>
 
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

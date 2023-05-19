@@ -120,7 +120,8 @@ table td,th{
     padding: 0.7rem;
 }
  table{
-    text-align: center
+    text-align: center;
+    caption-side: top;
 }
  table:not(#calendario) thead, tr{
     border-bottom: 2px solid black;
@@ -206,6 +207,9 @@ nav.navbar a.nav-link:hover, nav.navbar input:hover{
 .contenedor_tabla>table{
     width: 100%;
 }
+#tabla_horario{
+    min-width: 515px;
+}
 
 /* PEDIR CITA */
 #horas{
@@ -220,3 +224,5 @@ nav.navbar a.nav-link:hover, nav.navbar input:hover{
 #horas>div{
     justify-self: center;
 }
+input[type="time"]::-webkit-calendar-picker-indicator {
+    padding: 0%;
