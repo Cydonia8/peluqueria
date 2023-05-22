@@ -1,6 +1,7 @@
 <?php
     session_start();
     require_once("functions.php");
+    comprobarSesionAdmin();
     closeSession();
     $conexion=createConnection();
 
@@ -40,7 +41,7 @@
     <?php
         printMenu();
     ?>
-    <section class="container-fluid px-sm-3 px-0 mt-4 row">
+    <section class="container-fluid px-sm-3 px-0 mt-4 row mx-auto">
         <div>
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="Añadir nuevo">Añadir nuevo</button>
         </div>
@@ -72,8 +73,8 @@
                         echo "
                         <tr>
                             <td>$lista[nombre]</td>
-                            <td>$lista[duracion]</td>
-                            <td>$lista[precio]</td>
+                            <td>".cortarSeg($lista['duracion'])."</td>
+                            <td>$lista[precio] €</td>
                             <td>
                                 <button data-id='$lista[id]' type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#exampleModal' data-bs-whatever='Editar'>Editar</button>
                             </td>

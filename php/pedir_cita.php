@@ -1,6 +1,7 @@
 <?php
     session_start();
     require_once("functions.php");
+    comprobarSesionBasica();
     closeSession();
     if(isset($_POST['insertar'])){
         $conexion=createConnection();

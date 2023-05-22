@@ -1,6 +1,7 @@
 <?php
     session_start();
     require_once "functions.php";
+    comprobarSesionAdmin();
     closeSession();
     if(isset($_POST["insertar"])){
         $nombre = $_POST["nombre"];

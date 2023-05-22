@@ -6,6 +6,20 @@ function createConnection(){
     return $con;
 }
 
+function comprobarSesionBasica(){
+    if(!isset($_SESSION["user"])){
+        header("location:../index.php");
+    }
+}
+
+function comprobarSesionAdmin(){
+    if(!isset($_SESSION["user"])){
+        header("location:../index.php");
+    }else if($_SESSION["tipo"]!='Administrador'){
+        header("location:calendario.php");
+    }
+}
+
 function closeSession(){
     if(isset($_POST["cerrar-sesion"])){
         if(isset($_COOKIE['sesion'])){
@@ -17,6 +31,10 @@ function closeSession(){
             header("location:../index.php");
         }
     }
+}
+function formatoFecha($fecha){
+    $fecha_buena=date_format(date_create($fecha),"d-m-Y");
+    return $fecha_buena;
 }
 function getTypeUser($mail){
     $con = createConnection();

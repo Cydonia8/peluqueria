@@ -1,6 +1,7 @@
 <?php
     session_start();
     require_once("functions.php");
+    comprobarSesionAdmin();
     closeSession();
 
     $conexion=createConnection();
@@ -209,7 +210,7 @@
                             }else{
                                 echo "
                                 <tr>
-                                    <td>$lista[dia]</td>
+                                    <td>".formatoFecha($lista['dia'])."</td>
                                     <td>".cortarSeg($lista['m_apertura'])."-".cortarSeg($lista['m_cierre'])."</td>
                                     <td>".cortarSeg($lista['t_apertura'])."-".cortarSeg($lista['t_cierre'])."</td>
                                     <td>

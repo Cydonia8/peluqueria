@@ -1,6 +1,7 @@
 <?php
     session_start();
     require_once("functions.php");
+    comprobarSesionBasica();
     closeSession();
     $conexion=createConnection();
     if(isset($_POST['editar'])){
@@ -269,7 +270,6 @@
             $preparada->store_result();
             if($preparada->num_rows>0){
                 while($preparada->fetch()){
-                    $fecha2=date('d-m-Y',strtotime($fecha));
                     $formato=explode(":",$hora);
                     $hora=$formato[0].":".$formato[1];
 
@@ -282,7 +282,7 @@
                     $consulta->close();
 
                     echo "<tr>
-                        <td data-fecha='$fecha'>$fecha2</td>
+                        <td data-fecha='$fecha'>".formatoFecha($fecha)."</td>
                         <td>$hora</td>
                         <td data-id='$cliente'>$cliente_nom[0]</td>
                         <td data-id='$trabajador'>$trabajador_nom[0]</td>
