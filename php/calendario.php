@@ -37,6 +37,7 @@
     <script src="../scripts/calendario.js" defer></script>
     <script src="../scripts/citas_api.js" defer></script>
     <script src="../scripts/jquery-3.2.1.min.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>Bienvenido</title>
 </head>
 <body>
@@ -172,12 +173,11 @@
                 $año_anterior--;
                 $anio=$año_anterior;
             }
-            // echo "<table class='w-100 text-center'>
             echo "<table id=\"calendario\" class='mb-3'>
                 <caption class=\"text-center fs-3\">
-                    <a class='text-decoration-none text-dark' href='calendario.php?mes=$mes_anterior&año=$año_anterior'><-</a>
+                    <a class='text-decoration-none text-dark' href='calendario.php?mes=$mes_anterior&año=$año_anterior'><i class='fa-solid fa-arrow-left'></i></a>
                     $nombre_mes
-                    <a class='text-decoration-none text-dark' href='calendario.php?mes=$mes_siguiente&año=$año_siguiente'>-></a>
+                    <a class='text-decoration-none text-dark' href='calendario.php?mes=$mes_siguiente&año=$año_siguiente'><i class='fa-solid fa-arrow-right'></i></a>
                 </caption>
                 <thead>
                     <tr>
@@ -255,7 +255,7 @@
                 $busqueda="$_GET[año]-$_GET[mes]-$_GET[dia]";
             }else{
                 $dia_actual=date('d');
-                $busqueda="$anio_consulta-$mes_consulta-$dia_actual";
+                $busqueda="$anio_actual-$mes_actual-$dia_actual";
 
             }
             
