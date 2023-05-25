@@ -3,6 +3,7 @@
     require_once("functions.php");
     comprobarSesionBasica();
     closeSession();
+    $cancela = usuarioCancelaCitas();
     $conexion=createConnection();
     if(isset($_POST['editar'])){
         $preparada=$conexion->prepare("update citas set trabajador=?,fecha=?,hora=?,servicio=? where cliente=? and trabajador=? and fecha=? and hora=?");
@@ -246,9 +247,12 @@
                             <th>Hora</th>
                             <th>Cliente</th>
                             <th>Trabajador</th>
-                            <th>Servicio</th>
-                            <th>Cancelar</th>
-                        </tr>
+                            <th>Servicio</th>";
+                    if(($_SESSION["tipo"] == "Cliente" and $cancela == 1) or $_SESSION["user"] == "admin@admin.com"){
+                        echo "<th>Cancelar</th>";
+                    }
+                            
+                    echo "</tr>
                     </thead>
                     <tbody>";
 
@@ -288,8 +292,11 @@
                             <td>$hora</td>
                             <td data-id='$cliente'>$cliente_nom[0]</td>
                             <td data-id='$trabajador'>$trabajador_nom[0]</td>
-                            <td data-id='$servicio'>$servicio_nom</td>
-                            <td><button disabled type=\"submit\" class=\"btn btn-primary\">Cancelar cita</button></td>";
+                            <td data-id='$servicio'>$servicio_nom</td>";
+                            if($cancela == 1){
+                                echo "<td><button disabled type=\"submit\" class=\"btn btn-primary\">Cancelar cita</button></td>";
+                            }
+                            
     
                             $month=getdate()['mon'];
                             if($month<10){
@@ -318,7 +325,7 @@
                 if($_SESSION["user"] == "admin@admin.com"){
                     citasDiaAdmin($_POST["consultar-dia"]);
                 }else{
-                    citasDiaUsuario($_POST["consultar-dia"], $_SESSION["user"]);
+                    citasDiaUsuario($_POST["consultar-dia"], $_SESSION["user"], $cancela);
                 }
                 
             }
