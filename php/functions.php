@@ -61,6 +61,9 @@ function printMenu(){
                             <li class=\"nav-item active\">
                                 <a class=\"nav-link\" href=\"calendario.php\">Calendario</span></a>
                             </li>
+                            <li class='nav-item'>
+                                <a class='nav-link' href='citas.php'>Citas</a>
+                            </li>
                             <li class=\"nav-item\">
                                 <a class=\"nav-link\" href=\"empleados.php\">Empleados</a>
                             </li>
@@ -328,5 +331,46 @@ function getServiciosSelect(){
     while($fila = $consulta->fetch_array(MYSQLI_ASSOC)){
         echo "<option value='$fila[id]'>$fila[nombre]</option>";
     }
+    $con->close();
+}
+
+function citasDia($fecha){
+    $con = createConnection();
+    $consulta = $con->prepare("SELECT cliente, trabajador, fecha, s.nombre servicio, c.servicio servicio_id, hora from citas c, servicios s where c.servicio = s.id and fecha = ?");
+    $consulta->bind_param('s', $fecha);
+    $consulta->bind_result($cliente_id, $trabajador_id, $fecha_cita, $servicio, $servicio_id, $hora);
+    $consulta->execute();
+    $consulta->store_result();
+    if($consulta->num_rows > 0){
+        while($consulta->fetch()){
+            $hora_split = explode(":", $hora);
+            $hora_format = $hora_split[0].":".$hora_split[1];
+            $fecha_format = formatoFecha($fecha_cita);
+            $timestamp_actual = time()+86400;
+            $timestamp_cita = strtotime($fecha_cita);
+
+            $consulta_cliente = $con->query("SELECT nombre from personas where id = $cliente_id");
+            $fila = $consulta_cliente->fetch_array(MYSQLI_ASSOC);
+            $cliente = $fila["nombre"];
+
+            $consulta_trabajador = $con->query("SELECT nombre from personas where id = $trabajador_id");
+            $fila = $consulta_trabajador->fetch_array(MYSQLI_ASSOC);
+            $trabajador = $fila["nombre"];
+            echo "<tr>
+                        <td>$cliente</td>
+                        <td>$trabajador</td>
+                        <td>$servicio</td>
+                        <td>$hora_format</td>
+                        <td>$fecha_format</td>";
+            if($timestamp_cita > $timestamp_actual){
+                echo "<td><form action='#' method='post'><button name='cancelar-cita' value='$cliente_id/$trabajador_id/$fecha_cita/$servicio_id/$hora' type=\"submit\" class=\"btn btn-primary\">Cancelar cita</button></form></td>";
+            }else{
+                echo "<td><button disabled type=\"submit\" class=\"btn btn-primary\">Cancelar cita</button></td>";
+            }  
+        }
+    }else{
+        echo "<td colspan=6>No hay citas para esta fecha</td>";
+    }
+    $consulta->close();
     $con->close();
 }
