@@ -73,6 +73,9 @@ function printMenu(){
                             <li class=\"nav-item\">
                                 <a class=\"nav-link\" href=\"horario.php\">Horarios</a>
                             </li>
+                            <li class=\"nav-item\">
+                                <a class=\"nav-link\" href=\"configuracion.php\">Configuración</a>
+                            </li>
                             <li lass=\"nav-item\">
                                 <form action=\"#\" method=\"post\"><input class=\"nav-link\" type=\"submit\" name=\"cerrar-sesion\" value=\"Cerrar sesión\"></form>
                             </li>
