@@ -89,15 +89,15 @@ function printMenu(){
                     <div class=\"collapse navbar-collapse justify-content-center\" id=\"navbarNav\">
                         <ul class=\"navbar-nav gap-3\">
                         
-                        <li class=\"nav-item\">
-                            <a class=\"nav-link\" href=\"calendario.php\">Mis citas</a>
-                        </li>
-                        <li class=\"nav-item\">
-                            <a class=\"nav-link\" href=\"pedir_cita.php\">Pedir cita</a>
-                        </li>
-                        <li class=\"nav-item active\">
-                            <form action=\"#\" method=\"post\"><input class=\"nav-link\" type=\"submit\" name=\"cerrar-sesion\" value=\"Cerrar sesión\"></form>
-                        </li>
+                            <li class=\"nav-item\">
+                                <a class=\"nav-link\" href=\"calendario.php\">Calendario</a>
+                            </li>
+                            <li class=\"nav-item\">
+                                <a class=\"nav-link\" href=\"pedir_cita.php\">Pedir cita</a>
+                            </li>
+                            <li class=\"nav-item active\">
+                                <form action=\"#\" method=\"post\"><input class=\"nav-link\" type=\"submit\" name=\"cerrar-sesion\" value=\"Cerrar sesión\"></form>
+                            </li>
                         </ul>
                     </div>
                 </nav>";
@@ -328,10 +328,52 @@ function getServiciosSelect(){
     $con->close();
 }
 
-function citasDia($fecha){
+function citasDiaAdmin($fecha){
     $con = createConnection();
     $consulta = $con->prepare("SELECT cliente, trabajador, fecha, s.nombre servicio, c.servicio servicio_id, hora from citas c, servicios s where c.servicio = s.id and fecha = ?");
     $consulta->bind_param('s', $fecha);
+    $consulta->bind_result($cliente_id, $trabajador_id, $fecha_cita, $servicio, $servicio_id, $hora);
+    $consulta->execute();
+    $consulta->store_result();
+    if($consulta->num_rows > 0){
+        while($consulta->fetch()){
+            $hora_split = explode(":", $hora);
+            $hora_format = $hora_split[0].":".$hora_split[1];
+            $fecha_format = formatoFecha($fecha_cita);
+            $timestamp_actual = time()+86400;
+            $timestamp_cita = strtotime($fecha_cita);
+
+            $consulta_cliente = $con->query("SELECT nombre from personas where id = $cliente_id");
+            $fila = $consulta_cliente->fetch_array(MYSQLI_ASSOC);
+            $cliente = $fila["nombre"];
+
+            $consulta_trabajador = $con->query("SELECT nombre from personas where id = $trabajador_id");
+            $fila = $consulta_trabajador->fetch_array(MYSQLI_ASSOC);
+            $trabajador = $fila["nombre"];
+            echo "<tr>
+                        <td>$fecha_format</td>
+                        <td>$hora_format</td>
+                        <td>$cliente</td>
+                        <td>$trabajador</td>
+                        <td>$servicio</td>";
+            if($timestamp_cita > $timestamp_actual){
+                echo "<td><form action='#' method='post'><button name='cancelar-cita' value='$cliente_id/$trabajador_id/$fecha_cita/$servicio_id/$hora' type=\"submit\" class=\"btn btn-primary\">Cancelar cita</button></form></td>";
+            }else{
+                echo "<td><button disabled type=\"submit\" class=\"btn btn-primary\">Cancelar cita</button></td>";
+            }  
+        }
+    }else{
+        echo "<td colspan=6>No hay citas para esta fecha</td>";
+    }
+    $consulta->close();
+    $con->close();
+}
+
+function citasDiaUsuario($fecha, $usuario){
+    $con = createConnection();
+    $id = getIDCliente($usuario);
+    $consulta = $con->prepare("SELECT cliente, trabajador, fecha, s.nombre servicio, c.servicio servicio_id, hora from citas c, servicios s where c.servicio = s.id and fecha = ? and c.cliente = ?");
+    $consulta->bind_param('si', $fecha, $id);
     $consulta->bind_result($cliente_id, $trabajador_id, $fecha_cita, $servicio, $servicio_id, $hora);
     $consulta->execute();
     $consulta->store_result();

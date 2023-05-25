@@ -315,7 +315,12 @@
                     </tr>";
                 }
             }else{
-                citasDia($_POST["consultar-dia"]);
+                if($_SESSION["user"] == "admin@admin.com"){
+                    citasDiaAdmin($_POST["consultar-dia"]);
+                }else{
+                    citasDiaUsuario($_POST["consultar-dia"], $_SESSION["user"]);
+                }
+                
             }
             
 
