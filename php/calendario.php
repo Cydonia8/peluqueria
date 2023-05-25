@@ -219,7 +219,7 @@
                     $dia = formatDate($i);
                     $mes_f = formatDate($mes_consulta);
                     $fecha = "$anio_consulta-$mes_f-$dia";
-                    echo "<td data-date='$fecha'><form action='#' method='post'><button value='$fecha' name='consultar-dia'>$i</button></form></td>";
+                    echo "<td data-date='$fecha'><form action='#' method='post'><button class='boton_calendario' value='$fecha' name='consultar-dia'>$i</button></form></td>";
                 }
                 if($contador==7 and $i<$fin_mes){
                     echo "</tr><tr>";
@@ -311,7 +311,7 @@
                     }
                 }else{
                     echo "<tr>
-                        <td colspan=5 class='tabla_vacia'>No hay citas para hoy</td>
+                        <td colspan=6 class='tabla_vacia'>No hay citas para hoy</td>
                     </tr>";
                 }
             }else{
