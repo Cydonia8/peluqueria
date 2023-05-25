@@ -27,28 +27,47 @@ async function activar_calendario(){
 
 async function datos_hor(dia){
     let horario=[];
-    contenedor_horas.innerHTML=''
-    horario.length=0
+    contenedor_horas.innerHTML='';
+    horario.length=0;
+    let weekday=new Date(dia).getDay();
+    if(weekday==0){
+        weekday=7;
+    }
     const respuesta = await fetch('../php/api_citas.php')
     const datos = await respuesta.json();
     lista = datos["datos"];
     const respuesta2 = await fetch('../php/api_fechas_horas.php')
     const datos2 = await respuesta2.json();
+    const sele=datos2["datos"].horario.find(dia=>dia.id==weekday);
     if(datos2["datos"].trabaja.find(t=>t.empleado==select_trabajador.value)){
         const personalizado=datos2["datos"].trabaja.find(t=>t.empleado==select_trabajador.value)
-        horario.push(personalizado.m_inicio);
-        horario.push(personalizado.m_fin);
-        horario.push(personalizado.t_inicio);
-        horario.push(personalizado.t_fin);
+        if(sele.m_apertura>personalizado.m_inicio || (sele.m_apertura==undefined && personalizado.m_inicio!=undefined)){
+            horario.push(sele.m_apertura);
+        }else{
+            horario.push(personalizado.m_inicio);
+        }
+        if(sele.m_cierre<personalizado.m_fin || (sele.m_cierre==undefined && personalizado.m_fin!=undefined)){
+            horario.push(sele.m_cierre);
+        }else{
+            horario.push(personalizado.m_fin);
+        }
+        if(sele.t_apertura>personalizado.t_inicio || (sele.t_apertura==undefined && personalizado.t_inicio!=undefined)){
+            horario.push(sele.t_apertura);
+        }else{
+            horario.push(personalizado.t_inicio);
+        }
+        if(sele.t_cierre<personalizado.t_fin || (sele.t_cierre==undefined && personalizado.t_fin!=undefined)){
+            horario.push(sele.t_cierre);
+        }else{
+            horario.push(personalizado.t_fin);
+        }
         horario=horario.filter(item=>item!=undefined)
     }else{
-        horario.push(datos2["datos"].horario[0].m_apertura);
-        horario.push(datos2["datos"].horario[0].m_cierre);
-        horario.push(datos2["datos"].horario[0].t_apertura);
-        horario.push(datos2["datos"].horario[0].t_cierre);
+        horario.push(sele.m_apertura);
+        horario.push(sele.m_cierre);
+        horario.push(sele.t_apertura);
+        horario.push(sele.t_cierre);
     }
-
-   
 
     if(!fiestas.includes(dia)){
         let horas=[];

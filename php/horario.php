@@ -6,8 +6,13 @@
 
     $conexion=createConnection();
     if(isset($_POST['enviar'])){
-        $preparada=$conexion->prepare("update horario set m_apertura=?,m_cierre=?,t_apertura=?,t_cierre=? where id=1");
-        $preparada->bind_param("ssss",$_POST['m_apertura'],$_POST['m_cierre'],$_POST['t_apertura'],$_POST['t_cierre']);
+        if($_POST['dias']!=0){
+            $preparada=$conexion->prepare("update horario set m_apertura=?,m_cierre=?,t_apertura=?,t_cierre=? where id=?");
+            $preparada->bind_param("ssssi",$_POST['m_apertura'],$_POST['m_cierre'],$_POST['t_apertura'],$_POST['t_cierre'],$_POST['dias']);
+        }else{
+            $preparada=$conexion->prepare("update horario set m_apertura=?,m_cierre=?,t_apertura=?,t_cierre=? where id<=7");
+            $preparada->bind_param("ssss",$_POST['m_apertura'],$_POST['m_cierre'],$_POST['t_apertura'],$_POST['t_cierre']);
+        }
         $preparada->execute();
         $preparada->close();
         header("Refresh:0");
@@ -64,13 +69,14 @@
             $preparada->execute();
             $preparada->close();
             header("Refresh:0");
-        }else if(isset($_POST['borrar'])){
-            $preparada=$conexion->prepare("delete from horario where id=?");
-            $preparada->bind_param("i",$_POST['id']);
-            $preparada->execute();
-            $preparada->close();
-            header("Refresh:0");
         }
+    }
+    if(isset($_POST['borrar'])){
+        $preparada=$conexion->prepare("delete from horario where id=?");
+        $preparada->bind_param("i",$_POST['id']);
+        $preparada->execute();
+        $preparada->close();
+        header("Refresh:0");
     }
 ?>
 <!DOCTYPE html>
@@ -92,34 +98,34 @@
     <div class='row w-100 mx-auto'>
         <section class="container-fluid px-sm-3 px-0 mt-4 row col-12 col-md-7 mx-auto">
             <form action="" method="post" class="col-12 mx-auto row">
+                <div>
+                    <select name="dias" id="select_dias">
+                        <option selected value="0">Todos</option>
+                        <option value="1">Lunes</option>
+                        <option value="2">Martes</option>
+                        <option value="3">Miércoles</option>
+                        <option value="4">Jueves</option>
+                        <option value="5">Viernes</option>
+                        <option value="6">Sábado</option>
+                        <option value="7">Domingo</option>
+                    </select>
+                </div>
                 <div class="col d-flex flex-column align-items-center p-1">
                     <h3>Mañana</h3>
                     <div class=''>
-                        <?php
-                            $consulta=$conexion->query("select * from horario");
-                            $lista=$consulta->fetch_array(MYSQLI_NUM);
-
-                            echo"
-                                <span class='d-md-block d-sm-inline d-xl-inline d-block text-center'>Horario:<br class='d-xl-none d-md-block d-sm-none'></span>
-                                <input type='time' name='m_apertura' disabled value='$lista[1]'>
-                                <span>-</span>
-                                <input type='time' name='m_cierre' disabled value='$lista[2]'>
-                                ";
-                        ?>
+                        <span class='d-md-block d-sm-inline d-xl-inline d-block text-center'>Horario:<br class='d-xl-none d-md-block d-sm-none'></span>
+                        <input type='time' name='m_apertura' disabled value=''>
+                        <span>-</span>
+                        <input type='time' name='m_cierre' disabled value=''>
                     </div>
                 </div>
                 <div class="col d-flex flex-column align-items-center p-1">
                     <h3>Tarde</h3>
                     <div>
-                        <?php
-                            echo"
-                                <span class='d-md-block d-sm-inline d-xl-inline d-block text-center'>Horario:<br class='d-xl-none d-md-block d-sm-none'></span>
-                                <input type='time' name='t_apertura' disabled value='$lista[3]'>
-                                <span>-</span>
-                                <input type='time' name='t_cierre' disabled value='$lista[4]'>
-                            ";
-                            $consulta->close();
-                        ?>
+                        <span class='d-md-block d-sm-inline d-xl-inline d-block text-center'>Horario:<br class='d-xl-none d-md-block d-sm-none'></span>
+                        <input type='time' name='t_apertura' disabled value=''>
+                        <span>-</span>
+                        <input type='time' name='t_cierre' disabled value=''>
                     </div>
                 </div>
                 <div class='w-100'>
@@ -198,16 +204,11 @@
                 <tbody>
                     <?php
                         $conexion=createConnection();
-
-                        $consulta=$conexion->query("select * from horario where id!=1");
+                        $i=0;
+                        $consulta=$conexion->query("select * from horario where id>7");
                         while($lista=$consulta->fetch_array(MYSQLI_ASSOC)){
-                            if($lista['dia']<date("Y-m-d")){
-                                $preparada=$conexion->prepare("delete from horario where id=?");
-                                $preparada->bind_param("i",$lista['id']);
-                                $preparada->execute();
-                                $preparada->close();
-                                // header("Refresh:0");
-                            }else{
+                            if($lista['dia']>=date("Y-m-d")){
+                                $i++;
                                 echo "
                                 <tr>
                                     <td>".formatoFecha($lista['dia'])."</td>
@@ -219,12 +220,19 @@
                                     <td>
                                         <form action='#' method='post'>
                                             <input type='hidden' name='id' value='$lista[id]'>
-                                            <input class='recargar btn btn-primary' type='submit' name='estado' value='Borrar'></input>
+                                            <input class='recargar btn btn-primary' type='submit' name='borrar' value='Borrar'></input>
                                         </form>
                                     </td>
                                 </tr>
                                 ";
                             }
+                        }
+                        if($i==0){
+                            echo "
+                            <tr>
+                                <td colspan='5'>No se ha modificado el horario para ningún día</td>
+                            </tr>
+                            ";
                         }
                         $consulta->close();
                         $conexion->close();

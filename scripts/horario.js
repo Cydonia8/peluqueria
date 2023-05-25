@@ -90,3 +90,27 @@ responsiveCalendario(max_width)
 window.addEventListener("resize", ()=>{
     responsiveCalendario(max_width)
 })
+
+const select_dias=document.getElementById("select_dias");
+select_dias.addEventListener("change",()=>{
+    horario_diario(select_dias.value);
+})
+
+async function horario_diario(valor){
+    const respuesta = await fetch('../php/api_fechas_horas.php');
+    const datos = await respuesta.json();
+    const lista=datos["datos"].horario;
+    const manana=select_dias.parentElement.nextElementSibling.querySelectorAll("input");
+    const tarde=select_dias.parentElement.nextElementSibling.nextElementSibling.querySelectorAll("input");
+    
+    if(valor!=0){
+        const sele=lista.find(dia=>dia.id==valor);
+        manana[0].value=sele.m_apertura;
+        manana[1].value=sele.m_cierre;
+        tarde[0].value=sele.t_apertura;
+        tarde[1].value=sele.t_cierre;
+    }else{
+        manana.forEach(a=>a.value="");
+        tarde.forEach(a=>a.value="");
+    }
+}
