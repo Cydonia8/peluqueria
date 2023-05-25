@@ -219,7 +219,7 @@
                     $dia = formatDate($i);
                     $mes_f = formatDate($mes_consulta);
                     $fecha = "$anio_consulta-$mes_f-$dia";
-                    echo "<td data-date='$fecha'>$i</td>";
+                    echo "<td data-date='$fecha'><form action='#' method='post'><button value='$fecha' name='consultar-dia'>$i</button></form></td>";
                 }
                 if($contador==7 and $i<$fin_mes){
                     echo "</tr><tr>";
@@ -247,6 +247,7 @@
                             <th>Cliente</th>
                             <th>Trabajador</th>
                             <th>Servicio</th>
+                            <th>Cancelar</th>
                         </tr>
                     </thead>
                     <tbody>";
@@ -259,58 +260,64 @@
 
             }
             
-            if($_SESSION['user']=="admin@admin.com"){
-                $preparada=$conexion->prepare("select fecha,hora,cliente,trabajador,nombre,servicio from citas,servicios where servicios.id=servicio and fecha=? order by fecha asc");
-            }else{
-                $preparada=$conexion->prepare("select fecha,hora,cliente,trabajador,nombre,servicio from citas,servicios where (citas.cliente=$id or citas.trabajador=$id) and servicios.id=servicio and fecha=? order by fecha asc");
-            }
-            $preparada->bind_param("s",$busqueda);
-            $preparada->bind_result($fecha,$hora,$cliente,$trabajador,$servicio_nom,$servicio);
-            $preparada->execute();
-            $preparada->store_result();
-            if($preparada->num_rows>0){
-                while($preparada->fetch()){
-                    $formato=explode(":",$hora);
-                    $hora=$formato[0].":".$formato[1];
-
-                    $consulta=$conexion->query("select nombre from personas where id=$cliente");
-                    $cliente_nom=$consulta->fetch_array(MYSQLI_NUM);
-                    $consulta->close();
-
-                    $consulta=$conexion->query("select nombre from personas where id=$trabajador");
-                    $trabajador_nom=$consulta->fetch_array(MYSQLI_NUM);
-                    $consulta->close();
-
-                    echo "<tr>
-                        <td data-fecha='$fecha'>".formatoFecha($fecha)."</td>
-                        <td>$hora</td>
-                        <td data-id='$cliente'>$cliente_nom[0]</td>
-                        <td data-id='$trabajador'>$trabajador_nom[0]</td>
-                        <td data-id='$servicio'>$servicio_nom</td>";
-
-                        $month=getdate()['mon'];
-                        if($month<10){
-                            $month="0".$month;
-                        }
-
-                        $hoy=getdate()['year']."-".$month."-".getdate()['mday'];
-                        if($fecha>$hoy){
-                            if($_SESSION['tipo']!=="Cliente"){
-                                echo "<td>
-                                    <button type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#exampleModal' data-bs-whatever='Editar'>Editar</button>
-                                </td>
-                                <td>
-                                    <button type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#exampleModal' data-bs-whatever='Cancelar'>Cancelar</button>
-                                </td>";
+            if(!isset($_POST["consultar-dia"])){
+                if($_SESSION['user']=="admin@admin.com"){
+                    $preparada=$conexion->prepare("select fecha,hora,cliente,trabajador,nombre,servicio from citas,servicios where servicios.id=servicio and fecha=? order by fecha asc");
+                }else{
+                    $preparada=$conexion->prepare("select fecha,hora,cliente,trabajador,nombre,servicio from citas,servicios where (citas.cliente=$id or citas.trabajador=$id) and servicios.id=servicio and fecha=? order by fecha asc");
+                }
+                $preparada->bind_param("s",$busqueda);
+                $preparada->bind_result($fecha,$hora,$cliente,$trabajador,$servicio_nom,$servicio);
+                $preparada->execute();
+                $preparada->store_result();
+                if($preparada->num_rows>0){
+                    while($preparada->fetch()){
+                        $formato=explode(":",$hora);
+                        $hora=$formato[0].":".$formato[1];
+    
+                        $consulta=$conexion->query("select nombre from personas where id=$cliente");
+                        $cliente_nom=$consulta->fetch_array(MYSQLI_NUM);
+                        $consulta->close();
+    
+                        $consulta=$conexion->query("select nombre from personas where id=$trabajador");
+                        $trabajador_nom=$consulta->fetch_array(MYSQLI_NUM);
+                        $consulta->close();
+    
+                        echo "<tr>
+                            <td data-fecha='$fecha'>".formatoFecha($fecha)."</td>
+                            <td>$hora</td>
+                            <td data-id='$cliente'>$cliente_nom[0]</td>
+                            <td data-id='$trabajador'>$trabajador_nom[0]</td>
+                            <td data-id='$servicio'>$servicio_nom</td>
+                            <td><button disabled type=\"submit\" class=\"btn btn-primary\">Cancelar cita</button></td>";
+    
+                            $month=getdate()['mon'];
+                            if($month<10){
+                                $month="0".$month;
                             }
-                        }
-                    echo "</tr>";
+    
+                            $hoy=getdate()['year']."-".$month."-".getdate()['mday'];
+                            if($fecha>$hoy){
+                                if($_SESSION['tipo']!=="Cliente"){
+                                    echo "<td>
+                                        <button type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#exampleModal' data-bs-whatever='Editar'>Editar</button>
+                                    </td>
+                                    <td>
+                                        <button type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#exampleModal' data-bs-whatever='Cancelar'>Cancelar</button>
+                                    </td>";
+                                }
+                            }
+                        echo "</tr>";
+                    }
+                }else{
+                    echo "<tr>
+                        <td colspan=5 class='tabla_vacia'>No hay citas para hoy</td>
+                    </tr>";
                 }
             }else{
-                echo "<tr>
-                    <td colspan=5 class='tabla_vacia'>No hay citas para hoy</td>
-                </tr>";
+                citasDia($_POST["consultar-dia"]);
             }
+            
 
             echo "</tbody>
             </table>

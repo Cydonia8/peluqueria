@@ -61,9 +61,6 @@ function printMenu(){
                             <li class=\"nav-item active\">
                                 <a class=\"nav-link\" href=\"calendario.php\">Calendario</span></a>
                             </li>
-                            <li class='nav-item'>
-                                <a class='nav-link' href='citas.php'>Citas</a>
-                            </li>
                             <li class=\"nav-item\">
                                 <a class=\"nav-link\" href=\"empleados.php\">Empleados</a>
                             </li>
@@ -357,11 +354,11 @@ function citasDia($fecha){
             $fila = $consulta_trabajador->fetch_array(MYSQLI_ASSOC);
             $trabajador = $fila["nombre"];
             echo "<tr>
+                        <td>$fecha_format</td>
+                        <td>$hora_format</td>
                         <td>$cliente</td>
                         <td>$trabajador</td>
-                        <td>$servicio</td>
-                        <td>$hora_format</td>
-                        <td>$fecha_format</td>";
+                        <td>$servicio</td>";
             if($timestamp_cita > $timestamp_actual){
                 echo "<td><form action='#' method='post'><button name='cancelar-cita' value='$cliente_id/$trabajador_id/$fecha_cita/$servicio_id/$hora' type=\"submit\" class=\"btn btn-primary\">Cancelar cita</button></form></td>";
             }else{
