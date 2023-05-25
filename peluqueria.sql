@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 18-05-2023 a las 12:17:39
--- Versión del servidor: 10.4.27-MariaDB
--- Versión de PHP: 8.2.0
+-- Tiempo de generación: 25-05-2023 a las 09:47:46
+-- Versión del servidor: 10.4.24-MariaDB
+-- Versión de PHP: 8.1.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -33,7 +33,7 @@ CREATE TABLE `citas` (
   `fecha` date NOT NULL,
   `hora` time NOT NULL,
   `servicio` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `citas`
@@ -42,8 +42,11 @@ CREATE TABLE `citas` (
 INSERT INTO `citas` (`cliente`, `trabajador`, `fecha`, `hora`, `servicio`) VALUES
 (1, 3, '2023-04-29', '09:00:00', 1),
 (1, 3, '2023-05-11', '11:30:00', 1),
-(1, 6, '2023-05-17', '11:00:00', 1),
-(4, 3, '2023-04-28', '18:00:00', 1);
+(1, 6, '2023-05-18', '11:00:00', 1),
+(4, 3, '2023-04-28', '18:00:00', 1),
+(5, 6, '2023-05-22', '18:30:00', 1),
+(1, 6, '2023-05-26', '18:15:00', 2),
+(1, 6, '2023-06-08', '17:30:00', 2);
 
 -- --------------------------------------------------------
 
@@ -53,15 +56,14 @@ INSERT INTO `citas` (`cliente`, `trabajador`, `fecha`, `hora`, `servicio`) VALUE
 
 CREATE TABLE `descanso` (
   `dia` int(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `descanso`
 --
 
 INSERT INTO `descanso` (`dia`) VALUES
-(0),
-(6);
+(0);
 
 -- --------------------------------------------------------
 
@@ -76,14 +78,21 @@ CREATE TABLE `horario` (
   `t_apertura` time DEFAULT NULL,
   `t_cierre` time DEFAULT NULL,
   `dia` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `horario`
 --
 
 INSERT INTO `horario` (`id`, `m_apertura`, `m_cierre`, `t_apertura`, `t_cierre`, `dia`) VALUES
-(1, '09:00:00', '14:00:00', '17:00:00', '20:00:00', NULL);
+(1, '09:00:00', '14:00:00', '17:00:00', '20:00:00', NULL),
+(2, '09:00:00', '14:00:00', '17:00:00', '20:00:00', NULL),
+(3, '09:00:00', '14:00:00', '17:00:00', '20:00:00', NULL),
+(4, '09:00:00', '14:00:00', '17:00:00', '20:00:00', NULL),
+(5, '09:00:00', '14:00:00', '17:00:00', '20:00:00', NULL),
+(6, '09:00:00', '14:00:00', NULL, NULL, NULL),
+(7, NULL, NULL, NULL, NULL, NULL),
+(8, NULL, NULL, NULL, NULL, '2023-05-16');
 
 -- --------------------------------------------------------
 
@@ -101,7 +110,7 @@ CREATE TABLE `personas` (
   `activo` tinyint(4) NOT NULL DEFAULT 1,
   `f_inicio` date DEFAULT NULL,
   `f_fin` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `personas`
@@ -109,6 +118,7 @@ CREATE TABLE `personas` (
 
 INSERT INTO `personas` (`id`, `nombre`, `correo`, `telefono`, `tipo`, `pass`, `activo`, `f_inicio`, `f_fin`) VALUES
 (1, 'admin', 'admin@admin.com', '', 3, 'admin', 1, NULL, NULL),
+(2, 'cliente', '', '', 1, '', 1, NULL, NULL),
 (3, 'trabajador', 'traba@gmail.com', '612123123', 2, 'traba', 1, NULL, NULL),
 (4, 'Pepe', 'pepe@gmail.com', '123123123', 1, 'pepe', 1, NULL, NULL),
 (5, 'juan', 'juan@gmail.com', '111111111', 1, 'juan', 1, NULL, NULL),
@@ -123,7 +133,7 @@ INSERT INTO `personas` (`id`, `nombre`, `correo`, `telefono`, `tipo`, `pass`, `a
 CREATE TABLE `realiza` (
   `empleado` bigint(20) NOT NULL,
   `servicio` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `realiza`
@@ -146,7 +156,7 @@ CREATE TABLE `servicios` (
   `duracion` time NOT NULL,
   `precio` float(5,2) DEFAULT NULL,
   `activo` tinyint(4) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `servicios`
@@ -165,7 +175,7 @@ INSERT INTO `servicios` (`id`, `nombre`, `duracion`, `precio`, `activo`) VALUES
 CREATE TABLE `tipos` (
   `id` bigint(20) NOT NULL,
   `nombre` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `tipos`
@@ -188,7 +198,7 @@ CREATE TABLE `trabaja` (
   `m_fin` time DEFAULT NULL,
   `t_inicio` time DEFAULT NULL,
   `t_fin` time DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `trabaja`
@@ -263,7 +273,7 @@ ALTER TABLE `trabaja`
 -- AUTO_INCREMENT de la tabla `horario`
 --
 ALTER TABLE `horario`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `personas`
