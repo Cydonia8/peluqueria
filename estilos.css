@@ -238,3 +238,11 @@ nav.navbar a.nav-link:hover, nav.navbar input:hover{
 /* horario */
 input[type="time"]::-webkit-calendar-picker-indicator {
     padding: 0%;
+}
+.desactivado{
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+.desactivado>a{
+    pointer-events: none;
+}

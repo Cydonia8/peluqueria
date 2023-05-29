@@ -48,7 +48,8 @@ function LoadData($id)
             $data[]=$lista;
         }
     }else{
-        $data[]="No hay citas para hoy";
+        $array[]="No hay citas para hoy";
+        $data[]=$array;
     }
     $conexion->close();
 
@@ -81,13 +82,24 @@ function ImprovedTable($header, $data)
         $this->Cell($w[$i],7,$header[$i],1,0,'C');
     $this->Ln();
     // Datos
-    foreach($data as $row)
-    {
-        $this->Cell($w[0],6,$row[0],'LR');
-        $this->Cell($w[1],6,$row[1],'LR');
-        // $this->Cell($w[2],6,number_format($row[2]),'LR',0,'R');
-        // $this->Cell($w[3],6,number_format($row[3]),'LR',0,'R');
-        $this->Ln();
+    if(count($data)==1 and count($data[0])==1){
+        foreach($data as $row)
+        {
+            $this->Cell($w[0],6,$row[0],'LR');
+            $this->Ln();
+        }
+    }else{
+        foreach($data as $row)
+        {
+            $this->Cell($w[0],6,$row[0],'LR');
+            $this->Cell($w[1],6,$row[1],'LR');
+            $this->Cell($w[2],6,$row[2],'LR');
+            $this->Cell($w[3],6,$row[3],'LR');
+            $this->Cell($w[4],6,$row[4],'LR');
+            // $this->Cell($w[2],6,number_format($row[2]),'LR',0,'R');
+            // $this->Cell($w[3],6,number_format($row[3]),'LR',0,'R');
+            $this->Ln();
+        }
     }
     // Línea de cierre
     $this->Cell(array_sum($w),0,'','T');
@@ -113,14 +125,26 @@ function FancyTable($header, $data)
     $this->SetFont('');
     // Datos
     $fill = false;
-    foreach($data as $row)
-    {
-        $this->Cell($w[0],6,$row[0],'LR',0,'L',$fill);
-        $this->Cell($w[1],6,$row[1],'LR',0,'L',$fill);
-        // $this->Cell($w[2],6,number_format($row[2]),'LR',0,'R',$fill);
-        // $this->Cell($w[3],6,number_format($row[3]),'LR',0,'R',$fill);
-        $this->Ln();
-        $fill = !$fill;
+    if(count($data)==1 and count($data[0])==1){
+        foreach($data as $row)
+        {
+            $this->Cell($w[0],6,$row[0],'LR',0,'L',$fill);
+            $this->Ln();
+            $fill = !$fill;
+        }
+    }else{
+        foreach($data as $row)
+        {
+            $this->Cell($w[0],6,$row[0],'LR',0,'L',$fill);
+            $this->Cell($w[1],6,$row[1],'LR',0,'L',$fill);
+            $this->Cell($w[2],6,$row[2],'LR',0,'L',$fill);
+            $this->Cell($w[3],6,$row[3],'LR',0,'L',$fill);
+            $this->Cell($w[4],6,$row[4],'LR',0,'L',$fill);
+            // $this->Cell($w[2],6,number_format($row[2]),'LR',0,'R',$fill);
+            // $this->Cell($w[3],6,number_format($row[3]),'LR',0,'R',$fill);
+            $this->Ln();
+            $fill = !$fill;
+        }
     }
     // Línea de cierre
     $this->Cell(array_sum($w),0,'','T');

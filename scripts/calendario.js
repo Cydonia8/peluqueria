@@ -138,3 +138,8 @@ function comprobarFestivos(){
         })
     })
 }
+
+const tabla_citas=document.querySelectorAll("table")[1];
+if(tabla_citas.querySelector("tbody>tr>td").innerText=="No hay citas para hoy"){
+    console.log(tabla_citas.parentElement.previousElementSibling.children[0].classList.add("desactivado"));
+}
