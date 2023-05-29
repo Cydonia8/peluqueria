@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 25-05-2023 a las 09:47:46
+-- Tiempo de generación: 25-05-2023 a las 12:39:21
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 8.1.6
 
@@ -47,6 +47,28 @@ INSERT INTO `citas` (`cliente`, `trabajador`, `fecha`, `hora`, `servicio`) VALUE
 (5, 6, '2023-05-22', '18:30:00', 1),
 (1, 6, '2023-05-26', '18:15:00', 2),
 (1, 6, '2023-06-08', '17:30:00', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `configuracion`
+--
+
+CREATE TABLE `configuracion` (
+  `nombre` varchar(50) NOT NULL,
+  `telefono` varchar(9) NOT NULL,
+  `correo` varchar(50) NOT NULL,
+  `empresa` varchar(100) NOT NULL,
+  `direccion` varchar(100) NOT NULL,
+  `cancelar` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `configuracion`
+--
+
+INSERT INTO `configuracion` (`nombre`, `telefono`, `correo`, `empresa`, `direccion`, `cancelar`) VALUES
+('', '', '', '', '', 0);
 
 -- --------------------------------------------------------
 
