@@ -372,7 +372,7 @@ function citasDiaAdmin($fecha){
     $con->close();
 }
 
-function citasDiaUsuario($fecha, $usuario){
+function citasDiaUsuario($fecha, $usuario, $cancela){
     $con = createConnection();
     $id = getIDCliente($usuario);
     $consulta = $con->prepare("SELECT cliente, trabajador, fecha, s.nombre servicio, c.servicio servicio_id, hora from citas c, servicios s where c.servicio = s.id and fecha = ? and c.cliente = ?");
@@ -401,15 +401,27 @@ function citasDiaUsuario($fecha, $usuario){
                         <td>$cliente</td>
                         <td>$trabajador</td>
                         <td>$servicio</td>";
-            if($timestamp_cita > $timestamp_actual){
-                echo "<td><form action='#' method='post'><button name='cancelar-cita' value='$cliente_id/$trabajador_id/$fecha_cita/$servicio_id/$hora' type=\"submit\" class=\"btn btn-primary\">Cancelar cita</button></form></td>";
-            }else{
-                echo "<td><button disabled type=\"submit\" class=\"btn btn-primary\">Cancelar cita</button></td>";
-            }  
+            if($cancela == 1){
+                if($timestamp_cita > $timestamp_actual){
+                    echo "<td><form action='#' method='post'><button name='cancelar-cita' value='$cliente_id/$trabajador_id/$fecha_cita/$servicio_id/$hora' type=\"submit\" class=\"btn btn-primary\">Cancelar cita</button></form></td>";
+                }else{
+                    echo "<td><button disabled type=\"submit\" class=\"btn btn-primary\">Cancelar cita</button></td>";
+                }  
+            }
+            
         }
     }else{
         echo "<td colspan=6>No hay citas para esta fecha</td>";
     }
     $consulta->close();
     $con->close();
+}
+
+function usuarioCancelaCitas(){
+    $con = createConnection();
+    $consulta = $con->query("SELECT cancelar from configuracion");
+    $fila = $consulta->fetch_array(MYSQLI_ASSOC);
+    $cancela = $fila["cancelar"];
+    $con->close();
+    return $cancela;
 }
